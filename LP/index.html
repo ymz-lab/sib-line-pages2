@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GINZA RENKA｜銀座 蓮華｜高級和食・鉄板会席レストラン</title>
+  <meta name="description" content="銀座駅徒歩3分。完全予約制の高級和食・鉄板会席レストラン「GINZA RENKA 銀座 蓮華」。記念日、接待、顔合わせ、海外ゲストのおもてなしにふさわしい静かな一席を。" />
+
+  <style>
+    :root {
+      --black: #070707;
+      --deep-black: #020202;
+      --green: #10251d;
+      --green-light: #1f3a2f;
+      --gold: #b99a5b;
+      --gold-soft: #d8c28a;
+      --ivory: #f4efe5;
+      --ivory-dark: #e8ddcc;
+      --white: #ffffff;
+      --gray: #b8b2a8;
+      --line: rgba(185, 154, 91, 0.32);
+      --font-mincho: "Yu Mincho", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+      --font-gothic: "Noto Sans JP", "Yu Gothic", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: var(--font-gothic);
+      line-height: 1.9;
+      letter-spacing: 0.04em;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1120px, 88%);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 110px 0;
+    }
+
+    .section-header {
+      margin-bottom: 54px;
+    }
+
+    .section-label {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-family: var(--font-mincho);
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    .section-lead {
+      margin-top: 22px;
+      color: var(--ivory-dark);
+      font-size: 15px;
+      max-width: 720px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 210px;
+      padding: 15px 26px;
+      border: 1px solid var(--gold);
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      transition: 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      color: #15100a;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      color: var(--gold-soft);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline:hover {
+      background: rgba(185, 154, 91, 0.12);
+      transform: translateY(-2px);
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+      background: rgba(2, 2, 2, 0.74);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(185, 154, 91, 0.18);
+    }
+
+    .header-inner {
+      width: min(1180px, 92%);
+      height: 78px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-mincho);
+      letter-spacing: 0.12em;
+    }
+
+    .logo-main {
+      font-size: 22px;
+      color: var(--ivory);
+    }
+
+    .logo-sub {
+      display: block;
+      color: var(--gold);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 13px;
+      color: var(--ivory-dark);
+    }
+
+    .nav a:hover {
+      color: var(--gold-soft);
+    }
+
+    .header-cta {
+      padding: 10px 18px;
+      font-size: 12px;
+      min-width: auto;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 78px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.7) 42%, rgba(0,0,0,0.34) 100%),
+        url("images/hero-teppan-kaiseki.jpg") center/cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 76% 46%, rgba(185,154,91,0.18), transparent 28%),
+        linear-gradient(180deg, transparent 65%, var(--black) 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, 88%);
+      margin: 0 auto;
+      padding: 80px 0;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      color: var(--gold-soft);
+      border: 1px solid rgba(185, 154, 91, 0.42);
+      padding: 7px 14px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      margin-bottom: 28px;
+      background: rgba(0, 0, 0, 0.24);
+    }
+
+    .hero-title {
+      font-family: var(--font-mincho);
+      font-size: clamp(38px, 6.4vw, 82px);
+      font-weight: 400;
+      line-height: 1.22;
+      letter-spacing: 0.08em;
+      max-width: 780px;
+    }
+
+    .hero-title span {
+      color: var(--gold-soft);
+    }
+
+    .hero-lead {
+      margin-top: 30px;
+      max-width: 620px;
+      color: var(--ivory-dark);
+      font-size: clamp(15px, 1.8vw, 18px);
+    }
+
+    .hero-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      margin-top: 34px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    .hero-info strong {
+      color: var(--ivory);
+      font-weight: 400;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 42px;
+    }
+
+    /* Concept */
+    .concept {
+      background:
+        linear-gradient(180deg, var(--black), var(--green));
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 68px;
+      align-items: center;
+    }
+
+    .concept-image {
+      position: relative;
+    }
+
+    .concept-image img {
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .concept-image::before {
+      content: "";
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid var(--line);
+      z-index: -1;
+    }
+
+    .concept-text {
+      color: var(--ivory-dark);
+      font-size: 15px;
+    }
+
+    .concept-text p + p {
+      margin-top: 22px;
+    }
+
+    /* Reasons */
+    .reasons {
+      background: var(--green);
+    }
+
+    .reason-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .reason-card {
+      min-height: 260px;
+      padding: 34px 26px;
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .reason-number {
+      color: var(--gold);
+      font-family: var(--font-mincho);
+      font-size: 15px;
+      margin-bottom: 18px;
+    }
+
+    .reason-card h3 {
+      font-family: var(--font-mincho);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .reason-card p {
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    /* Courses */
+    .courses {
+      background:
+        linear-gradient(180deg, var(--green), var(--black));
+    }
+
+    .course-list {
+      display: grid;
+      gap: 22px;
+    }
+
+    .course-card {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 32px;
+      padding: 34px;
+      border: 1px solid var(--line);
+      background: rgba(244, 239, 229, 0.035);
+    }
+
+    .course-name {
+      font-family: var(--font-mincho);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--ivory);
+      margin-bottom: 12px;
+    }
+
+    .course-desc {
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    .course-price {
+      font-family: var(--font-mincho);
+      color: var(--gold-soft);
+      font-size: 28px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .course-price span {
+      display: block;
+      color: var(--gray);
+      font-family: var(--font-gothic);
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .course-cta {
+      margin-top: 36px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Scenes */
+    .scenes {
+      background: var(--black);
+    }
+
+    .scene-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .scene-item {
+      position: relative;
+      min-height: 180px;
+      display: flex;
+      align-items: flex-end;
+      padding: 22px;
+      overflow: hidden;
+      background: var(--green);
+    }
+
+    .scene-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.84));
+      z-index: 1;
+    }
+
+    .scene-item:nth-child(1) { background: url("images/anniversary.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(2) { background: url("images/business-dinner.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(3) { background: url("images/private-room.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(4) { background: url("images/omotenashi.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(5) { background: url("images/proposal.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(6) { background: url("images/hotel-dinner.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(7) { background: url("images/kaoawase.jpg") center/cover no-repeat; }
+    .scene-item:nth-child(8) { background: url("images/wine-pairing.jpg") center/cover no-repeat; }
+
+    .scene-item span {
+      position: relative;
+      z-index: 2;
+      font-family: var(--font-mincho);
+      font-size: 19px;
+      color: var(--ivory);
+    }
+
+    /* Seats */
+    .seats {
+      background: var(--ivory);
+      color: #151515;
+    }
+
+    .seats .section-label {
+      color: #806631;
+    }
+
+    .seats .section-lead {
+      color: #4e4a43;
+    }
+
+    .seat-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .seat-photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .seat-photo-grid img {
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+
+    .seat-info {
+      border-top: 1px solid rgba(20,20,20,0.18);
+    }
+
+    .seat-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(20,20,20,0.18);
+      font-size: 15px;
+    }
+
+    .seat-row strong {
+      font-family: var(--font-mincho);
+      font-size: 19px;
+      font-weight: 400;
+    }
+
+    .seat-row span {
+      color: #555;
+    }
+
+    /* Access */
+    .access {
+      background: var(--black);
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 54px;
+      align-items: stretch;
+    }
+
+    .access-card {
+      border: 1px solid var(--line);
+      padding: 38px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .access-card h3 {
+      font-family: var(--font-mincho);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 22px;
+    }
+
+    .access-list {
+      list-style: none;
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    .access-list li {
+      padding: 13px 0;
+      border-bottom: 1px solid rgba(185,154,91,0.18);
+    }
+
+    .access-list strong {
+      display: inline-block;
+      min-width: 92px;
+      color: var(--ivory);
+      font-weight: 400;
+    }
+
+    .map-placeholder {
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        linear-gradient(rgba(16,37,29,0.75), rgba(16,37,29,0.75)),
+        url("images/ginza-map.jpg") center/cover no-repeat;
+      border: 1px solid var(--line);
+      color: var(--gold-soft);
+      font-family: var(--font-mincho);
+      font-size: 24px;
+      text-align: center;
+      padding: 32px;
+    }
+
+    /* CTA */
+    .reservation {
+      position: relative;
+      background:
+        linear-gradient(rgba(0,0,0,0.78), rgba(0,0,0,0.86)),
+        url("images/cta-counter.jpg") center/cover no-repeat;
+      text-align: center;
+    }
+
+    .reservation-inner {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .reservation h2 {
+      font-family: var(--font-mincho);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .reservation p {
+      margin-top: 22px;
+      color: var(--ivory-dark);
+      font-size: 15px;
+    }
+
+    .reservation-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 42px;
+    }
+
+    .reservation-methods {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px 24px;
+      margin-top: 26px;
+      color: var(--gray);
+      font-size: 13px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 46px 0 110px;
+      background: var(--deep-black);
+      border-top: 1px solid rgba(185,154,91,0.18);
+      text-align: center;
+      color: var(--gray);
+      font-size: 12px;
+    }
+
+    .footer-logo {
+      font-family: var(--font-mincho);
+      color: var(--ivory);
+      font-size: 22px;
+      letter-spacing: 0.14em;
+      margin-bottom: 10px;
+    }
+
+    /* Mobile fixed CTA */
+    .fixed-cta {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 60;
+      width: 100%;
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(2,2,2,0.94);
+      border-top: 1px solid rgba(185,154,91,0.3);
+    }
+
+    .fixed-cta a {
+      text-align: center;
+      padding: 14px 8px;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .fixed-cta a:first-child {
+      background: var(--green);
+      color: var(--ivory);
+    }
+
+    .fixed-cta a:last-child {
+      background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+      color: #15100a;
+    }
+
+    @media (max-width: 920px) {
+      .nav {
+        display: none;
+      }
+
+      .concept-grid,
+      .seat-grid,
+      .access-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .reason-grid,
+      .scene-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .course-card {
+        grid-template-columns: 1fr;
+      }
+
+      .course-price {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .section {
+        padding: 82px 0;
+      }
+
+      .header-inner {
+        height: 68px;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .hero {
+        min-height: 92vh;
+        padding-top: 68px;
+        background:
+          linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.88) 86%),
+          url("images/hero-teppan-kaiseki.jpg") center/cover no-repeat;
+      }
+
+      .hero-title {
+        letter-spacing: 0.04em;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .reason-grid,
+      .scene-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .course-card {
+        padding: 28px 22px;
+      }
+
+      .seat-photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .access-card {
+        padding: 30px 22px;
+      }
+
+      .reservation-actions .btn {
+        width: 100%;
+      }
+
+      .fixed-cta {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <span class="logo-main">GINZA RENKA</span>
+        <span class="logo-sub">銀座 蓮華</span>
+      </a>
+
+      <nav class="nav">
+        <a href="#concept">コンセプト</a>
+        <a href="#course">コース</a>
+        <a href="#seat">お席</a>
+        <a href="#access">アクセス</a>
+        <a href="#reservation" class="btn btn-primary header-cta">空席を確認する</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- First View -->
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-tag">完全予約制｜銀座駅徒歩3分｜個室あり</p>
+
+        <h1 class="hero-title">
+          一夜の記憶に残る、<br />
+          <span>銀座の隠れ家会席。</span>
+        </h1>
+
+        <p class="hero-lead">
+          旬の和食と鉄板焼きが美しく重なる、全34席の高級和食レストラン。
+          記念日、接待、顔合わせ、海外ゲストのおもてなしまで。
+          大切な人を迎えるための、静かで上質な一席をご用意いたします。
+        </p>
+
+        <div class="hero-info">
+          <p><strong>Lunch</strong> 11:30〜14:30</p>
+          <p><strong>Dinner</strong> 17:30〜22:30</p>
+          <p><strong>Budget</strong> Lunch 8,800円〜 / Dinner 16,500円〜</p>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#reservation" class="btn btn-primary">空席を確認する</a>
+          <a href="#course" class="btn btn-outline">コースを見る</a>
+          <a href="#seat" class="btn btn-outline">個室を予約する</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Concept -->
+    <section class="section concept" id="concept">
+      <div class="container concept-grid">
+        <div class="concept-image">
+          <img src="images/concept-chef.jpg" alt="職人が旬の食材を丁寧に仕上げる様子" />
+        </div>
+
+        <div>
+          <div class="section-header">
+            <p class="section-label">Concept</p>
+            <h2 class="section-title">
+              喧騒を離れ、<br />
+              旬と職人の余韻に浸る。
+            </h2>
+          </div>
+
+          <div class="concept-text">
+            <p>
+              GINZA RENKAは、銀座の中心にありながら、街の賑わいを忘れられる完全予約制の高級和食・鉄板会席レストランです。
+            </p>
+            <p>
+              月替わりの会席には、季節ごとに表情を変える旬の食材を使用。和食の繊細な仕立てに、鉄板焼きならではの香り、音、温度を重ね、目の前の一皿に静かな高揚感を宿します。
+            </p>
+            <p>
+              記念日や誕生日、接待、顔合わせ、海外からのお客様のおもてなしまで。
+              その日が美しく整うよう、料理、空間、所作のすべてに心を配ります。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reasons -->
+    <section class="section reasons">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Why RENKA</p>
+          <h2 class="section-title">大切な一席に、選ばれる理由。</h2>
+          <p class="section-lead">
+            予約時からお帰りの瞬間まで、主催者様にもゲストにも安心していただけるよう、
+            利用目的に合わせたお席とコースをご提案いたします。
+          </p>
+        </div>
+
+        <div class="reason-grid">
+          <article class="reason-card">
+            <p class="reason-number">01</p>
+            <h3>完全予約制の<br />特別感</h3>
+            <p>
+              落ち着いた時間をお過ごしいただくため、完全予約制でご案内。
+              大切な会食にふさわしい静けさを守ります。
+            </p>
+          </article>
+
+          <article class="reason-card">
+            <p class="reason-number">02</p>
+            <h3>銀座駅徒歩3分の<br />隠れ家立地</h3>
+            <p>
+              銀座駅から徒歩3分、東銀座駅から徒歩5分。
+              ホテル宿泊時のディナーやビジネス利用にも便利です。
+            </p>
+          </article>
+
+          <article class="reason-card">
+            <p class="reason-number">03</p>
+            <h3>個室・半個室を<br />完備</h3>
+            <p>
+              接待、顔合わせ、記念日、海外ゲストのおもてなしに。
+              会話を大切にできる個室・半個室をご用意しています。
+            </p>
+          </article>
+
+          <article class="reason-card">
+            <p class="reason-number">04</p>
+            <h3>和食と鉄板焼きの<br />美しい融合</h3>
+            <p>
+              旬魚、和牛、鮑、土鍋ご飯まで。
+              会席の流れに鉄板焼きの臨場感を重ねたコースをお楽しみください。
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses -->
+    <section class="section courses" id="course">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Course</p>
+          <h2 class="section-title">用途に合わせて選べる、月替わり会席。</h2>
+          <p class="section-lead">
+            ランチ会席から、接待・記念日にふさわしい特別コースまで。
+            価格と内容が明確なため、大切なご予定にも安心してご利用いただけます。
+          </p>
+        </div>
+
+        <div class="course-list">
+          <article class="course-card">
+            <div>
+              <h3 class="course-name">蓮華ランチ会席</h3>
+              <p class="course-desc">
+                前菜、椀物、造り、焼物、季節の土鍋ご飯、甘味。
+                銀座での昼会食や、ホテル滞在中のランチにもおすすめの上質な会席です。
+              </p>
+            </div>
+            <p class="course-price">8,800円<span>税込 / お一人様</span></p>
+          </article>
+
+          <article class="course-card">
+            <div>
+              <h3 class="course-name">蓮華ディナーコース</h3>
+              <p class="course-desc">
+                季節の前菜、旬魚のお造り、焼物、和牛鉄板焼き、土鍋ご飯、甘味。
+                和食と鉄板焼きの魅力をバランスよく味わえる、当店の基本コースです。
+              </p>
+            </div>
+            <p class="course-price">16,500円<span>税込 / お一人様</span></p>
+          </article>
+
+          <article class="course-card">
+            <div>
+              <h3 class="course-name">匠コース</h3>
+              <p class="course-desc">
+                料理長が厳選した食材を使用した特別会席。
+                和牛、鮑、旬魚などを中心に、接待や特別な会食にふさわしい一皿を重ねます。
+              </p>
+            </div>
+            <p class="course-price">22,000円<span>税込 / お一人様</span></p>
+          </article>
+
+          <article class="course-card">
+            <div>
+              <h3 class="course-name">記念日コース</h3>
+              <p class="course-desc">
+                乾杯ドリンク、特別会席、メッセージ付きデザートプレート、記念写真サービス。
+                誕生日、結婚記念日、プロポーズなど、思い出に残る夜を演出いたします。
+              </p>
+            </div>
+            <p class="course-price">25,000円<span>税込 / お一人様</span></p>
+          </article>
+        </div>
+
+        <div class="course-cta">
+          <a href="#reservation" class="btn btn-primary">コースを予約する</a>
+          <a href="#seat" class="btn btn-outline">個室を確認する</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scenes -->
+    <section class="section scenes">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-label">Occasion</p>
+          <h2 class="section-title">記念日も、接待も、美しく整う和の時間。</h2>
+          <p class="section-lead">
+            主役を引き立てたい日、失礼のないおもてなしが求められる日。
+            目的に合わせて、お席・コース・演出をご提案いたします。
+          </p>
+        </div>
+
+        <div class="scene-grid">
+          <div class="scene-item"><span>記念日</span></div>
+          <div class="scene-item"><span>接待</span></div>
+          <div class="scene-item"><span>個室会食</span></div>
+          <div class="scene-item"><span>海外ゲスト</span></div>
+          <div class="scene-item"><span>プロポーズ</span></div>
+          <div class="scene-item"><span>ホテル宿泊時のディナー</span></div>
+          <div class="scene-item"><span>顔合わせ</span></div>
+          <div class="scene-item"><span>日本酒・ワインペアリング</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seats -->
+    <section class="section seats" id="seat">
+      <div class="container seat-grid">
+        <div>
+          <div class="section-header">
+            <p class="section-label">Private Room & Seats</p>
+            <h2 class="section-title">静かな会話が似合う、全34席。</h2>
+            <p class="section-lead">
+              カウンター、個室、半個室、テーブル席をご用意。
+              臨場感ある鉄板カウンターから、接待や顔合わせに適した個室まで、
+              ご利用目的に合わせてお選びいただけます。
+            </p>
+          </div>
+
+          <div class="seat-info">
+            <div class="seat-row">
+              <strong>カウンター席</strong>
+              <span>8席</span>
+            </div>
+            <div class="seat-row">
+              <strong>個室</strong>
+              <span>2室</span>
+            </div>
+            <div class="seat-row">
+              <strong>半個室</strong>
+              <span>3室</span>
+            </div>
+            <div class="seat-row">
+              <strong>テーブル席</strong>
+              <span>12席</span>
+            </div>
+            <div class="seat-row">
+              <strong>総席数</strong>
+              <span>34席</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="seat-photo-grid">
+          <img src="images/counter-seat.jpg" alt="鉄板カウンター席" />
+          <img src="images/private-room-seat.jpg" alt="接待や顔合わせに適した個室" />
+          <img src="images/table-seat.jpg" alt="落ち着いたテーブル席" />
+          <img src="images/tableware.jpg" alt="和モダンな器と設え" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Access -->
+    <section class="section access" id="access">
+      <div class="container access-grid">
+        <div class="access-card">
+          <p class="section-label">Access</p>
+          <h3>銀座の中心に佇む、<br />大人の隠れ家。</h3>
+
+          <ul class="access-list">
+            <li><strong>店名</strong> GINZA RENKA / 銀座 蓮華</li>
+            <li><strong>業態</strong> 高級和食・鉄板会席レストラン</li>
+            <li><strong>所在地</strong> 東京都中央区銀座</li>
+            <li><strong>最寄駅</strong> 銀座駅 徒歩3分 / 東銀座駅 徒歩5分</li>
+            <li><strong>営業時間</strong> 11:30〜14:30 / 17:30〜22:30</li>
+            <li><strong>定休日</strong> 日曜・祝日</li>
+            <li><strong>平均予算</strong> Lunch 8,000円〜12,000円 / Dinner 15,000円〜30,000円</li>
+          </ul>
+        </div>
+
+        <div class="map-placeholder">
+          Google Map Area<br />
+          銀座駅 徒歩3分
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservation CTA -->
+    <section class="section reservation" id="reservation">
+      <div class="container reservation-inner">
+        <p class="section-label">Reservation</p>
+        <h2>
+          大切な一席は、<br />
+          どうぞお早めにご予約ください。
+        </h2>
+
+        <p>
+          個室・半個室は席数に限りがございます。<br />
+          記念日、接待、顔合わせ、海外ゲストのおもてなしなど、
+          ご利用目的に合わせて最適なお席をご案内いたします。
+        </p>
+
+        <div class="reservation-actions">
+          <a href="#" class="btn btn-primary">空席を確認する</a>
+          <a href="#" class="btn btn-outline">コースを予約する</a>
+          <a href="#" class="btn btn-outline">個室を予約する</a>
+        </div>
+
+        <div class="reservation-methods">
+          <span>Web予約フォーム</span>
+          <span>電話予約</span>
+          <span>LINE予約</span>
+          <span>ホテルコンシェルジュ経由</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-logo">GINZA RENKA</div>
+    <p>銀座 蓮華｜高級和食・鉄板会席レストラン</p>
+    <p>© GINZA RENKA. All Rights Reserved.</p>
+  </footer>
+
+  <div class="fixed-cta">
+    <a href="#seat">個室を予約する</a>
+    <a href="#reservation">空席を確認する</a>
+  </div>
+</body>
+</html>
