@@ -440,9 +440,8 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
   background: var(--navy-12);
   box-shadow: inset 0 0 0 0 transparent;
 }
-.plan__ul li.inc { color: var(--navy-light); font-weight: 700; }
-.plan__ul li.inc::before { background: var(--navy-light); }
-.plan--mid .plan__ul li::before { background: rgba(242,137,75,0.35); }
+.plan__ul li.inc { color: var(--navy); font-weight: 700; }
+.plan__ul li.inc::before { background: var(--navy); }
 
 /* ============================================================
    13 Fee scope
@@ -577,3 +576,51 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .steps { max-height: 370px; }
 #s12 .plans { max-height: 600px; }
 #s12 .s-body > .alert { margin-top: 22px; }
+
+
+/* ============================================================
+   14 Early partner cards（navy スライド上のカード）
+   ============================================================ */
+.pcard {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  padding: 38px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-height: 430px;
+}
+.pcard__top { display: flex; align-items: center; justify-content: space-between; }
+.pcard__no {
+  font-family: var(--font-head);
+  font-size: 46px; font-weight: 900; line-height: 1;
+  color: rgba(255, 255, 255, 0.32);
+  letter-spacing: 0.02em;
+}
+.pcard:first-child .pcard__no { color: var(--accent); }
+.pcard__ico { width: 46px; height: 46px; opacity: 0.85; }
+.pcard__t {
+  font-family: var(--font-head);
+  font-size: 26px; font-weight: 700; line-height: 1.45; color: var(--white);
+}
+.pcard__d {
+  font-size: 21px; line-height: 1.75; font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: auto;
+}
+.note--onnavy { color: rgba(255, 255, 255, 0.55); }
+
+/* ============================================================
+   17 Closing CTA 補足
+   ============================================================ */
+.cta__note {
+  margin-top: 24px;
+  font-size: 20px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* navy スライド上のサブ見出し・補足の可読性 */
+.slide--navy .s-lead { color: rgba(255, 255, 255, 0.72); }
