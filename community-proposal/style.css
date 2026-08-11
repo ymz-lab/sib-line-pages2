@@ -1,7 +1,7 @@
 /* 見出し・本文とも Noto Sans JP のみ（Google Fonts）。装飾フォントは使わない。
    オンラインでは Google Fonts から、オフライン書き出し時は fonts/ 配下の
    同一ファイル（Google Fonts から取得した本文用サブセット）から読み込む。 */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
 @import url('fonts/local-fonts.css');
 
 /* ============================================================
@@ -864,7 +864,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .freqlead { display: flex; align-items: flex-end; gap: 34px; }
 .freqlead__n {
   font-family: var(--font-head); font-weight: 700; font-size: 190px; line-height: 0.82;
-  background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: #F09A5C;
   letter-spacing: -0.03em;
 }
 .freqlead__u { font-family: var(--font-head); font-weight: 700; font-size: 46px; line-height: 1.5; padding-bottom: 8px; }
@@ -885,7 +885,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .cyc__col { padding-right: 60px; display: flex; flex-direction: column; gap: 18px; }
 .cyc__m { font-size: 20px; font-weight: 700; letter-spacing: 0.18em; color: var(--gray-text); }
 .cyc__h { font-family: var(--font-head); font-weight: 700; font-size: 52px; line-height: 1.15; }
-.cyc__col--last .cyc__h { background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cyc__col--last .cyc__h { color: var(--accent); }
 .cyc__ul { list-style: none; display: flex; flex-direction: column; gap: 14px; }
 .cyc__ul li { font-size: 25px; line-height: 1.5; font-weight: 500; color: var(--navy-light); }
 .cyc__num {
@@ -899,7 +899,8 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .plan2:first-child { border-left: none; }
 .plan2--mid {
   background: var(--navy-grad-soft); color: var(--white);
-  border-left: none; box-shadow: var(--sh-lg); border-radius: 4px;
+  border-left: none; border-radius: 6px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.07);
 }
 .plan2--mid + .plan2 { border-left: none; }
 .plan2__tag { font-size: 19px; font-weight: 700; letter-spacing: 0.18em; color: var(--gray-text); }
@@ -908,7 +909,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .plan2__price { display: flex; align-items: baseline; gap: 7px; }
 .plan2__price .y { font-size: 24px; font-weight: 700; }
 .plan2__price .n { font-family: var(--font-head); font-size: 52px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
-.plan2--mid .plan2__price .n { background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.plan2--mid .plan2__price .n { color: #F49E62; }
 .plan2__price .u { font-size: 21px; font-weight: 700; color: var(--gray-text); }
 .plan2--mid .plan2__price .u { color: rgba(255,255,255,0.72); }
 .plan2__cand { font-size: 18px; color: var(--gray-text); font-weight: 500; margin-top: -8px; }
@@ -951,7 +952,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .slide--navy .s-title .em { color: var(--gold); }
 
 /* --- 16 hero にグラデーションと奥行き --- */
-.hero { background: var(--navy-grad); box-shadow: var(--sh-lg); border-radius: 4px; }
+.hero { background: var(--navy-grad); border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.07); }
 .hero__label { color: var(--gold); }
 
 /* --- 05 レーダーチャート --- */
@@ -966,7 +967,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 
 /* --- CTA / 強調にグラデーションと影 --- */
 .cta { background: var(--accent-grad); box-shadow: 0 18px 46px -14px rgba(0,0,0,0.5); }
-.footmsg { background: var(--navy-grad); box-shadow: var(--sh-md); }
+.footmsg { background: var(--navy-grad); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12); }
 .alert { box-shadow: none; }
 .plan--mid, .block, .icard, .vcard, .acard, .ecard, .step, .tl__card, .actgroup, .actitem, .entryitem { box-shadow: none; }
 
@@ -1011,3 +1012,77 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .stepline__item--soft .stepline__no { color: #AEB8C2; }
 .stepline__d { font-size: 20px; line-height: 1.65; color: var(--gray-text); font-weight: 500; }
 .stepline__item--soft .stepline__d { color: #9AA7B4; }
+
+/* ============================================================
+   PREMIUM PASS
+   主役スライド（表紙・VISION・CONCEPT・クロージング）にだけ
+   メッシュグラデーション背景と大胆なタイポグラフィを適用する。
+   情報量の多いページは可読性優先で現状のトーンを維持する。
+   ※ PDF 出力で破綻しないよう、ぼかしは filter ではなく
+     radial-gradient の柔らかいストップで表現している。
+   ============================================================ */
+
+/* --- メッシュグラデーション（navy 版：表紙・クロージング） --- */
+.mesh { position: absolute; inset: 0; z-index: 0; }
+.mesh--navy {
+  background:
+    radial-gradient(58% 52% at 16% 20%, rgba(64, 128, 208, 0.62) 0%, rgba(56, 118, 196, 0) 62%),
+    radial-gradient(52% 48% at 84% 14%, rgba(112, 96, 204, 0.52) 0%, rgba(104, 88, 190, 0) 60%),
+    radial-gradient(50% 46% at 78% 82%, rgba(242, 137, 75, 0.34) 0%, rgba(242, 137, 75, 0) 62%),
+    radial-gradient(46% 44% at 26% 92%, rgba(28, 74, 132, 0.60) 0%, rgba(28, 74, 132, 0) 64%),
+    radial-gradient(70% 60% at 50% 50%, rgba(20, 52, 88, 0.55) 0%, rgba(20, 52, 88, 0) 70%),
+    linear-gradient(140deg, #14335A 0%, #0F2A47 48%, #0C1B30 100%);
+}
+/* 文字が乗る側をわずかに沈ませ、可読性を確保する */
+.mesh--navy::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(100deg, rgba(8, 20, 36, 0.40) 0%, rgba(8, 20, 36, 0.12) 40%, rgba(8, 20, 36, 0) 62%);
+}
+
+/* --- メッシュグラデーション（light 版：VISION・CONCEPT） --- */
+.mesh--light {
+  background:
+    radial-gradient(52% 48% at 82% 16%, rgba(126, 158, 226, 0.28) 0%, rgba(126, 158, 226, 0) 62%),
+    radial-gradient(46% 44% at 92% 62%, rgba(158, 132, 214, 0.20) 0%, rgba(158, 132, 214, 0) 62%),
+    radial-gradient(54% 50% at 12% 84%, rgba(242, 137, 75, 0.16) 0%, rgba(242, 137, 75, 0) 64%),
+    radial-gradient(44% 42% at 22% 12%, rgba(96, 140, 210, 0.16) 0%, rgba(96, 140, 210, 0) 62%),
+    linear-gradient(150deg, #FFFFFF 0%, #F5F7FB 55%, #EEF1F8 100%);
+}
+
+/* --- ピル型グラデーション CTA --- */
+.cta {
+  border-radius: 999px;
+  background: linear-gradient(105deg, #F7A968 0%, #F2894B 45%, #DE6E39 100%);
+  color: #2A1508;
+  padding: 34px 88px;
+  box-shadow: 0 10px 24px -12px rgba(200, 96, 40, 0.75);
+}
+.cta__1 { font-size: 40px; font-weight: 900; letter-spacing: 0.01em; color: #24170D; }
+.cta__2 { font-size: 24px; font-weight: 700; color: rgba(38, 22, 10, 0.78); }
+
+/* --- タイポグラフィの強弱を大胆にする（主役スライドのみ） --- */
+.cover__title {
+  font-size: 98px; font-weight: 900; line-height: 1.24; letter-spacing: -0.005em;
+}
+.cover__tag {
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 20px; font-weight: 500; letter-spacing: 0.18em;
+  padding: 11px 28px; margin-bottom: 42px;
+}
+.cover__sub { font-size: 30px; font-weight: 400; color: rgba(255, 255, 255, 0.74); }
+.cover__rule { width: 108px; height: 5px; background: linear-gradient(90deg, #F8AC72, #DE6E39); margin: 40px 0 32px; }
+.cover__meta { font-size: 18px; color: rgba(255, 255, 255, 0.42); }
+.cover__brand .name { font-size: 21px; font-weight: 700; }
+.cover__brand .sub { font-size: 17px; color: rgba(255, 255, 255, 0.5); }
+
+.stmt__big { font-size: 74px; font-weight: 900; line-height: 1.42; letter-spacing: -0.005em; }
+.stmt__sub { font-size: 27px; font-weight: 400; color: var(--gray-text); margin-top: 42px; }
+.closing__msg { font-size: 72px; font-weight: 900; line-height: 1.4; letter-spacing: -0.005em; }
+.closing__foot { font-size: 19px; color: rgba(255, 255, 255, 0.45); }
+.cta__note { font-size: 19px; color: rgba(255, 255, 255, 0.5); }
+
+/* 主役スライドの見出しラベルは、より控えめに */
+.slide--hero .eyebrow { font-size: 18px; color: rgba(255, 255, 255, 0.5); }
+.slide--hero .s-title { font-size: 62px; font-weight: 900; }
