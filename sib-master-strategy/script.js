@@ -1,5 +1,5 @@
 /* ============================================================
-   SIB Master Strategy — deck controller
+   SIBのこれから｜全体方針・事業戦略 — ページ制御
    ・← → / Space / PageUp / PageDown / Home / End でページ移動
    ・M で目次、P で印刷（PDF）
    ・1920x1080 のステージをビューポートに合わせて等比スケール
@@ -25,13 +25,13 @@
       '<span class="s-num">' + pageNo + "</span>" +
       '<span class="s-sec">' + (el.getAttribute("data-sec") || "") + "</span>" +
       '<span class="rule"></span>' +
-      '<span class="s-brand">SIB MASTER STRATEGY</span>';
+      '<span class="s-brand">SIBのこれから</span>';
     el.insertBefore(head, el.firstChild);
 
     var foot = document.createElement("div");
     foot.className = "s-foot";
     foot.innerHTML =
-      "<span>Shonan Innovation Base ／ Internal only</span>" +
+      "<span>Shonan Innovation Base ／ メンバー向け内部資料</span>" +
       '<span class="pg">' + pageNo + " / " + String(total).padStart(2, "0") + "</span>";
     el.appendChild(foot);
   });
