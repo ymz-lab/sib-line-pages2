@@ -59,7 +59,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 
 .eyebrow {
   display: flex; align-items: center; gap: 18px;
-  font-size: 24px; font-weight: 700; letter-spacing: 0.2em; color: var(--blue);
+  font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue);
   margin-bottom: 22px;
 }
 .eyebrow::before { content: ''; width: 48px; height: 4px; background: var(--accent); }
@@ -102,13 +102,13 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
   display: flex; align-items: center; justify-content: center;
   font-size: 24px; font-weight: 700; color: var(--navy);
 }
-.cover__brand .name { font-size: 26px; font-weight: 700; letter-spacing: 0.14em; }
+.cover__brand .name { font-size: 26px; font-weight: 700; letter-spacing: 0.12em; }
 .cover__brand .sub  { font-size: 24px; color: rgba(255,255,255,0.62); margin-top: 4px; }
 
 .cover__tag {
   align-self: flex-start; border: 1px solid rgba(255,255,255,0.4);
   border-radius: 999px; padding: 14px 34px;
-  font-size: 24px; font-weight: 500; letter-spacing: 0.14em; color: rgba(255,255,255,0.92);
+  font-size: 24px; font-weight: 500; letter-spacing: 0.12em; color: rgba(255,255,255,0.92);
   margin-bottom: 46px;
 }
 .cover__name { font-size: 104px; font-weight: 700; line-height: 1.14; color: var(--white); letter-spacing: 0.01em; }
@@ -141,7 +141,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .col:last-child { padding-right: 0; }
 .slide--navy .col { border-left-color: rgba(255,255,255,0.18); }
 
-.col__cap { font-size: 24px; font-weight: 700; letter-spacing: 0.14em; color: var(--blue); }
+.col__cap { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue); }
 .col__h { font-size: 38px; font-weight: 700; line-height: 1.35; }
 .col__d { font-size: 27px; line-height: 1.7; color: var(--muted); }
 .slide--navy .col__d { color: rgba(255,255,255,0.74); }
@@ -171,7 +171,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .value { padding: 0 56px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 24px; }
 .value:first-child { padding-left: 0; border-left: none; }
 .value:last-child { padding-right: 0; }
-.value__n { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; color: var(--blue-2); }
+.value__n { font-size: 30px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue-2); }
 .value__h { font-size: 40px; font-weight: 700; line-height: 1.35; }
 .value__d { font-size: 27px; line-height: 1.7; color: var(--muted); }
 .value__ico { width: 64px; height: 64px; color: var(--blue); }
@@ -181,7 +181,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 /* ---------- 06 ACTIVITIES ---------- */
 .acts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 44px 40px; }
 .act { display: flex; flex-direction: column; gap: 14px; padding-top: 24px; border-top: 3px solid var(--line); }
-.act__n { font-size: 24px; font-weight: 700; letter-spacing: 0.14em; color: var(--blue-2); }
+.act__n { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue-2); }
 .act__h { font-size: 30px; font-weight: 700; line-height: 1.35; }
 .act__d { font-size: 25px; line-height: 1.6; color: var(--muted); }
 
@@ -204,7 +204,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .jr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
 .jr__col { padding: 0 60px; display: flex; flex-direction: column; gap: 20px; }
 .jr__col:first-child { padding-left: 0; }
-.jr__m { font-size: 24px; font-weight: 700; letter-spacing: 0.18em; color: var(--muted); }
+.jr__m { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--muted); }
 .jr__h { font-size: 56px; font-weight: 700; line-height: 1.2; }
 .jr__e { font-size: 28px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue); }
 .jr__col--last .jr__h { color: var(--accent); }
@@ -246,7 +246,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; align-items: stretch; }
 .phase { padding: 0 56px; display: flex; flex-direction: column; gap: 20px; position: relative; }
 .phase:first-child { padding-left: 0; }
-.phase__n { font-size: 26px; font-weight: 700; letter-spacing: 0.16em; color: var(--muted); }
+.phase__n { font-size: 26px; font-weight: 700; letter-spacing: 0.12em; color: var(--muted); }
 .phase__h { font-size: 38px; font-weight: 700; line-height: 1.35; }
 .phase--now .phase__n { color: var(--accent); }
 .phase--now .phase__h { color: var(--accent); }
@@ -256,7 +256,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 /* ---------- 14 PRICING ---------- */
 .price { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: center; }
 .price__main { display: flex; flex-direction: column; gap: 18px; }
-.price__cap { font-size: 26px; font-weight: 700; letter-spacing: 0.16em; color: var(--blue); }
+.price__cap { font-size: 26px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue); }
 .price__n { display: flex; align-items: baseline; gap: 10px; }
 .price__n b { font-size: 128px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
 .price__n span { font-size: 40px; font-weight: 700; }
@@ -272,7 +272,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .scope__bar { height: 8px; }
 .scope__bar--in { background: var(--navy); }
 .scope__bar--op { background: var(--accent); }
-.scope__cap { font-size: 26px; font-weight: 700; letter-spacing: 0.14em; color: var(--muted); }
+.scope__cap { font-size: 26px; font-weight: 700; letter-spacing: 0.12em; color: var(--muted); }
 .scope__h { font-size: 40px; font-weight: 700; line-height: 1.35; }
 .scope__ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 30px; }
 .scope__ul li { font-size: 27px; line-height: 1.45; display: flex; gap: 14px; align-items: flex-start; }
@@ -285,7 +285,7 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 /* ---------- 17 NEXT STEP ---------- */
 .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 34px; }
 .step { display: flex; flex-direction: column; gap: 16px; }
-.step__n { font-size: 24px; font-weight: 700; letter-spacing: 0.14em; color: var(--blue-2); }
+.step__n { font-size: 24px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue-2); }
 .step--now .step__n { color: var(--accent); }
 .step__h { font-size: 32px; font-weight: 700; line-height: 1.35; }
 .step__d { font-size: 25px; line-height: 1.6; color: var(--muted); }
@@ -389,3 +389,45 @@ html.js-anim .slide.is-in .draw { stroke-dashoffset: 0; }
 #s09 .feed { gap: 16px; }
 #s16 .col__d { margin-bottom: 6px; }
 #s16 .col { gap: 16px; }
+
+/* ============================================================
+   日本語組版
+   ・auto-phrase：文節単位で改行し、単語の途中や1文字だけの折り返しを防ぐ
+   ・line-break: strict：句読点・閉じ括弧の行頭禁則を厳格に適用
+   ・英語ラベル／サービス名は語の途中で切らない
+   ============================================================ */
+html { text-spacing-trim: normal; }
+
+body,
+.p-title, .p-lead, .note, .callout,
+.why__a, .why__b, .why__d,
+.stmt__x, .stmt__big,
+.col__h, .col__d, .ul li,
+.value__h, .value__d,
+.act__h, .act__d,
+.rt__d, .feed__tx,
+.jr__h, .mtx__c--label, .mtx__t,
+.four__h, .four__d,
+.phase__h, .phase__ul li,
+.price__u, .price__later .v, .price__later .d,
+.scope__h, .scope__ul li,
+.step__h, .step__d,
+.cover__copy, .closing__copy,
+.mformula__k, .mformula__r, .mrow__a, .mrow__b {
+  word-break: auto-phrase;      /* 文節で改行（未対応環境では normal 相当） */
+  overflow-wrap: normal;
+  line-break: strict;           /* 禁則処理を厳格に */
+  text-wrap: pretty;            /* 最終行に1語だけ残るのを避ける */
+}
+
+/* 英語ラベル・サービス名は語の途中で分割しない */
+.eyebrow, .col__cap, .value__n, .act__n, .jr__m, .jr__e,
+.four__e, .phase__n, .price__cap, .price__later .k,
+.scope__cap, .step__n, .cover__tag, .cover__brand .name,
+.closing__name, .mtx__c--corner, .pagenum, .feed__tag, .chip {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+/* 表ヘッダの英語サービス名は途中で折り返さない（<br> の位置でのみ改行） */
+.mtx__c--head { word-break: keep-all; overflow-wrap: normal; }
