@@ -101,8 +101,13 @@ PHASE 3  企業向けサービス（SNS運用・学生PJ・採用広報・AI活�
 --sky     #E9F0F8 / --sky-2 #F5F8FC   面
 --line    #D7E1EC   罫線
 --muted   #55697F   補足テキスト
---accent  #EE7B3C   差し色（少量）
+--accent  #C43D8E   差し色（マゼンタ・少量）
+--violet  #6E42D1   差し色（パープル・少量）
+--accent-grad  linear-gradient(135deg, var(--violet), var(--accent))  重要箇所のみ
 ```
+
+グラデーションは表紙・クロージングCTA・循環図の中心番号など「重要な数箇所」に限定し、
+資料全体をグラデーション塗りにしない。
 
 **過度なグラデーションは禁止。** navy 面の緩やかな1段グラデーションまで。
 
@@ -141,7 +146,7 @@ PHASE 3  企業向けサービス（SNS運用・学生PJ・採用広報・AI活�
 
 ## 5. 実装
 
-- `index.html` / `style.css` / `app.js`（16:9・1920×1080・全18ページ）
+- `index.html` / `style.css` / `app.js`（16:9・1920×1080・全19ページ）
 - `app.js`：← / → / Space / PageUp / PageDown でページ移動。
   スクロール連動の控えめなアニメーション（Fade / Slide / Line Draw / Stagger）。
 - `?static=1` を付けて開くとアニメーションを無効化し完成状態で描画する。
@@ -182,25 +187,32 @@ PNG が正常でも PDF だけ壊れることがあるため、**必ず PDF も�
 
 ---
 
-## 6. ページ構成（全18枚）
+## 6. ページ構成（全19枚）
+
+外部の初対面の読み手（転送先の経営者）が単体で理解できることを前提に、
+起（Why）→承（What）→転（SIBだからこそ／差別化・将来価値）→結（料金・対象・CTA）の順で構成。
 
 | No | 内容 | 構図 |
 | --- | --- | --- |
-| 01 | COVER | 大型タイポ・navy |
-| 02 | WHY 「つながり」の課題 | 3カラム（現状→でも） |
-| 03 | CONCEPT | 中央・大型タイポ |
-| 04 | HOW IT WORKS | 横フロー（5ステップ） |
-| 05 | 3 CORE VALUES | 3カラム |
-| 06 | ACTIVITIES（7つ） | 4×2グリッド |
-| 07 | THEME ROUNDTABLE | 左右分割・大型数字 |
-| 08 | BUSINESS MATCHING | 式＋事例3行 |
+| 01 | COVER（メインコピー＝つながりを、次の事業機会へ。） | 大型タイポ・navy |
+| 02 | WHY 「つながり」は事業につながっているか | 3カラム（現状→でも） |
+| 03 | CONCEPT（名刺交換で終わらないネットワークへ） | 中央・大型タイポ |
+| 04 | HOW IT WORKS | 循環図（5ステップ・中心にSIB） |
+| 05 | 3 CORE VALUES（学ぶ／つながる／生まれる） | 3カラム・円バッジ |
+| 06 | ACTIVITIES | 大3＋補助4（均等グリッドにしない） |
+| 07 | THEME ROUNDTABLE | 左右分割・当日の問い（例） |
+| 08 | BUSINESS MATCHING（NEEDS × ASSETS） | 式＋事例3行 |
 | 09 | COMMUNITY EXPERIENCE | フィード型リスト |
 | 10 | 3 MONTH JOURNEY | 横タイムライン |
 | 11 | COMPARISON | ○△－マトリクス（8軸） |
-| 12 | WHY SIB | 4カラム・navy |
-| 13 | FUTURE VALUE | PHASE 1→3・navy |
-| 14 | PRICING | 大型数字・左右分割 |
+| 12 | ABOUT SIB（新設・運営主体の説明） | 左右分割。数値は要確認のみ記載 |
+| 13 | WHY SIB | 4カラム・navy |
+| 14 | FUTURE VALUE | PHASE 1→3・navy |
 | 15 | SCOPE | 会費内／別料金の2分割 |
-| 16 | EARLY MEMBER | 参加する意味／お願いしたいこと |
-| 17 | NEXT STEP | 5ステップ |
-| 18 | CLOSING | 中央・navy・ピルCTA |
+| 16 | PRICING | 大型数字・左右分割 |
+| 17 | WHO WE'RE LOOKING FOR（対象・お願いしたいこと） | 左右分割・チェックリスト |
+| 18 | EARLY MEMBER（初期メンバーだからこそ） | 4パーク・ポジティブな訴求 |
+| 19 | NEXT STEP / CLOSING | 中央・navy・2択CTA |
+
+12ページ「ABOUT SIB」に記載する実績・数値は必ず「実際に確認できるもの」だけに差し替える。
+未確認の企業名・行政連携・具体的な人数や回数は記載しない。
