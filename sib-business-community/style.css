@@ -283,6 +283,57 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
   display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-top: 2px;
 }
 
+/* ---------- POSITIONING（強み・弱み・勝ち筋） ---------- */
+.posn__lead { font-size: 38px; font-weight: 700; line-height: 1.55; color: var(--navy); margin-bottom: 40px; }
+.posn__lead b { color: var(--accent); }
+.posn__cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px; align-items: start; margin-bottom: 32px; }
+
+.posn__strh { font-size: 26px; font-weight: 700; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 20px; }
+.posn__str { display: flex; flex-direction: column; gap: 18px; }
+.stritem { display: flex; gap: 18px; align-items: flex-start; }
+.stritem__n {
+  flex: none; width: 46px; height: 46px; border-radius: 50%;
+  background: var(--accent-grad); color: var(--white);
+  display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700;
+}
+.stritem__h { font-size: 27px; font-weight: 700; line-height: 1.4; }
+.stritem__d { font-size: 24px; line-height: 1.55; color: var(--muted); margin-top: 2px; }
+
+.posn__weakh { font-size: 26px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 20px; }
+.posn__weakbox {
+  background: var(--sky-2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 28px 32px; display: flex; flex-direction: column; gap: 14px;
+}
+.weaklist { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.weaklist li { font-size: 25px; line-height: 1.5; color: var(--muted); padding-left: 26px; position: relative; }
+.weaklist li::before { content: ''; position: absolute; left: 0; top: 11px; width: 8px; height: 8px; border-radius: 50%; background: #9AA7B4; }
+.posn__weaknote { font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1.55; padding-top: 12px; border-top: 1px solid var(--line); }
+
+.posn__win {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: linear-gradient(135deg, #FBEEF6, #F1ECFB); border-radius: 8px;
+  padding: 24px 28px;
+}
+.winstep {
+  font-size: 24px; font-weight: 700; color: var(--navy);
+  background: var(--white); border: 1px solid var(--line); border-radius: 999px; padding: 12px 24px;
+}
+.winarrow { color: var(--accent); font-weight: 700; font-size: 24px; flex: none; }
+.posn__tag { text-align: center; margin-top: 20px; font-size: 30px; font-weight: 700; color: var(--accent); }
+
+#s11 .s-body { justify-content: flex-start; }
+#s11 .s-head { margin-bottom: 40px; }
+#s11 .posn__lead { font-size: 32px; line-height: 1.45; margin-bottom: 30px; }
+#s11 .posn__cols { gap: 56px; margin-bottom: 24px; }
+#s11 .posn__strh, #s11 .posn__weakh { margin-bottom: 14px; }
+#s11 .posn__str { gap: 12px; }
+#s11 .stritem__d { margin-top: 0; }
+#s11 .weaklist { gap: 8px; }
+#s11 .posn__weakbox { padding: 22px 28px; gap: 10px; }
+#s11 .posn__weaknote { padding-top: 8px; }
+#s11 .posn__win { padding: 18px 26px; flex-wrap: nowrap; }
+#s11 .winstep { font-size: 24px; padding: 10px 18px; white-space: nowrap; }
+
 /* ---------- 18 早期メンバー特典（4） ---------- */
 .perks { display: grid; grid-template-columns: repeat(2, 1fr); gap: 44px 60px; }
 .perk { display: flex; gap: 26px; align-items: flex-start; }
@@ -341,13 +392,16 @@ body { display: flex; flex-direction: column; align-items: center; gap: 40px; pa
 .mtx__c--corner { justify-content: flex-start; padding-left: 0; font-size: 24px; color: var(--muted); letter-spacing: 0.1em; }
 .mtx__c--own { background: #FBEEF6; }
 .mtx__c--head.mtx__c--own { background: #F5DDEC; border-bottom-color: var(--accent); }
-.mk { font-size: 38px; font-weight: 700; line-height: 1; }
-.mk--o { color: var(--accent); }
-.mk--t { color: #8FA1B4; }
-.mk--n { color: #B6C2CE; }
-.mtxlegend { display: flex; gap: 52px; margin-top: 30px; font-size: 24px; color: var(--muted); }
-.mtxlegend span { display: flex; align-items: center; gap: 12px; }
-.mtxlegend .mk { font-size: 28px; }
+.mk { font-size: 32px; font-weight: 700; line-height: 1; color: #3C5A78; }
+.mk--dbl { font-size: 38px; font-weight: 800; color: var(--navy); }
+.mtx__c--own .mk--dbl { color: var(--accent); }
+.mk--t { color: #9AA7B4; font-size: 30px; }
+.mk--n { color: #C3CCD6; font-size: 28px; }
+.mk--mix { font-size: 26px; font-weight: 800; }
+.mtx__c--own .mk--mix { color: var(--accent); }
+.mtxlegend { display: flex; gap: 40px; margin-top: 26px; font-size: 24px; color: var(--muted); flex-wrap: wrap; }
+.mtxlegend span { display: flex; align-items: center; gap: 10px; }
+.mtxlegend .mk { font-size: 26px; }
 
 /* ---------- 12 WHY SIB ---------- */
 .four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 46px; }
@@ -477,20 +531,26 @@ html.js-anim .slide.is-in .draw { stroke-dashoffset: 0; }
 .mrow__x { text-align: center; font-size: 34px; font-weight: 700; color: var(--accent); }
 
 /* ---------- 情報量の多いページの詰め（24px 下限は維持） ---------- */
-.slide--dense .s-head { margin-bottom: 40px; }
-.slide--dense .mtx__c { min-height: 58px; padding: 12px 24px; font-size: 25px; }
-.slide--dense .mtx__c--label { font-size: 26px; }
-.slide--dense .mtx__c--head { min-height: 96px; font-size: 26px; }
-.slide--dense .mk { font-size: 32px; }
-.slide--dense .mtxlegend { margin-top: 26px; }
+.slide--dense .s-head { margin-bottom: 26px; }
+.slide--dense .mtx__c { min-height: 50px; padding: 9px 22px; font-size: 24px; }
+.slide--dense .mtx__c--label { font-size: 25px; }
+.slide--dense .mtx__c--head { min-height: 80px; font-size: 25px; }
+.slide--dense .mk { font-size: 28px; }
+.slide--dense .mk--dbl { font-size: 34px; }
+.slide--dense .mk--t { font-size: 26px; }
+.slide--dense .mk--n { font-size: 24px; }
+.slide--dense .mk--mix { font-size: 24px; }
+.slide--dense .mtxlegend { margin-top: 18px; }
+.slide--dense .note { font-size: 24px; }
 
-/* 16 EARLY MEMBER の詰め */
-#s16 .col__d { margin-bottom: 10px; }
-#s16 .em2 { gap: 80px; }
-#s16 .s-head { margin-bottom: 46px; }
-#s16 .col__h { font-size: 34px; }
-#s16 .col__d { font-size: 26px; line-height: 1.6; }
-#s16 .ul li { font-size: 27px; }
+#s12 .s-body { justify-content: flex-start; }
+#s12 .s-head { margin-bottom: 16px; }
+#s12 .p-title { font-size: 42px; line-height: 1.28; }
+#s12 .p-lead { font-size: 25px; line-height: 1.45; margin-top: 8px; }
+#s12 .mtx__c { min-height: 36px; padding: 5px 20px; }
+#s12 .mtx__c--head { min-height: 58px; }
+#s12 .mtxlegend { margin-top: 8px; }
+#s12 .note { margin-top: 4px !important; }
 
 /* navy 面での補足テキストの可読性 */
 .slide--navy .phase__ul li,
@@ -501,14 +561,8 @@ html.js-anim .slide.is-in .draw { stroke-dashoffset: 0; }
 .slide--navy .why__d,
 .slide--navy .mtx__c { color: rgba(255, 255, 255, 0.72); }
 .slide--navy .col__cap { color: var(--blue-2); }
-#s09 .feed__row { padding: 22px 34px; }
-#s09 .feed { gap: 18px; }
-#s16 .s-head { margin-bottom: 40px; }
-#s16 .ul { gap: 15px; }
 #s09 .feed__row { padding: 20px 34px; }
 #s09 .feed { gap: 16px; }
-#s16 .col__d { margin-bottom: 6px; }
-#s16 .col { gap: 16px; }
 
 /* ============================================================
    日本語組版

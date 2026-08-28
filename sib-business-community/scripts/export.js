@@ -58,7 +58,7 @@ const doPdf = (has('--pdf') || (!has('--png') && only === null));
 
   const count = await page.$$eval('.slide', (els) => els.length);
   console.log(`スライド数: ${count}`);
-  if (count !== 19) console.warn(`⚠ スライド数が19ではありません (${count})`);
+  if (count !== 20) console.warn(`⚠ スライド数が20ではありません (${count})`);
 
   // ---------- PNG ----------
   if (doPng) {
