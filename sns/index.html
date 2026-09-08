@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0b2c7a" />
+<title>SIB SNS投稿管理ツール</title>
+<meta name="description" content="SIB（Shonan Innovation Base）のSNS投稿を一元管理するための社内ツール。投稿の管理、バズった投稿の型の参考、投稿タイミングの目安、フィード画像の作成ができます。" />
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="logo">SIB <small>SNS投稿管理ツール</small></div>
+    <div class="update">社内利用ツール</div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="manage">投稿管理</button>
+    <button class="tab" data-tab="reference">バズ投稿の参考</button>
+    <button class="tab" data-tab="timing">投稿タイミング</button>
+    <button class="tab" data-tab="image">フィード画像作成</button>
+  </nav>
+
+  <!-- 投稿管理 -->
+  <main id="panel-manage" class="panel">
+    <section class="card">
+      <h2>新しい投稿を登録</h2>
+      <form id="postForm">
+        <input type="hidden" id="postId" />
+        <div class="grid2">
+          <label>媒体
+            <select id="f-platform"></select>
+          </label>
+          <label>ステータス
+            <select id="f-status"></select>
+          </label>
+        </div>
+        <label>タイトル（社内メモ用）
+          <input type="text" id="f-title" placeholder="例：夏イベント告知1回目" required />
+        </label>
+        <label>キャプション本文
+          <textarea id="f-caption" rows="4" placeholder="投稿する文章を入力"></textarea>
+        </label>
+        <label>ハッシュタグ
+          <input type="text" id="f-hashtags" placeholder="#SIB #湘南 #学生団体" />
+        </label>
+        <label>画像・動画の内容メモ
+          <input type="text" id="f-image" placeholder="例：登壇者3名の集合写真＋イベントロゴ" />
+        </label>
+        <div class="grid2">
+          <label>投稿予定日
+            <input type="date" id="f-date" />
+          </label>
+          <label>投稿予定時刻
+            <input type="time" id="f-time" />
+          </label>
+        </div>
+        <div class="formActions">
+          <button type="submit" class="solid" id="submitBtn">投稿を追加</button>
+          <button type="button" class="outline hidden" id="cancelEdit">編集をやめる</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="listHead">
+        <h2>投稿一覧</h2>
+        <div class="filters">
+          <select id="filterPlatform"><option value="">すべての媒体</option></select>
+          <select id="filterStatus"><option value="">すべてのステータス</option></select>
+        </div>
+      </div>
+      <div id="postList" class="postList"></div>
+      <p class="emptyNote hidden" id="emptyNote">まだ投稿が登録されていません。上のフォームから追加してください。</p>
+    </section>
+  </main>
+
+  <!-- バズ投稿の参考 -->
+  <main id="panel-reference" class="panel hidden">
+    <section class="card">
+      <h2>バズりやすい投稿の型</h2>
+      <p class="lead">学生団体・地域連携という SIB の文脈に合わせて、伸びやすい投稿の型と理由をまとめています。そのまま使えるキャプションの型付きです。</p>
+      <div id="referenceList" class="refList"></div>
+    </section>
+  </main>
+
+  <!-- 投稿タイミング -->
+  <main id="panel-timing" class="panel hidden">
+    <section class="card">
+      <h2>投稿タイミングの目安</h2>
+      <p class="lead">一般的に言われている傾向の目安です。最終的には自社アカウントのインサイト（実測データ）を優先して調整してください。</p>
+      <div id="timingList" class="timingList"></div>
+    </section>
+  </main>
+
+  <!-- フィード画像作成 -->
+  <main id="panel-image" class="panel hidden">
+    <section class="card">
+      <h2>投稿フィード画像ジェネレーター</h2>
+      <p class="lead">テンプレートを選び、テキストを入力すると正方形（1080×1080）の投稿画像プレビューを作成できます。そのままPNG形式でダウンロードできます。</p>
+      <div class="imageGenerator">
+        <div class="genControls">
+          <label>テンプレート
+            <select id="tplSelect"></select>
+          </label>
+          <label>見出し（大きく表示）
+            <input type="text" id="tplHeadline" placeholder="例：累計500人達成" />
+          </label>
+          <label>サブテキスト
+            <input type="text" id="tplSub" placeholder="例：学生と企業をつなぐ活動を継続中" />
+          </label>
+          <label>小さなラベル（左上に表示）
+            <input type="text" id="tplLabel" placeholder="例：SIB 活動実績" />
+          </label>
+          <button type="button" class="solid" id="downloadBtn">PNGでダウンロード</button>
+        </div>
+        <div class="genPreview">
+          <canvas id="feedCanvas" width="1080" height="1080"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footNote">このツールのデータはお使いのブラウザ内にのみ保存されます（他の端末とは同期されません）。</footer>
+</div>
+
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
