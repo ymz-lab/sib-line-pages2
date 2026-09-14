@@ -3,7 +3,16 @@ import type { MetadataRoute } from "next";
 const siteUrl = "https://www.base-ai.co.jp";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/news", "/contact"];
+  const routes = [
+    "",
+    "/company",
+    "/services",
+    "/events",
+    "/partners",
+    "/philosophy",
+    "/news",
+    "/contact",
+  ];
 
   return routes.map((route) => ({
     url: `${siteUrl}${route}`,

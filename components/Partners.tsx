@@ -1,52 +1,96 @@
+import Link from "next/link";
 import { partners } from "@/data/partners";
 import Reveal from "./Reveal";
 
-const typeLabel: Record<string, string> = {
-  partner: "提携先",
-  collaboration: "連携・協力実績",
-  support: "後援・協賛",
+const typeLabel: Record<string, { en: string; ja: string }> = {
+  partner: { en: "Partner", ja: "正式提携" },
+  collaboration: { en: "Collaboration", ja: "連携・協力" },
+  support: { en: "Support", ja: "後援・協賛" },
 };
 
-export default function Partners() {
+function PartnerLogo({ name }: { name: string }) {
+  return (
+    <div className="flex h-24 items-center justify-center rounded-lg border border-primary/10 bg-bg-soft px-4">
+      <span className="text-center text-sm font-medium text-primary/70">{name}</span>
+    </div>
+  );
+}
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="mt-16 rounded-2xl border border-dashed border-primary/20 bg-bg-soft px-8 py-20 text-center">
+      <p className="text-base text-primary/60">{message}</p>
+    </div>
+  );
+}
+
+type PartnersProps = {
+  variant?: "summary" | "full";
+};
+
+export default function Partners({ variant = "full" }: PartnersProps) {
+  if (variant === "summary") {
+    const sample = partners.slice(0, 8);
+
+    return (
+      <section className="bg-white py-24 md:py-32">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <Reveal>
+              <p className="eyebrow mb-4">Partners</p>
+              <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">
+                地域とともに、
+                <br />
+                新しい機会をつくる。
+              </h2>
+            </Reveal>
+            <Link href="/partners" className="text-sm font-semibold text-blue hover:underline">
+              提携・連携について →
+            </Link>
+          </div>
+
+          {sample.length === 0 ? (
+            <EmptyState message="提携先・連携実績は確定次第、掲載いたします。" />
+          ) : (
+            <Reveal delay={0.1}>
+              <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+                {sample.map((p) => (
+                  <PartnerLogo key={p.id} name={p.name} />
+                ))}
+              </div>
+            </Reveal>
+          )}
+        </div>
+      </section>
+    );
+  }
+
   const grouped = partners.reduce<Record<string, typeof partners>>((acc, p) => {
     (acc[p.type] ||= []).push(p);
     return acc;
   }, {});
 
   return (
-    <section id="partners" className="scroll-mt-20 bg-white py-24 md:py-32">
+    <section className="bg-white py-20 md:py-28">
       <div className="container-page">
-        <Reveal>
-          <p className="eyebrow mb-4">Partners</p>
-          <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">
-            地域とともに、
-            <br />
-            新しい機会をつくる。
-          </h2>
-        </Reveal>
-
         {partners.length === 0 ? (
-          <Reveal delay={0.1}>
-            <div className="mt-16 rounded-2xl border border-dashed border-primary/20 bg-bg-soft px-8 py-20 text-center">
-              <p className="text-base text-primary/60">提携先・連携実績は確定次第、掲載いたします。</p>
-            </div>
-          </Reveal>
+          <EmptyState message="提携先・連携実績は確定次第、掲載いたします。" />
         ) : (
-          <div className="mt-16 space-y-14">
-            {Object.entries(grouped).map(([type, list]) => (
-              <div key={type}>
-                <p className="text-sm font-semibold text-primary/50">{typeLabel[type] ?? type}</p>
-                <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-                  {list.map((p) => (
-                    <div
-                      key={p.id}
-                      className="flex h-24 items-center justify-center rounded-lg border border-primary/10 bg-bg-soft px-4"
-                    >
-                      <span className="text-center text-sm font-medium text-primary/70">{p.name}</span>
-                    </div>
-                  ))}
+          <div className="space-y-16">
+            {Object.entries(grouped).map(([type, list], gi) => (
+              <Reveal key={type} delay={0.05 * gi}>
+                <div>
+                  <p className="text-sm font-semibold text-primary/50">
+                    {typeLabel[type]?.en ?? type}
+                    <span className="ml-2 text-primary/40">／ {typeLabel[type]?.ja ?? ""}</span>
+                  </p>
+                  <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+                    {list.map((p) => (
+                      <PartnerLogo key={p.id} name={p.name} />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         )}

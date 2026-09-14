@@ -1,15 +1,10 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import MissionVisionValue from "@/components/MissionVisionValue";
 import Business from "@/components/Business";
-import BusinessCycle from "@/components/BusinessCycle";
+import MissionVisionValue from "@/components/MissionVisionValue";
 import Events from "@/components/Events";
 import Partners from "@/components/Partners";
-import WhyBaseAI from "@/components/WhyBaseAI";
-import Community from "@/components/Community";
-import PlatformConcept from "@/components/PlatformConcept";
 import News from "@/components/News";
-import Company from "@/components/Company";
 import ContactCTA from "@/components/ContactCTA";
 
 export default function Home() {
@@ -17,16 +12,11 @@ export default function Home() {
     <>
       <Hero />
       <About />
-      <MissionVisionValue />
-      <Business />
-      <BusinessCycle />
-      <Events />
-      <Partners />
-      <WhyBaseAI />
-      <Community />
-      <PlatformConcept />
+      <Business variant="summary" />
+      <MissionVisionValue variant="summary" />
+      <Events variant="summary" />
+      <Partners variant="summary" />
       <News />
-      <Company />
       <ContactCTA />
     </>
   );

@@ -19,15 +19,10 @@ const rows: [string, React.ReactNode][] = [
 
 export default function Company() {
   return (
-    <section id="company" className="scroll-mt-20 bg-white py-24 md:py-32">
+    <section className="bg-white pb-20 pt-4 md:pb-28">
       <div className="container-page">
         <Reveal>
-          <p className="eyebrow mb-4">Company</p>
-          <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">会社概要</h2>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <div className="mt-14 overflow-hidden rounded-xl border border-primary/10">
+          <div className="overflow-hidden rounded-xl border border-primary/10">
             <table className="w-full border-collapse text-left">
               <tbody>
                 {rows.map(([label, value]) => (

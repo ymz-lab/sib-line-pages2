@@ -1,12 +1,13 @@
 import Link from "next/link";
 
 const links = [
-  { label: "ABOUT", href: "/#about" },
-  { label: "MISSION", href: "/#mission" },
-  { label: "BUSINESS", href: "/#business" },
-  { label: "EVENTS", href: "/#events" },
-  { label: "PARTNERS", href: "/#partners" },
-  { label: "COMPANY", href: "/#company" },
+  { label: "ABOUT", href: "/" },
+  { label: "COMPANY", href: "/company" },
+  { label: "SERVICES", href: "/services" },
+  { label: "EVENTS", href: "/events" },
+  { label: "PARTNERS", href: "/partners" },
+  { label: "PHILOSOPHY", href: "/philosophy" },
+  { label: "NEWS", href: "/news" },
   { label: "CONTACT", href: "/contact" },
 ];
 
