@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { services } from "@/data/services";
-import Reveal from "./Reveal";
+import { FadeUp, StaggerGroup, StaggerItem } from "./motion";
 
 type BusinessProps = {
   variant?: "summary" | "full";
@@ -10,45 +10,44 @@ export default function Business({ variant = "full" }: BusinessProps) {
   const isSummary = variant === "summary";
 
   return (
-    <section className={`py-24 md:py-32 ${isSummary ? "bg-white" : "bg-bg-soft"}`}>
+    <section className={`py-28 md:py-40 ${isSummary ? "bg-white" : "bg-bg-soft"}`}>
       <div className="container-page">
-        <Reveal>
+        <FadeUp>
           <p className="eyebrow mb-4">{isSummary ? "What We Do" : "Business"}</p>
-          <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">
+          <h2 className="text-3xl font-bold leading-snug text-primary md:text-5xl">
             BaseAIが取り組む3つの事業
           </h2>
-        </Reveal>
+        </FadeUp>
 
         {isSummary ? (
           <>
-            <div className="mt-16 grid gap-8 sm:grid-cols-3">
-              {services.map((service, i) => (
-                <Reveal key={service.id} delay={0.05 * i}>
-                  <div className="border-t border-primary/10 pt-6">
-                    <span className="text-sm font-semibold text-blue">{service.number}</span>
-                    <h3 className="mt-2 text-lg font-bold text-primary">{service.title}</h3>
-                    <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-primary/70">
-                      {service.copy}
-                    </p>
-                  </div>
-                </Reveal>
+            <StaggerGroup className="mt-16 grid gap-10 border-t border-line pt-10 sm:grid-cols-3">
+              {services.map((service) => (
+                <StaggerItem key={service.id}>
+                  <span className="block text-sm font-semibold text-blue">{service.number}</span>
+                  <h3 className="mt-3 text-lg font-bold text-primary">{service.title}</h3>
+                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-primary/70">
+                    {service.copy}
+                  </p>
+                </StaggerItem>
               ))}
-            </div>
-            <Reveal delay={0.15}>
-              <Link
-                href="/services"
-                className="mt-14 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-              >
-                サービスを詳しく見る →
+            </StaggerGroup>
+            <FadeUp delay={0.15}>
+              <Link href="/services" className="arrow-link mt-14">
+                サービスを詳しく見る
+                <span className="arrow" aria-hidden="true">→</span>
               </Link>
-            </Reveal>
+            </FadeUp>
           </>
         ) : (
-          <div className="mt-16 divide-y divide-primary/10 border-t border-primary/10">
+          <div className="mt-16 border-t border-line">
             {services.map((service, i) => (
-              <Reveal key={service.id} delay={0.05 * i}>
-                <div className="grid gap-6 py-12 md:grid-cols-[100px_1fr_1.4fr] md:gap-10">
-                  <span className="text-2xl font-bold text-blue">{service.number}</span>
+              <FadeUp key={service.id} delay={0.05 * i}>
+                <Link
+                  href={`/services/${service.id}`}
+                  className="group grid gap-4 border-b border-line py-12 transition-colors hover:bg-white/60 md:grid-cols-[120px_1fr_1.5fr] md:gap-10 md:py-16"
+                >
+                  <span className="text-3xl font-bold text-blue md:text-4xl">{service.number}</span>
 
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wides text-primary/40">
@@ -64,21 +63,21 @@ export default function Business({ variant = "full" }: BusinessProps) {
                     <p className="text-base leading-loose text-primary/70">{service.description}</p>
                     <ul className="mt-5 space-y-2">
                       {service.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2 text-sm text-primary/60">
-                          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-blue" />
+                        <li key={point} className="flex items-start gap-3 text-sm text-primary/60">
+                          <span className="mt-2.5 h-px w-3 shrink-0 bg-primary/30" />
                           {point}
                         </li>
                       ))}
                     </ul>
-                    <Link
-                      href={`/services/${service.id}`}
-                      className="mt-6 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-                    >
-                      VIEW MORE →
-                    </Link>
+                    <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors group-hover:text-blue">
+                      VIEW MORE
+                      <span className="inline-block transition-transform group-hover:translate-x-1.5" aria-hidden="true">
+                        →
+                      </span>
+                    </span>
                   </div>
-                </div>
-              </Reveal>
+                </Link>
+              </FadeUp>
             ))}
           </div>
         )}

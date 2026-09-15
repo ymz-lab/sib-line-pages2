@@ -37,102 +37,97 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="border-b border-bg-mist bg-white/95 backdrop-blur">
-        <div className="container-page flex h-16 items-center justify-between md:h-20">
-          <Link href="/" className="flex items-center gap-2">
-            <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
-              <rect width="64" height="64" rx="12" fill="#071745" />
-              <circle cx="20" cy="24" r="6" fill="#3B7DD8" />
-              <circle cx="44" cy="24" r="6" fill="#3B7DD8" />
-              <circle cx="32" cy="44" r="6" fill="#F7F9FC" />
-              <line x1="20" y1="24" x2="44" y2="24" stroke="#EEF3F8" strokeWidth="2" />
-              <line x1="20" y1="24" x2="32" y2="44" stroke="#EEF3F8" strokeWidth="2" />
-              <line x1="44" y1="24" x2="32" y2="44" stroke="#EEF3F8" strokeWidth="2" />
-            </svg>
-            <span className="text-lg font-bold tracking-tight text-primary">BaseAI</span>
-          </Link>
+      <div className="border-b border-line bg-white/95 backdrop-blur-sm">
+      <div className="container-page flex h-[70px] items-center justify-between md:h-20">
+        <Link href="/" className="flex items-center gap-2.5">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="1" y="1" width="22" height="22" fill="none" stroke="#0A1330" strokeWidth="1.4" />
+            <line x1="1" y1="14" x2="23" y2="14" stroke="#0A1330" strokeWidth="1.4" />
+          </svg>
+          <span className="text-base font-bold tracking-tight text-primary">BaseAI</span>
+        </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            {navItems.map((item) => {
-              const active = isActive(pathname, item.href);
+        <nav className="hidden items-center gap-9 md:flex">
+          {navItems.map((item) => {
+            const active = isActive(pathname, item.href);
 
-              if (item.href === "/services") {
-                return (
-                  <div key={item.href} className="group relative -mb-2 pb-2">
-                    <Link
-                      href={item.href}
-                      aria-current={active ? "page" : undefined}
-                      className={`flex items-center gap-1 py-2 text-sm font-medium tracking-wide transition-colors hover:text-blue ${
-                        active ? "text-blue" : "text-primary/80"
-                      }`}
-                    >
-                      {item.label}
-                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-                        <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                      </svg>
-                    </Link>
+            if (item.href === "/services") {
+              return (
+                <div key={item.href} className="group relative -mb-2 pb-2">
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex items-center gap-1 py-2 text-[13px] font-medium tracking-wide transition-colors hover:text-blue ${
+                      active ? "text-blue" : "text-primary/75"
+                    }`}
+                  >
+                    {item.label}
+                    <svg width="9" height="5" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                      <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    </svg>
+                  </Link>
 
-                    <div className="pointer-events-none absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
-                      <div className="overflow-hidden rounded-xl border border-primary/10 bg-white py-2 shadow-lg">
-                        {services.map((service) => (
-                          <Link
-                            key={service.id}
-                            href={`/services/${service.id}`}
-                            className="block px-5 py-3 text-sm font-medium text-primary/80 transition-colors hover:bg-bg-soft hover:text-blue"
-                          >
-                            {service.title}
-                          </Link>
-                        ))}
-                      </div>
+                  <div className="pointer-events-none absolute left-1/2 top-full w-60 -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                    <div className="border border-line bg-white py-1.5">
+                      {services.map((service) => (
+                        <Link
+                          key={service.id}
+                          href={`/services/${service.id}`}
+                          className="block px-5 py-3 text-[13px] font-medium text-primary/75 transition-colors hover:bg-bg-soft hover:text-blue"
+                        >
+                          {service.title}
+                        </Link>
+                      ))}
                     </div>
                   </div>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`text-sm font-medium tracking-wide transition-colors hover:text-blue ${
-                    active ? "text-blue" : "text-primary/80"
-                  }`}
-                >
-                  {item.label}
-                </Link>
+                </div>
               );
-            })}
-          </nav>
+            }
 
-          <div className="hidden md:block">
-            <Link
-              href="/contact"
-              className="inline-flex items-center rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue"
-            >
-              CONTACT
-            </Link>
-          </div>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`text-[13px] font-medium tracking-wide transition-colors hover:text-blue ${
+                  active ? "text-blue" : "text-primary/75"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-          <button
-            type="button"
-            aria-label={open ? "メニューを閉じる" : "メニューを開く"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
+        <div className="hidden md:block">
+          <Link
+            href="/contact"
+            className="border border-primary px-5 py-2 text-[13px] font-semibold text-primary transition-colors hover:border-blue hover:text-blue"
           >
-            <span
-              className={`block h-0.5 w-6 bg-primary transition-transform ${open ? "translate-y-2 rotate-45" : ""}`}
-            />
-            <span className={`block h-0.5 w-6 bg-primary transition-opacity ${open ? "opacity-0" : ""}`} />
-            <span
-              className={`block h-0.5 w-6 bg-primary transition-transform ${open ? "-translate-y-2 -rotate-45" : ""}`}
-            />
-          </button>
+            CONTACT
+          </Link>
         </div>
+
+        <button
+          type="button"
+          aria-label={open ? "メニューを閉じる" : "メニューを開く"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
+        >
+          <span
+            className={`block h-px w-6 bg-primary transition-transform ${open ? "translate-y-[7px] rotate-45" : ""}`}
+          />
+          <span className={`block h-px w-6 bg-primary transition-opacity ${open ? "opacity-0" : ""}`} />
+          <span
+            className={`block h-px w-6 bg-primary transition-transform ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
+          />
+        </button>
+      </div>
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white md:hidden">
+        <div className="fixed inset-x-0 top-[70px] bottom-0 z-40 overflow-y-auto bg-white md:hidden">
           <nav className="container-page flex flex-col gap-6 py-10">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
@@ -170,7 +165,7 @@ export default function Header() {
                     </div>
 
                     {mobileServicesOpen && (
-                      <div className="mt-4 flex flex-col gap-4 border-l border-primary/10 pl-4">
+                      <div className="mt-4 flex flex-col gap-4 border-l border-line pl-4">
                         {services.map((service) => (
                           <Link
                             key={service.id}
@@ -202,7 +197,7 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-base font-semibold text-white"
+              className="mt-4 inline-flex w-full items-center justify-center border border-primary px-6 py-3 text-base font-semibold text-primary"
             >
               CONTACT
             </Link>

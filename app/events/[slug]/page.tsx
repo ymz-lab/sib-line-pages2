@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
-import Reveal from "@/components/Reveal";
+import { FadeUp } from "@/components/motion";
+import PhotoPlaceholder from "@/components/PhotoPlaceholder";
 import { events } from "@/data/events";
 
 type Props = {
@@ -34,11 +35,11 @@ export default function EventDetailPage({ params }: Props) {
     <>
       <PageHero eyebrow={event.category} title={event.title} description={event.summary} />
 
-      <section className="bg-white pb-20 pt-4 md:pb-28">
+      <section className="bg-white pb-24 pt-6 md:pb-32">
         <div className="container-page">
-          <Reveal>
-            <div className="aspect-[16/9] w-full max-w-3xl rounded-xl bg-bg-mist" />
-            <dl className="mt-10 max-w-3xl space-y-4 border-t border-primary/10 pt-8">
+          <FadeUp>
+            <PhotoPlaceholder className="aspect-[16/9] w-full max-w-3xl" />
+            <dl className="mt-10 max-w-3xl space-y-4 border-t border-line pt-8">
               <div className="flex gap-6">
                 <dt className="w-24 shrink-0 text-sm font-semibold text-primary/50">開催日</dt>
                 <dd className="text-sm text-primary">{formatDate(event.date)}</dd>
@@ -52,7 +53,7 @@ export default function EventDetailPage({ params }: Props) {
                 <dd className="text-sm text-primary">{event.category}</dd>
               </div>
             </dl>
-          </Reveal>
+          </FadeUp>
         </div>
       </section>
     </>

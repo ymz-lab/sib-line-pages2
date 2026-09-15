@@ -32,7 +32,7 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="rounded-xl border border-accent-green/30 bg-accent-green/5 p-10 text-center">
+      <div className="border border-accent-green/30 bg-accent-green/5 p-10 text-center">
         <p className="text-lg font-bold text-primary">お問い合わせありがとうございます。</p>
         <p className="mt-3 text-sm leading-relaxed text-primary/70">
           内容を確認のうえ、担当者よりご連絡いたします。今しばらくお待ちください。
@@ -79,7 +79,7 @@ export default function ContactForm() {
         <input
           type="checkbox"
           required
-          className="mt-1 h-4 w-4 shrink-0 rounded border-primary/30 text-blue focus:ring-blue"
+          className="mt-1 h-4 w-4 shrink-0 border-primary/30 text-blue focus:ring-blue"
         />
         <span>個人情報の取り扱いに同意する</span>
       </label>
@@ -93,7 +93,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="inline-flex items-center justify-center rounded-full bg-primary px-10 py-4 text-sm font-semibold text-white transition-colors hover:bg-blue disabled:opacity-60"
+        className="inline-flex items-center justify-center bg-primary px-10 py-4 text-sm font-semibold text-white transition-colors hover:bg-blue disabled:opacity-60"
       >
         {status === "submitting" ? "送信中..." : "問い合わせを送信"}
       </button>
@@ -102,7 +102,7 @@ export default function ContactForm() {
 }
 
 const inputClass =
-  "w-full rounded-lg border border-primary/20 bg-white px-4 py-3 text-sm text-primary outline-none transition-colors focus:border-blue";
+  "w-full border border-primary/25 bg-white px-4 py-3 text-sm text-primary outline-none transition-colors focus:border-blue";
 
 function Field({
   label,

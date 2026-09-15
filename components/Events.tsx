@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { events, type EventItem } from "@/data/events";
-import Reveal from "./Reveal";
+import { FadeUp } from "./motion";
+import PhotoPlaceholder from "./PhotoPlaceholder";
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -9,31 +10,32 @@ function formatDate(dateStr: string) {
 
 function EventCard({ event, delay = 0 }: { event: EventItem; delay?: number }) {
   return (
-    <Reveal delay={delay}>
-      <article className="flex h-full flex-col overflow-hidden rounded-xl border border-primary/10 bg-white">
-        <div className="aspect-[4/3] bg-bg-mist" />
-        <div className="flex flex-1 flex-col p-6">
-          <span className="text-xs font-semibold uppercase tracking-wides text-blue">{event.category}</span>
-          <h3 className="mt-2 text-lg font-bold text-primary">{event.title}</h3>
-          <p className="mt-3 text-sm text-primary/60">
-            {formatDate(event.date)} ／ {event.location}
-          </p>
-          <p className="mt-3 flex-1 text-sm leading-relaxed text-primary/70">{event.summary}</p>
-          <Link
-            href={`/events/${event.id}`}
-            className="mt-4 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-          >
-            詳細を見る →
-          </Link>
+    <FadeUp delay={delay}>
+      <Link href={`/events/${event.id}`} className="group block">
+        <div className="overflow-hidden">
+          <div className="aspect-[4/3] transition-transform duration-500 ease-out group-hover:scale-[1.03]">
+            <PhotoPlaceholder className="h-full w-full" />
+          </div>
         </div>
-      </article>
-    </Reveal>
+        <div className="mt-5">
+          <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wides text-primary/45">
+            <span>{formatDate(event.date)}</span>
+            <span className="text-primary/20">/</span>
+            <span>{event.category}</span>
+          </div>
+          <h3 className="mt-2 text-lg font-bold text-primary transition-colors group-hover:text-blue">
+            {event.title}
+          </h3>
+          <p className="mt-1 text-sm text-primary/60">{event.location}</p>
+        </div>
+      </Link>
+    </FadeUp>
   );
 }
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="mt-16 rounded-2xl border border-dashed border-primary/20 bg-white px-8 py-20 text-center">
+    <div className="mt-16 border border-line px-8 py-20 text-center">
       <p className="text-base text-primary/60">{message}</p>
     </div>
   );
@@ -50,24 +52,25 @@ export default function Events({ variant = "full" }: EventsProps) {
       .slice(0, 3);
 
     return (
-      <section className="bg-bg-soft py-24 md:py-32">
+      <section className="bg-white py-28 md:py-40">
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <Reveal>
+            <FadeUp>
               <p className="eyebrow mb-4">Events</p>
-              <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">
+              <h2 className="text-3xl font-bold leading-snug text-primary md:text-5xl">
                 人と企業が出会う場所をつくる。
               </h2>
-            </Reveal>
-            <Link href="/events" className="text-sm font-semibold text-blue hover:underline">
-              イベント一覧を見る →
+            </FadeUp>
+            <Link href="/events" className="arrow-link">
+              イベント一覧を見る
+              <span className="arrow" aria-hidden="true">→</span>
             </Link>
           </div>
 
           {latest.length === 0 ? (
             <EmptyState message="イベント情報は順次公開予定です。" />
           ) : (
-            <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {latest.map((event, i) => (
                 <EventCard key={event.id} event={event} delay={0.05 * i} />
               ))}
@@ -87,17 +90,17 @@ export default function Events({ variant = "full" }: EventsProps) {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <section className="bg-bg-soft py-20 md:py-28">
+    <section className="bg-white py-20 md:py-28">
       <div className="container-page">
-        <Reveal>
+        <FadeUp>
           <p className="eyebrow mb-4">Upcoming</p>
           <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">開催予定イベント</h2>
-        </Reveal>
+        </FadeUp>
 
         {upcoming.length === 0 ? (
           <EmptyState message="現在公開中のイベントはありません。イベント情報は順次公開予定です。" />
         ) : (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {upcoming.map((event, i) => (
               <EventCard key={event.id} event={event} delay={0.05 * i} />
             ))}
@@ -105,12 +108,12 @@ export default function Events({ variant = "full" }: EventsProps) {
         )}
 
         {past.length > 0 && (
-          <div className="mt-24 border-t border-primary/10 pt-16">
-            <Reveal>
+          <div className="mt-24 border-t border-line pt-16">
+            <FadeUp>
               <p className="eyebrow mb-4">Past Events</p>
               <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">過去イベント</h2>
-            </Reveal>
-            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            </FadeUp>
+            <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {past.map((event, i) => (
                 <EventCard key={event.id} event={event} delay={0.05 * i} />
               ))}

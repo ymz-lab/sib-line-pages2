@@ -19,11 +19,11 @@ export default function CompanyPage() {
     <>
       <PageHero eyebrow="Company" title="会社概要" description="株式会社BaseAIについて。" />
 
-      <section className="bg-white pb-20 pt-4 md:pb-28">
+      <section className="bg-white pb-24 pt-6 md:pb-32">
         <div className="container-page grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
           <Reveal>
             <p className="eyebrow mb-4">About Company</p>
-            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">BaseAIについて</h2>
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-4xl">BaseAIについて</h2>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -43,15 +43,15 @@ export default function CompanyPage() {
 
       <MissionVisionValue variant="full" />
 
-      <section className="bg-bg-soft py-20 md:py-28">
+      <section className="bg-bg-soft py-24 md:py-32">
         <div className="container-page">
           <Reveal>
             <p className="eyebrow mb-4">Team</p>
-            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">代表・チーム</h2>
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-4xl">代表・チーム</h2>
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="mt-12 rounded-2xl border border-dashed border-primary/20 bg-white px-8 py-16 text-center">
+            <div className="mt-12 border border-dashed border-primary/25 bg-white px-8 py-16 text-center">
               <p className="text-base text-primary/60">
                 代表・チームの紹介は準備中です。確定次第、掲載いたします。
               </p>
@@ -64,11 +64,11 @@ export default function CompanyPage() {
 
       <WhyBaseAI variant="full" />
 
-      <section className="bg-white pb-4 pt-20 md:pt-28">
+      <section className="bg-white pb-6 pt-24 md:pt-32">
         <div className="container-page">
           <Reveal>
             <p className="eyebrow mb-4">Partners</p>
-            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-4xl">
               PARTNERS / COLLABORATION
             </h2>
           </Reveal>

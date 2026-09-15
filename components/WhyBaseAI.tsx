@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Reveal from "./Reveal";
+import { FadeUp, StaggerGroup, StaggerItem } from "./motion";
 
 const points = [
   { number: "01", title: "地域との近い接点", body: "神奈川・藤沢を拠点に、地域の経営者・企業と近い距離で関わっています。" },
@@ -16,45 +16,41 @@ type WhyBaseAIProps = {
 export default function WhyBaseAI({ variant = "full" }: WhyBaseAIProps) {
   if (variant === "summary") {
     return (
-      <section className="bg-bg-soft py-24 md:py-32">
+      <section className="bg-bg-soft py-28 md:py-40">
         <div className="container-page">
-          <Reveal>
+          <FadeUp>
             <p className="eyebrow mb-4">Why BaseAI</p>
-            <h2 className="max-w-2xl text-2xl font-bold leading-[1.5] text-primary md:text-3xl">
+            <h2 className="max-w-2xl text-2xl font-bold leading-[1.5] text-primary md:text-4xl">
               大規模な専門会社ではなく、地域の関係性を起点に、小さく実行へ進める伴走役。
             </h2>
-          </Reveal>
+          </FadeUp>
 
-          <Reveal delay={0.1}>
-            <div className="mt-12 flex flex-wrap gap-3">
-              {points.map((p) => (
-                <span
-                  key={p.number}
-                  className="rounded-full border border-primary/15 bg-white px-4 py-2 text-sm font-medium text-primary/80"
-                >
-                  {p.title}
-                </span>
-              ))}
-            </div>
-          </Reveal>
+          <StaggerGroup className="mt-14 divide-y divide-line border-t border-line">
+            {points.map((p) => (
+              <StaggerItem key={p.number}>
+                <div className="flex items-baseline gap-6 py-4">
+                  <span className="w-8 shrink-0 text-sm font-semibold text-blue">{p.number}</span>
+                  <span className="text-base font-medium text-primary">{p.title}</span>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
 
-          <Reveal delay={0.15}>
-            <Link
-              href="/company"
-              className="mt-12 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-            >
-              会社について詳しく見る →
+          <FadeUp delay={0.15}>
+            <Link href="/company" className="arrow-link mt-12">
+              会社について詳しく見る
+              <span className="arrow" aria-hidden="true">→</span>
             </Link>
-          </Reveal>
+          </FadeUp>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="bg-bg-soft py-24 md:py-32">
+    <section className="bg-bg-soft py-28 md:py-40">
       <div className="container-page grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
-        <Reveal>
+        <FadeUp>
           <p className="eyebrow mb-4">Why BaseAI</p>
           <h2 className="text-3xl font-bold leading-[1.5] text-primary md:text-4xl md:leading-[1.5]">
             大規模な専門会社ではなく、
@@ -66,19 +62,19 @@ export default function WhyBaseAI({ variant = "full" }: WhyBaseAIProps) {
             専門領域によっては、専門特化した企業の方が適している場合もあります。
             その前提のうえで、私たちにできることをお伝えします。
           </p>
-        </Reveal>
+        </FadeUp>
 
         <div className="space-y-10">
           {points.map((p, i) => (
-            <Reveal key={p.number} delay={0.05 * i}>
-              <div className="flex gap-6 border-t border-primary/10 pt-6">
-                <span className="text-lg font-bold text-blue">{p.number}</span>
+            <FadeUp key={p.number} delay={0.05 * i}>
+              <div className="flex gap-6 border-t border-line pt-6">
+                <span className="text-2xl font-bold text-blue">{p.number}</span>
                 <div>
                   <h3 className="text-lg font-bold text-primary">{p.title}</h3>
                   <p className="mt-2 text-base leading-relaxed text-primary/70">{p.body}</p>
                 </div>
               </div>
-            </Reveal>
+            </FadeUp>
           ))}
         </div>
       </div>

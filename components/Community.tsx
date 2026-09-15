@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Reveal from "./Reveal";
+import { FadeUp } from "./motion";
 
 const flow = ["ヒアリング", "課題整理", "接点設計", "個別紹介", "フォロー"];
 
@@ -15,56 +15,50 @@ const activities = [
 
 export default function Community() {
   return (
-    <section className="bg-white py-24 md:py-32">
+    <section className="bg-white py-28 md:py-40">
       <div className="container-page">
-        <Reveal>
+        <FadeUp>
           <p className="eyebrow mb-4">Community</p>
-          <h2 className="max-w-2xl text-2xl font-bold leading-snug text-primary md:text-3xl">
+          <h2 className="max-w-2xl text-2xl font-bold leading-snug text-primary md:text-4xl">
             人脈を探す場所ではなく、
             <br />
             必要な接点が生まれる場所。
           </h2>
-        </Reveal>
+        </FadeUp>
 
         <div className="mt-16 grid gap-16 md:grid-cols-2">
-          <Reveal delay={0.05}>
+          <FadeUp delay={0.05}>
             <div>
               <p className="text-sm font-semibold text-primary/50">Flow</p>
               <ol className="mt-6 space-y-5">
                 {flow.map((step, i) => (
-                  <li key={step} className="flex items-center gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-primary/20 text-sm font-semibold text-primary">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                  <li key={step} className="flex items-center gap-4 border-t border-line pt-5 first:border-t-0 first:pt-0">
+                    <span className="text-sm font-semibold text-blue">{String(i + 1).padStart(2, "0")}</span>
                     <span className="text-base font-medium text-primary">{step}</span>
                   </li>
                 ))}
               </ol>
             </div>
-          </Reveal>
+          </FadeUp>
 
-          <Reveal delay={0.1}>
+          <FadeUp delay={0.1}>
             <div>
               <p className="text-sm font-semibold text-primary/50">Activities</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                {activities.map((a) => (
-                  <span
-                    key={a}
-                    className="rounded-full border border-primary/15 px-4 py-2 text-sm text-primary/70"
-                  >
+              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+                {activities.map((a, i) => (
+                  <span key={a} className="text-sm text-primary/70">
                     {a}
+                    {i < activities.length - 1 && <span className="ml-5 text-primary/20">・</span>}
                   </span>
                 ))}
               </div>
 
-              <Link
-                href="/contact"
-                className="mt-10 inline-flex items-center justify-center rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-blue"
-              >
+              <Link href="/contact" className="arrow-link mt-10">
                 コミュニティについて相談する
+                <span className="arrow" aria-hidden="true">→</span>
               </Link>
             </div>
-          </Reveal>
+          </FadeUp>
         </div>
       </div>
     </section>

@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#071745",
+        primary: "#0A1330",
         secondary: "#0B1B3D",
         blue: {
           DEFAULT: "#1E5BA8",
@@ -20,6 +20,7 @@ const config: Config = {
           soft: "#F7F9FC",
           mist: "#EEF3F8",
         },
+        line: "#E5E8EC",
         accent: {
           orange: "#F06418",
           green: "#08883D",
@@ -40,6 +41,10 @@ const config: Config = {
       },
       letterSpacing: {
         wides: "0.08em",
+      },
+      fontSize: {
+        display: ["3.75rem", { lineHeight: "1.2", letterSpacing: "-0.01em" }],
+        "display-lg": ["5rem", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
       },
     },
   },

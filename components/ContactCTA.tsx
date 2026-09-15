@@ -1,26 +1,36 @@
 import Link from "next/link";
-import Reveal from "./Reveal";
+import { FadeUp, TextReveal } from "./motion";
 
 export default function ContactCTA() {
   return (
-    <section className="bg-bg-mist py-24 md:py-32">
-      <div className="container-page text-center">
-        <Reveal>
-          <p className="eyebrow mb-4">Contact</p>
-          <h2 className="text-3xl font-bold leading-snug text-primary md:text-4xl">
-            まずは、お気軽にご相談ください。
-          </h2>
-          <p className="mx-auto mt-6 max-w-lg text-base leading-loose text-primary/70">
+    <section className="border-t border-line bg-white py-28 md:py-40">
+      <div className="container-page">
+        <FadeUp>
+          <p className="eyebrow mb-6">Contact</p>
+        </FadeUp>
+
+        <Link href="/contact" className="group block">
+          <TextReveal
+            as="h2"
+            lines={["まずは、お気軽に", "ご相談ください。"]}
+            className="text-4xl font-bold leading-[1.2] tracking-tight text-primary transition-colors group-hover:text-blue sm:text-6xl md:text-display"
+          />
+          <FadeUp delay={0.3}>
+            <span className="mt-10 inline-flex items-center gap-3 text-base font-semibold text-primary transition-colors group-hover:text-blue">
+              お問い合わせフォームへ
+              <span className="inline-block transition-transform group-hover:translate-x-2" aria-hidden="true">
+                →
+              </span>
+            </span>
+          </FadeUp>
+        </Link>
+
+        <FadeUp delay={0.15}>
+          <p className="mt-14 max-w-lg text-sm leading-loose text-primary/60">
             経営者コミュニティ、企業向け実行支援、SIB、イベント、協業・提携など、
             内容を問わずお気軽にお問い合わせください。
           </p>
-          <Link
-            href="/contact"
-            className="mt-10 inline-flex items-center justify-center rounded-full bg-primary px-10 py-4 text-sm font-semibold text-white transition-colors hover:bg-blue"
-          >
-            お問い合わせフォームへ
-          </Link>
-        </Reveal>
+        </FadeUp>
       </div>
     </section>
   );

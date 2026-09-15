@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  color: #071745;
+  color: #0a1330;
   background-color: #ffffff;
   overflow-x: hidden;
 }
@@ -38,4 +38,42 @@ body {
   letter-spacing: 0.2em;
   color: #1e5ba8;
   text-transform: uppercase;
+}
+
+/* Text link with an arrow that shifts on hover — used in place of pill buttons */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0a1330;
+  border-bottom: 1px solid #0a1330;
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.arrow-link:hover {
+  color: #1e5ba8;
+  border-color: #1e5ba8;
+}
+
+.arrow-link .arrow {
+  transition: transform 0.25s ease;
+  display: inline-block;
+}
+
+.arrow-link:hover .arrow {
+  transform: translateX(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

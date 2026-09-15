@@ -1,4 +1,4 @@
-import Reveal from "./Reveal";
+import { FadeUp } from "./motion";
 
 const rows: [string, React.ReactNode][] = [
   ["会社名", "株式会社BaseAI"],
@@ -21,12 +21,12 @@ export default function Company() {
   return (
     <section className="bg-white pb-20 pt-4 md:pb-28">
       <div className="container-page">
-        <Reveal>
-          <div className="overflow-hidden rounded-xl border border-primary/10">
+        <FadeUp>
+          <div className="border border-line">
             <table className="w-full border-collapse text-left">
               <tbody>
                 {rows.map(([label, value]) => (
-                  <tr key={label} className="border-b border-primary/10 last:border-b-0">
+                  <tr key={label} className="border-b border-line last:border-b-0">
                     <th className="w-32 shrink-0 whitespace-nowrap bg-bg-soft px-5 py-5 align-top text-sm font-semibold text-primary/60 sm:w-48 sm:px-8">
                       {label}
                     </th>
@@ -38,7 +38,7 @@ export default function Company() {
               </tbody>
             </table>
           </div>
-        </Reveal>
+        </FadeUp>
       </div>
     </section>
   );

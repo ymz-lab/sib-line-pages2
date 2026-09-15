@@ -1,4 +1,4 @@
-import Reveal from "./Reveal";
+import { FadeUp } from "./motion";
 
 const steps = [
   "企業の課題",
@@ -11,25 +11,25 @@ const steps = [
 
 export default function BusinessCycle() {
   return (
-    <section className="bg-white py-24 md:py-32">
+    <section className="bg-white py-28 md:py-40">
       <div className="container-page">
-        <Reveal>
+        <FadeUp>
           <p className="eyebrow mb-4">Business Cycle</p>
-          <h2 className="max-w-2xl text-2xl font-bold leading-snug text-primary md:text-3xl">
+          <h2 className="max-w-2xl text-2xl font-bold leading-snug text-primary md:text-4xl">
             接点 → 実行 → 成長を、
             <br />
             ひとつの循環へ。
           </h2>
-        </Reveal>
+        </FadeUp>
 
-        <Reveal delay={0.1}>
-          <div className="mt-16 rounded-2xl border border-primary/10 bg-bg-soft p-8 md:p-14">
+        <FadeUp delay={0.1}>
+          <div className="mt-16 border border-line bg-bg-soft p-8 md:p-14">
             <div className="grid gap-10 md:grid-cols-[1fr_auto_1fr] md:items-center">
               <div className="flex flex-col items-center gap-3 md:items-end">
                 <span className="text-sm font-semibold text-primary/50">経営者コミュニティ</span>
               </div>
 
-              <div className="flex flex-col items-center gap-2 rounded-full border-2 border-primary bg-white px-10 py-6 text-center">
+              <div className="flex flex-col items-center gap-2 border border-primary bg-white px-10 py-6 text-center">
                 <span className="text-lg font-bold text-primary">BaseAI</span>
               </div>
 
@@ -42,10 +42,10 @@ export default function BusinessCycle() {
               <span className="text-sm font-semibold text-primary/50">企業向け実行支援</span>
             </div>
 
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-4 border-t border-primary/10 pt-10">
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-3 gap-y-4 border-t border-line pt-10">
               {steps.map((step, i) => (
                 <span key={step} className="flex items-center gap-3">
-                  <span className="whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-primary shadow-sm">
+                  <span className="whitespace-nowrap border border-line bg-white px-4 py-2 text-sm font-medium text-primary">
                     {step}
                   </span>
                   {i < steps.length - 1 && (
@@ -57,7 +57,7 @@ export default function BusinessCycle() {
               ))}
             </div>
           </div>
-        </Reveal>
+        </FadeUp>
       </div>
     </section>
   );

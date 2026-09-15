@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
+import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -49,9 +50,11 @@ export default function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable} data-scroll-behavior="smooth">
       <body className="font-sans antialiased text-primary bg-white">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <MotionConfig reducedMotion="user">
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </MotionConfig>
       </body>
     </html>
   );
