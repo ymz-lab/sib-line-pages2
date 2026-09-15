@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang="ja" className={notoSansJP.variable} data-scroll-behavior="smooth">
       <body className="font-sans antialiased text-primary bg-white">
         <Header />
         <main>{children}</main>

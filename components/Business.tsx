@@ -70,6 +70,12 @@ export default function Business({ variant = "full" }: BusinessProps) {
                         </li>
                       ))}
                     </ul>
+                    <Link
+                      href={`/services/${service.id}`}
+                      className="mt-6 inline-flex items-center text-sm font-semibold text-blue hover:underline"
+                    >
+                      VIEW MORE →
+                    </Link>
                   </div>
                 </div>
               </Reveal>

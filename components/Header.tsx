@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { services } from "@/data/services";
 
 const navItems = [
   { label: "ABOUT", href: "/" },
-  { label: "COMPANY", href: "/company" },
   { label: "SERVICES", href: "/services" },
   { label: "EVENTS", href: "/events" },
-  { label: "PARTNERS", href: "/partners" },
-  { label: "PHILOSOPHY", href: "/philosophy" },
+  { label: "COMPANY", href: "/company" },
+  { label: "NEWS", href: "/news" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -20,6 +20,7 @@ function isActive(pathname: string, href: string) {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function Header() {
 
   useEffect(() => {
     setOpen(false);
+    setMobileServicesOpen(false);
   }, [pathname]);
 
   return (
@@ -53,6 +55,40 @@ export default function Header() {
           <nav className="hidden items-center gap-8 md:flex">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
+
+              if (item.href === "/services") {
+                return (
+                  <div key={item.href} className="group relative -mb-2 pb-2">
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={`flex items-center gap-1 py-2 text-sm font-medium tracking-wide transition-colors hover:text-blue ${
+                        active ? "text-blue" : "text-primary/80"
+                      }`}
+                    >
+                      {item.label}
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                        <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                      </svg>
+                    </Link>
+
+                    <div className="pointer-events-none absolute left-1/2 top-full w-64 -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                      <div className="overflow-hidden rounded-xl border border-primary/10 bg-white py-2 shadow-lg">
+                        {services.map((service) => (
+                          <Link
+                            key={service.id}
+                            href={`/services/${service.id}`}
+                            className="block px-5 py-3 text-sm font-medium text-primary/80 transition-colors hover:bg-bg-soft hover:text-blue"
+                          >
+                            {service.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={item.href}
@@ -96,10 +132,61 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 top-16 bottom-0 z-40 bg-white md:hidden">
+        <div className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto bg-white md:hidden">
           <nav className="container-page flex flex-col gap-6 py-10">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
+
+              if (item.href === "/services") {
+                return (
+                  <div key={item.href}>
+                    <div className="flex items-center justify-between">
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`text-xl font-semibold ${active ? "text-blue" : "text-primary"}`}
+                      >
+                        {item.label}
+                      </Link>
+                      <button
+                        type="button"
+                        aria-label={mobileServicesOpen ? "SERVICESを閉じる" : "SERVICESを開く"}
+                        aria-expanded={mobileServicesOpen}
+                        onClick={() => setMobileServicesOpen((v) => !v)}
+                        className="flex h-9 w-9 items-center justify-center text-primary"
+                      >
+                        <svg
+                          width="14"
+                          height="8"
+                          viewBox="0 0 14 8"
+                          fill="none"
+                          aria-hidden="true"
+                          className={`transition-transform ${mobileServicesOpen ? "rotate-180" : ""}`}
+                        >
+                          <path d="M1 1l6 6 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {mobileServicesOpen && (
+                      <div className="mt-4 flex flex-col gap-4 border-l border-primary/10 pl-4">
+                        {services.map((service) => (
+                          <Link
+                            key={service.id}
+                            href={`/services/${service.id}`}
+                            onClick={() => setOpen(false)}
+                            className="text-base font-medium text-primary/70"
+                          >
+                            {service.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={item.href}

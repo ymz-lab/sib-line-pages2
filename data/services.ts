@@ -20,7 +20,7 @@ export const services: Service[] = [
     points: ["経営相談・情報交換", "企業紹介・協業マッチング", "少人数会・テーマ別会の運営"],
   },
   {
-    id: "student-community",
+    id: "sib",
     number: "02",
     title: "学生コミュニティ SIB",
     subtitle: "Student Community",
@@ -30,7 +30,7 @@ export const services: Service[] = [
     points: ["AI・SNS・ビジネスの学習機会", "企業との実践プロジェクト", "経営者との接点づくり"],
   },
   {
-    id: "execution-support",
+    id: "business-support",
     number: "03",
     title: "企業向け実行支援",
     subtitle: "Execution Support",

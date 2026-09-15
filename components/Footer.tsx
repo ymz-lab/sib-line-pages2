@@ -1,14 +1,14 @@
 import Link from "next/link";
+import { services } from "@/data/services";
 
 const links = [
   { label: "ABOUT", href: "/" },
-  { label: "COMPANY", href: "/company" },
   { label: "SERVICES", href: "/services" },
   { label: "EVENTS", href: "/events" },
-  { label: "PARTNERS", href: "/partners" },
-  { label: "PHILOSOPHY", href: "/philosophy" },
+  { label: "COMPANY", href: "/company" },
   { label: "NEWS", href: "/news" },
   { label: "CONTACT", href: "/contact" },
+  { label: "PRIVACY", href: "/privacy" },
 ];
 
 export default function Footer() {
@@ -22,17 +22,31 @@ export default function Footer() {
             <p className="text-sm text-primary/70">神奈川県藤沢市</p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-x-10 gap-y-3 sm:grid-cols-3 md:flex md:flex-wrap md:gap-x-8">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-primary/70 transition-colors hover:text-blue"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex flex-col gap-6 sm:flex-row sm:gap-16">
+            <nav className="grid grid-cols-2 gap-x-10 gap-y-3 sm:grid-cols-1 sm:gap-y-3">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-primary/70 transition-colors hover:text-blue"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            <nav className="flex flex-col gap-3">
+              {services.map((service) => (
+                <Link
+                  key={service.id}
+                  href={`/services/${service.id}`}
+                  className="text-sm text-primary/50 transition-colors hover:text-blue"
+                >
+                  {service.title}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           <div className="flex gap-4">
             <a
@@ -67,11 +81,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col-reverse items-start justify-between gap-4 border-t border-primary/10 pt-6 sm:flex-row sm:items-center">
+        <div className="mt-10 border-t border-primary/10 pt-6">
           <p className="text-xs text-primary/50">&copy; {new Date().getFullYear()} BaseAI Inc.</p>
-          <Link href="/privacy" className="text-xs text-primary/50 hover:text-blue">
-            Privacy Policy
-          </Link>
         </div>
       </div>
     </footer>

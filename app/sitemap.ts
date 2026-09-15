@@ -7,9 +7,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/company",
     "/services",
+    "/services/executive-community",
+    "/services/sib",
+    "/services/business-support",
     "/events",
-    "/partners",
-    "/philosophy",
     "/news",
     "/contact",
   ];

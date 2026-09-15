@@ -19,14 +19,12 @@ function EventCard({ event, delay = 0 }: { event: EventItem; delay?: number }) {
             {formatDate(event.date)} ／ {event.location}
           </p>
           <p className="mt-3 flex-1 text-sm leading-relaxed text-primary/70">{event.summary}</p>
-          {event.detailUrl && (
-            <a
-              href={event.detailUrl}
-              className="mt-4 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-            >
-              詳細を見る →
-            </a>
-          )}
+          <Link
+            href={`/events/${event.id}`}
+            className="mt-4 inline-flex items-center text-sm font-semibold text-blue hover:underline"
+          >
+            詳細を見る →
+          </Link>
         </div>
       </article>
     </Reveal>

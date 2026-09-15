@@ -44,7 +44,7 @@ export default function Partners({ variant = "full" }: PartnersProps) {
                 新しい機会をつくる。
               </h2>
             </Reveal>
-            <Link href="/partners" className="text-sm font-semibold text-blue hover:underline">
+            <Link href="/company" className="text-sm font-semibold text-blue hover:underline">
               提携・連携について →
             </Link>
           </div>

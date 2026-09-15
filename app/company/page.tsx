@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import PageHero from "@/components/PageHero";
-import Company from "@/components/Company";
 import Reveal from "@/components/Reveal";
+import MissionVisionValue from "@/components/MissionVisionValue";
+import Company from "@/components/Company";
+import WhyBaseAI from "@/components/WhyBaseAI";
+import Partners from "@/components/Partners";
+import PlatformConcept from "@/components/PlatformConcept";
 import ContactCTA from "@/components/ContactCTA";
 
 export const metadata: Metadata = {
@@ -11,26 +14,16 @@ export const metadata: Metadata = {
     "株式会社BaseAIの会社概要です。神奈川県藤沢市を拠点に、経営者コミュニティ、学生コミュニティSIB、企業向け実行支援を運営しています。",
 };
 
-const features = [
-  "神奈川・藤沢を拠点に、地域の経営者・企業と近い距離で関わっています。",
-  "技術ありきではなく、企業や地域が抱える課題の理解から着手します。",
-  "納品や紹介で終わらせず、運用や改善まで継続的に伴走します。",
-];
-
 export default function CompanyPage() {
   return (
     <>
       <PageHero eyebrow="Company" title="会社概要" description="株式会社BaseAIについて。" />
 
-      <Company />
-
-      <section className="bg-bg-soft py-20 md:py-28">
+      <section className="bg-white pb-20 pt-4 md:pb-28">
         <div className="container-page grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
           <Reveal>
-            <p className="eyebrow mb-4">About</p>
-            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">
-              BaseAIについて
-            </h2>
+            <p className="eyebrow mb-4">About Company</p>
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">BaseAIについて</h2>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -48,38 +41,42 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      <section className="bg-white py-20 md:py-28">
+      <MissionVisionValue variant="full" />
+
+      <section className="bg-bg-soft py-20 md:py-28">
         <div className="container-page">
           <Reveal>
-            <p className="eyebrow mb-4">Our Approach</p>
-            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">会社の特徴</h2>
+            <p className="eyebrow mb-4">Team</p>
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">代表・チーム</h2>
           </Reveal>
 
-          <div className="mt-12 space-y-8">
-            {features.map((f, i) => (
-              <Reveal key={f} delay={0.05 * i}>
-                <div className="flex gap-6 border-t border-primary/10 pt-6">
-                  <span className="text-lg font-bold text-blue">{String(i + 1).padStart(2, "0")}</span>
-                  <p className="text-base leading-relaxed text-primary/70">{f}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={0.2}>
-            <p className="mt-10 text-sm leading-relaxed text-primary/50">
-              BaseAIは立ち上げ期の会社であり、実績はこれからつくっていく段階です。
-              私たちの考え方や大切にしている価値観については、企業理念ページで詳しくご紹介しています。
-            </p>
-            <Link
-              href="/philosophy"
-              className="mt-4 inline-flex items-center text-sm font-semibold text-blue hover:underline"
-            >
-              企業理念を見る →
-            </Link>
+          <Reveal delay={0.1}>
+            <div className="mt-12 rounded-2xl border border-dashed border-primary/20 bg-white px-8 py-16 text-center">
+              <p className="text-base text-primary/60">
+                代表・チームの紹介は準備中です。確定次第、掲載いたします。
+              </p>
+            </div>
           </Reveal>
         </div>
       </section>
+
+      <Company />
+
+      <WhyBaseAI variant="full" />
+
+      <section className="bg-white pb-4 pt-20 md:pt-28">
+        <div className="container-page">
+          <Reveal>
+            <p className="eyebrow mb-4">Partners</p>
+            <h2 className="text-2xl font-bold leading-snug text-primary md:text-3xl">
+              PARTNERS / COLLABORATION
+            </h2>
+          </Reveal>
+        </div>
+      </section>
+      <Partners variant="full" />
+
+      <PlatformConcept />
 
       <ContactCTA />
     </>

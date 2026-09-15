@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Reveal from "./Reveal";
 
 const points = [
@@ -8,7 +9,48 @@ const points = [
   { number: "05", title: "制作して終わらず、改善まで伴走", body: "納品後も継続的に関わり、運用や改善を一緒に進めます。" },
 ];
 
-export default function WhyBaseAI() {
+type WhyBaseAIProps = {
+  variant?: "summary" | "full";
+};
+
+export default function WhyBaseAI({ variant = "full" }: WhyBaseAIProps) {
+  if (variant === "summary") {
+    return (
+      <section className="bg-bg-soft py-24 md:py-32">
+        <div className="container-page">
+          <Reveal>
+            <p className="eyebrow mb-4">Why BaseAI</p>
+            <h2 className="max-w-2xl text-2xl font-bold leading-[1.5] text-primary md:text-3xl">
+              大規模な専門会社ではなく、地域の関係性を起点に、小さく実行へ進める伴走役。
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div className="mt-12 flex flex-wrap gap-3">
+              {points.map((p) => (
+                <span
+                  key={p.number}
+                  className="rounded-full border border-primary/15 bg-white px-4 py-2 text-sm font-medium text-primary/80"
+                >
+                  {p.title}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <Link
+              href="/company"
+              className="mt-12 inline-flex items-center text-sm font-semibold text-blue hover:underline"
+            >
+              会社について詳しく見る →
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-bg-soft py-24 md:py-32">
       <div className="container-page grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">

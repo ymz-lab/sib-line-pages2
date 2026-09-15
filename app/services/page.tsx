@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import Business from "@/components/Business";
-import Community from "@/components/Community";
 import BusinessCycle from "@/components/BusinessCycle";
-import WhyBaseAI from "@/components/WhyBaseAI";
-import PlatformConcept from "@/components/PlatformConcept";
 import ContactCTA from "@/components/ContactCTA";
 
 export const metadata: Metadata = {
@@ -23,10 +20,7 @@ export default function ServicesPage() {
       />
 
       <Business variant="full" />
-      <Community />
       <BusinessCycle />
-      <WhyBaseAI />
-      <PlatformConcept />
       <ContactCTA />
     </>
   );

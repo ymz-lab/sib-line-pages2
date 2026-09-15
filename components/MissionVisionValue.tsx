@@ -79,7 +79,7 @@ export default function MissionVisionValue({ variant = "full" }: MissionVisionVa
 
           <Reveal delay={0.2}>
             <Link
-              href="/philosophy"
+              href="/company"
               className="mt-14 inline-flex items-center text-sm font-semibold text-blue hover:underline"
             >
               私たちの考え方 →
