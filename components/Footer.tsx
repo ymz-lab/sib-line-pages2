@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { services } from "@/data/services";
+import BaseGraphic from "./BaseGraphic";
 
 const links = [
   { label: "ABOUT", href: "/" },
@@ -13,12 +14,20 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-white">
-      <div className="container-page py-16 md:py-20">
+    <footer className="relative overflow-hidden border-t border-line bg-white">
+      <BaseGraphic className="pointer-events-none absolute -right-6 -top-10 h-28 w-44 text-primary opacity-70 md:h-36 md:w-56" />
+
+      <div className="container-page relative py-16 md:py-20">
         <div className="flex flex-col justify-between gap-12 md:flex-row">
           <div>
-            <span className="text-lg font-bold text-primary">BaseAI</span>
-            <p className="mt-3 text-sm text-primary/60">株式会社BaseAI</p>
+            <Link href="/" className="flex items-center gap-2.5">
+              <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="1" y="1" width="22" height="22" fill="none" stroke="#0A1330" strokeWidth="1.4" />
+                <line x1="1" y1="14" x2="23" y2="14" stroke="#0A1330" strokeWidth="1.4" />
+              </svg>
+              <span className="text-lg font-bold text-primary">BaseAI</span>
+            </Link>
+            <p className="mt-4 text-sm text-primary/60">株式会社BaseAI</p>
             <p className="text-sm text-primary/60">神奈川県藤沢市</p>
           </div>
 
@@ -36,11 +45,14 @@ export default function Footer() {
             </nav>
 
             <nav className="flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-wides text-primary/30">
+                Services
+              </span>
               {services.map((service) => (
                 <Link
                   key={service.id}
                   href={`/services/${service.id}`}
-                  className="text-sm text-primary/40 transition-colors hover:text-blue"
+                  className="text-sm text-primary/50 transition-colors hover:text-blue"
                 >
                   {service.title}
                 </Link>
@@ -73,8 +85,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-line pt-6">
+        <div className="mt-14 flex flex-col-reverse gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-primary/45">&copy; {new Date().getFullYear()} BaseAI Inc.</p>
+          <p className="text-xs uppercase tracking-wides text-primary/25">Base / Connection / Community</p>
         </div>
       </div>
     </footer>

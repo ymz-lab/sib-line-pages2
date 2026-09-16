@@ -9,7 +9,7 @@ function formatDate(dateStr: string) {
 
 export function NewsRow({ item }: { item: NewsItem }) {
   const content = (
-    <div className="group grid grid-cols-1 items-baseline gap-2 py-6 sm:grid-cols-[110px_130px_1fr_auto] sm:items-center sm:gap-6">
+    <div className="group grid grid-cols-1 items-baseline gap-2 px-4 py-6 transition-all duration-300 hover:translate-x-1.5 hover:bg-white sm:grid-cols-[110px_130px_1fr_auto] sm:items-center sm:gap-6 sm:px-6">
       <span className="text-sm text-primary/45">{formatDate(item.date)}</span>
       <span className="text-xs font-semibold uppercase tracking-wides text-blue">{item.category}</span>
       <span className="text-base font-medium text-primary transition-colors group-hover:text-blue">
@@ -25,13 +25,13 @@ export function NewsRow({ item }: { item: NewsItem }) {
 
   if (item.url) {
     return (
-      <Link href={item.url} className="block border-b border-line">
+      <Link href={item.url} className="-mx-4 block border-b border-line sm:-mx-6">
         {content}
       </Link>
     );
   }
 
-  return <div className="border-b border-line">{content}</div>;
+  return <div className="-mx-4 border-b border-line sm:-mx-6">{content}</div>;
 }
 
 export default function News() {

@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { FadeUp, TextReveal } from "./motion";
+import BaseGraphic from "./BaseGraphic";
 
 export default function ContactCTA() {
   return (
-    <section className="border-t border-line bg-white py-28 md:py-40">
-      <div className="container-page">
+    <section className="relative overflow-hidden border-t border-line bg-white py-28 md:py-40">
+      <BaseGraphic className="pointer-events-none absolute -right-8 top-10 hidden h-32 w-52 text-primary opacity-60 md:block" />
+
+      <div className="container-page relative">
         <FadeUp>
           <p className="eyebrow mb-6">Contact</p>
         </FadeUp>
@@ -13,7 +16,7 @@ export default function ContactCTA() {
           <TextReveal
             as="h2"
             lines={["まずは、お気軽に", "ご相談ください。"]}
-            className="text-4xl font-bold leading-[1.2] tracking-tight text-primary transition-colors group-hover:text-blue sm:text-6xl md:text-display"
+            className="text-[clamp(2.5rem,6.5vw,5.5rem)] font-bold leading-[1.15] tracking-tight text-primary transition-colors group-hover:text-blue"
           />
           <FadeUp delay={0.3}>
             <span className="mt-10 inline-flex items-center gap-3 text-base font-semibold text-primary transition-colors group-hover:text-blue">

@@ -21,6 +21,7 @@ function isActive(pathname: string, href: string) {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -35,10 +36,21 @@ export default function Header() {
     setMobileServicesOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50">
       <div className="border-b border-line bg-white/95 backdrop-blur-sm">
-      <div className="container-page flex h-[70px] items-center justify-between md:h-20">
+      <div
+        className={`container-page flex items-center justify-between transition-[height] duration-300 ease-out ${
+          scrolled ? "h-[60px] md:h-16" : "h-[70px] md:h-20"
+        }`}
+      >
         <Link href="/" className="flex items-center gap-2.5">
           <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             <rect x="1" y="1" width="22" height="22" fill="none" stroke="#0A1330" strokeWidth="1.4" />
@@ -127,7 +139,11 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 top-[70px] bottom-0 z-40 overflow-y-auto bg-white md:hidden">
+        <div
+          className={`fixed inset-x-0 bottom-0 z-40 overflow-y-auto bg-white md:hidden ${
+            scrolled ? "top-[60px]" : "top-[70px]"
+          }`}
+        >
           <nav className="container-page flex flex-col gap-6 py-10">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);

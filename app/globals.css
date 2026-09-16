@@ -67,6 +67,24 @@ body {
   transform: translateX(6px);
 }
 
+/* Full-bleed horizontal rule — the BASE/CONNECTION motif that threads
+   through section transitions, independent of the container's max-width. */
+.brand-line {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 1px;
+  background: #e5e8ec;
+}
+
+/* Faint background grid — used sparingly behind large type to suggest an
+   underlying structure without becoming a decorative pattern. */
+.grid-lines {
+  background-image: linear-gradient(to right, #eef3f8 1px, transparent 1px);
+  background-size: 25% 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

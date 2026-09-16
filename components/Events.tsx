@@ -8,14 +8,25 @@ function formatDate(dateStr: string) {
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function EventCard({ event, delay = 0 }: { event: EventItem; delay?: number }) {
+function EventCard({
+  event,
+  delay = 0,
+  featured = false,
+}: {
+  event: EventItem;
+  delay?: number;
+  featured?: boolean;
+}) {
   return (
-    <FadeUp delay={delay}>
-      <Link href={`/events/${event.id}`} className="group block">
+    <FadeUp delay={delay} className={featured ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""}>
+      <Link href={`/events/${event.id}`} className="group block h-full">
         <div className="overflow-hidden">
-          <div className="aspect-[4/3] transition-transform duration-500 ease-out group-hover:scale-[1.03]">
-            <PhotoPlaceholder className="h-full w-full" />
-          </div>
+          <PhotoPlaceholder
+            label="EVENT PHOTO"
+            className={`w-full transition-transform duration-500 ease-out group-hover:scale-[1.03] ${
+              featured ? "aspect-[16/10]" : "aspect-[4/3]"
+            }`}
+          />
         </div>
         <div className="mt-5">
           <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wides text-primary/45">
@@ -23,7 +34,11 @@ function EventCard({ event, delay = 0 }: { event: EventItem; delay?: number }) {
             <span className="text-primary/20">/</span>
             <span>{event.category}</span>
           </div>
-          <h3 className="mt-2 text-lg font-bold text-primary transition-colors group-hover:text-blue">
+          <h3
+            className={`mt-2 font-bold text-primary transition-colors group-hover:text-blue ${
+              featured ? "text-2xl md:text-3xl" : "text-lg"
+            }`}
+          >
             {event.title}
           </h3>
           <p className="mt-1 text-sm text-primary/60">{event.location}</p>
@@ -72,7 +87,7 @@ export default function Events({ variant = "full" }: EventsProps) {
           ) : (
             <div className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
               {latest.map((event, i) => (
-                <EventCard key={event.id} event={event} delay={0.05 * i} />
+                <EventCard key={event.id} event={event} delay={0.05 * i} featured={i === 0} />
               ))}
             </div>
           )}
@@ -102,7 +117,7 @@ export default function Events({ variant = "full" }: EventsProps) {
         ) : (
           <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {upcoming.map((event, i) => (
-              <EventCard key={event.id} event={event} delay={0.05 * i} />
+              <EventCard key={event.id} event={event} delay={0.05 * i} featured={i === 0} />
             ))}
           </div>
         )}

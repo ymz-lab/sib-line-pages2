@@ -49,33 +49,45 @@ export default function WhyBaseAI({ variant = "full" }: WhyBaseAIProps) {
 
   return (
     <section className="bg-bg-soft py-28 md:py-40">
-      <div className="container-page grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
-        <FadeUp>
-          <p className="eyebrow mb-4">Why BaseAI</p>
-          <h2 className="text-3xl font-bold leading-[1.5] text-primary md:text-4xl md:leading-[1.5]">
-            大規模な専門会社ではなく、
-            地域の関係性を起点に、
-            小さく実行へ進める伴走役。
-          </h2>
-          <p className="mt-8 text-sm leading-loose text-primary/60">
-            BaseAIは立ち上げ期の会社であり、実績はこれからつくっていく段階です。
-            専門領域によっては、専門特化した企業の方が適している場合もあります。
-            その前提のうえで、私たちにできることをお伝えします。
-          </p>
-        </FadeUp>
+      <div className="container-page">
+        <div className="grid gap-12 md:grid-cols-[0.8fr_1.4fr] md:gap-20">
+          <FadeUp>
+            <p className="eyebrow mb-4">Why BaseAI</p>
+            <h2 className="text-3xl font-bold leading-[1.4] text-primary md:text-5xl md:leading-[1.3]">
+              大規模な専門会社ではなく、
+              地域の関係性を起点に、
+              小さく実行へ進める伴走役。
+            </h2>
+            <p className="mt-8 text-sm leading-loose text-primary/60">
+              BaseAIは立ち上げ期の会社であり、実績はこれからつくっていく段階です。
+              専門領域によっては、専門特化した企業の方が適している場合もあります。
+              その前提のうえで、私たちにできることをお伝えします。
+            </p>
+          </FadeUp>
 
-        <div className="space-y-10">
-          {points.map((p, i) => (
-            <FadeUp key={p.number} delay={0.05 * i}>
-              <div className="flex gap-6 border-t border-line pt-6">
-                <span className="text-2xl font-bold text-blue">{p.number}</span>
-                <div>
-                  <h3 className="text-lg font-bold text-primary">{p.title}</h3>
-                  <p className="mt-2 text-base leading-relaxed text-primary/70">{p.body}</p>
+          <div className="border-t border-line">
+            {points.map((p, i) => (
+              <FadeUp key={p.number} delay={0.05 * i}>
+                <div className="group grid cursor-default grid-cols-[3rem_1fr] items-baseline gap-6 border-b border-line py-8 transition-colors hover:bg-white/70 md:grid-cols-[4rem_1fr_auto] md:py-10">
+                  <span className="text-xl font-bold text-blue transition-transform duration-300 group-hover:translate-x-1 md:text-2xl">
+                    {p.number}
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-bold text-primary transition-transform duration-300 group-hover:translate-x-1 md:text-xl">
+                      {p.title}
+                    </h3>
+                    <p className="mt-2 max-w-lg text-base leading-relaxed text-primary/70">{p.body}</p>
+                  </div>
+                  <span
+                    className="hidden text-primary/0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary md:inline-block"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
                 </div>
-              </div>
-            </FadeUp>
-          ))}
+              </FadeUp>
+            ))}
+          </div>
         </div>
       </div>
     </section>

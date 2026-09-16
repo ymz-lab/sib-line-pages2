@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import Events from "@/components/Events";
+import ContactCTA from "@/components/ContactCTA";
 
 export const metadata: Metadata = {
   title: "イベント",
@@ -16,6 +17,7 @@ export default function EventsPage() {
         description="人と企業が出会う場所をつくる。BaseAIが主催・関わるイベントをご紹介します。"
       />
       <Events variant="full" />
+      <ContactCTA />
     </>
   );
 }
