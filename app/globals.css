@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #0a1330;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #1e5ba8;
+  color: #ffffff;
+}
+
+.container-page {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #1e5ba8;
+  text-transform: uppercase;
+}
+
+/* Text link with an arrow that shifts on hover — used in place of pill buttons */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0a1330;
+  border-bottom: 1px solid #0a1330;
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.arrow-link:hover {
+  color: #1e5ba8;
+  border-color: #1e5ba8;
+}
+
+.arrow-link .arrow {
+  transition: transform 0.25s ease;
+  display: inline-block;
+}
+
+.arrow-link:hover .arrow {
+  transform: translateX(6px);
+}
+
+/* Full-bleed horizontal rule — the BASE/CONNECTION motif that threads
+   through section transitions, independent of the container's max-width. */
+.brand-line {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 1px;
+  background: #e5e8ec;
+}
+
+/* Faint background grid — used sparingly behind large type to suggest an
+   underlying structure without becoming a decorative pattern. */
+.grid-lines {
+  background-image: linear-gradient(to right, #eef3f8 1px, transparent 1px);
+  background-size: 25% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
