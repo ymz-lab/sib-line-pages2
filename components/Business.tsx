@@ -16,7 +16,7 @@ export default function Business({ variant = "full" }: BusinessProps) {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <FadeUp>
             <p className="eyebrow mb-4">{isSummary ? "What We Do" : "Business"}</p>
-            <h2 className="text-3xl font-bold leading-snug text-primary md:text-5xl">
+            <h2 className="text-[clamp(1.9rem,4.6vw,3.75rem)] font-bold leading-snug text-primary">
               BaseAIが取り組む3つの事業
             </h2>
           </FadeUp>
@@ -66,7 +66,7 @@ export default function Business({ variant = "full" }: BusinessProps) {
                       <p className="text-xs font-semibold uppercase tracking-wides text-primary/40">
                         {service.subtitle}
                       </p>
-                      <h3 className="mt-2 text-xl font-bold text-primary transition-transform duration-300 group-hover:translate-x-1 md:text-2xl">
+                      <h3 className="mt-2 text-2xl font-bold text-primary transition-transform duration-300 group-hover:translate-x-1 md:text-3xl lg:text-4xl">
                         {service.title}
                       </h3>
                       <p className="mt-4 whitespace-pre-line text-lg font-semibold leading-relaxed text-primary">

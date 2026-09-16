@@ -22,8 +22,8 @@ export default function HeroPhoto({ className }: HeroPhotoProps) {
     <div ref={ref} className={className}>
       <motion.div
         style={{ y }}
-        initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0, scale: 1.05 }}
-        animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1, scale: 1 }}
+        initial={{ clipPath: "inset(0 0 0 12%)", opacity: 0, scale: 1.08, x: 28 }}
+        animate={{ clipPath: "inset(0 0 0 0%)", opacity: 1, scale: 1, x: 0 }}
         transition={{ duration: 1.1, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="h-full w-full"
       >

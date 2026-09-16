@@ -17,7 +17,14 @@ export default function Hero() {
       <div className="pointer-events-none absolute right-0 top-[8%] hidden h-[62%] w-[34vw] max-w-[520px] lg:block">
         <HeroPhoto className="h-full w-full" />
       </div>
-      <BaseGraphic className="pointer-events-none absolute right-[30vw] top-[4%] hidden h-20 w-32 text-primary lg:block" />
+      <motion.div
+        initial={{ opacity: 0, x: -24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.9, delay: 0.35, ease: EASE }}
+        className="pointer-events-none absolute right-[30vw] top-[4%] hidden lg:block"
+      >
+        <BaseGraphic className="h-20 w-32 text-primary" />
+      </motion.div>
 
       <div className="container-page relative z-10">
         <motion.p
@@ -32,7 +39,7 @@ export default function Hero() {
         <TextReveal
           as="h1"
           lines={["人と企業をつなぎ、", "新しい挑戦を生み出す。"]}
-          className="max-w-[22ch] text-[clamp(2.5rem,7.2vw,5.75rem)] font-bold leading-[1.2] tracking-tight text-primary lg:max-w-[15ch]"
+          className="max-w-[15em] text-[clamp(1.85rem,8vw,5.5rem)] font-bold leading-[1.3] tracking-tight text-primary lg:max-w-[1040px] lg:leading-[1.25]"
         />
 
         <motion.p
