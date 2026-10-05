@@ -156,3 +156,44 @@ def test_import_from_ui_export(env, tmp_path):
     pipeline.save_draft(d, pipeline.DRAFTS_DIR / f"{d.id}.json")
     cli.main(["import", str(f)])  # already published: must not be re-queued
     assert pipeline.load_draft("2020-01-01_01_x")[0].status == "published"
+
+
+def test_sync_matching_and_writes(monkeypatch):
+    from sns_auto import sync
+
+    posts = [
+        {"platform": "x", "id": "111", "format": "x", "date": "2026-10-01", "time": "12:00",
+         "text": "SIBのピッチ当日の裏側を公開", "permalink": "p1", "perf": {"views": 900, "likes": 10}},
+        {"platform": "instagram", "id": "222", "format": "reel", "date": "2026-10-02", "time": "19:00",
+         "text": "アプリから直接投稿したリール", "permalink": "p2", "perf": {"views": 5000, "reach": 3000}},
+        {"platform": "instagram", "id": "333", "format": "feed", "date": "2026-10-03", "time": "18:00",
+         "text": "協賛企業のメリット5選", "permalink": "p3", "perf": {"reach": 800, "saves": 40}},
+    ]
+    drafts = [
+        {"id": "2026-10-01_01_x", "version": 3, "data": {"id": "2026-10-01_01_x", "status": "published", "format": "x",
+         "plan": {"date": "2026-10-01"}, "body": {"posts": ["x"]}, "published": {"ids": ["111"]}}},
+        {"id": "2026-10-03_02_feed", "version": 1, "data": {"id": "2026-10-03_02_feed", "status": "approved", "format": "feed",
+         "plan": {"date": "2026-10-03"}, "body": {"title": "協賛企業のメリット5選", "caption": "協賛のメリット"}}},
+    ]
+    result = {"snapshot": {"date": "2026-10-05", "ig": 1500, "x": 700, "line": None}, "posts": posts}
+    writes = sync.build_writes(result, drafts, [])
+    by = {w["doc_id"]: w for w in writes}
+    assert by["2026-10-05"]["data"]["ig"] == 1500 and "line" not in by["2026-10-05"]["data"]
+    assert by["2026-10-01_01_x"]["if_version"] == 3 and by["2026-10-01_01_x"]["data"]["perf"]["views"] == 900
+    assert by["2026-10-03_02_feed"]["data"]["status"] == "published"  # matched by date+format+text
+    ext = by["ext_instagram_222"]
+    assert ext["op"] == "set" and ext["data"]["perf"]["views"] == 5000 and ext["data"]["format"] == "reel"
+
+    # A later sync updates the external record instead of creating it again.
+    drafts.append({"id": "ext_instagram_222", "version": 2, "data": ext["data"]})
+    again = {w["doc_id"]: w for w in sync.build_writes(result, drafts, [])}
+    assert again["ext_instagram_222"]["op"] == "update" and again["ext_instagram_222"]["if_version"] == 2
+
+
+def test_sync_skips_unconfigured_platforms(monkeypatch):
+    from sns_auto import sync
+
+    for k in ["IG_USER_ID", "IG_ACCESS_TOKEN", "X_API_KEY", "LINE_CHANNEL_ACCESS_TOKEN"]:
+        monkeypatch.delenv(k, raising=False)
+    r = sync.fetch_all()
+    assert r["posts"] == [] and r["errors"] == [] and list(r["snapshot"]) == ["date"]

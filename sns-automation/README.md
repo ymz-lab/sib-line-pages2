@@ -34,6 +34,46 @@
 - UIのトレンド分析はWeb検索を行いません。最新のバズは「気になっているトレンド」に書き足すか、CLIの `research` を使ってください。
 - 承認済みの原稿は「投稿・書き出し」から JSON を保存し、`python -m sns_auto import baseai-approved.json` で取り込めば `publish` で自動投稿できます。
 
+## 実際のアカウントとの連携
+
+`sync` コマンドで Instagram・X・LINE の実数値を取得し、UIの「成果・KPI → アカウント連携」から取り込みます。
+
+```bash
+python -m sns_auto sync --out baseai-sync.json   # 取得（設定のないサービスはスキップ）
+# → UIの「連携データを取り込む」で baseai-sync.json を選ぶ
+```
+
+| サービス | 取得する数値 | 必要な環境変数 |
+|---|---|---|
+| Instagram（ビジネス/クリエイター） | フォロワー数、直近の投稿・ストーリーの再生・リーチ・いいね・コメント・保存・シェア | `IG_USER_ID`, `IG_ACCESS_TOKEN`（`instagram_basic`, `instagram_manage_insights` 権限。投稿もするなら `instagram_content_publish`） |
+| X | フォロワー数、直近のポストの表示・いいね・返信・リポスト・ブックマーク | `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`（読み取りに対応したプラン） |
+| LINE公式アカウント | 友だち数（前日分） | `LINE_CHANNEL_ACCESS_TOKEN`（Messaging API のチャネルアクセストークン） |
+
+- ツールで作った原稿は、投稿IDまたは「同じ日・同じ形式・本文が近い」で自動的に紐づきます。アプリから直接投稿したものは「アプリから投稿」として集計されます。
+- 同じファイルを何度取り込んでも重複しません。
+
+### 毎日の自動連携（Claude のルーティン）
+
+Claude Code のクラウド環境で毎日 `sync` → UIの共有データへの書き込み、承認済み原稿の予約投稿まで自動で回せます。準備:
+
+1. クラウド環境の設定（セッションのタイトルバーの環境メニュー → Edit）で、上の環境変数を追加する
+2. 同じ設定の Network access を Custom にし、`graph.facebook.com`・`api.x.com`・`api.line.me` を Allowed domains に追加する
+3. Claude に「自動連携のルーティンを作って」と依頼する
+
+`sync --writes writes.json --drafts drafts.json --metrics metrics.json` で、共有データへの書き込みリスト（照合済み・バージョン付き）を出力できます。
+
+## チームでの利用（第三者の入力）
+
+UIは共有メニューの権限で操作が分かれます。
+
+| 権限 | できること |
+|---|---|
+| オーナー・編集者（Editor） | すべて。方向性・KPI目標の変更はこの権限のみ |
+| 参加者（Contributor） | 分析・計画・原稿の作成と編集、承認、成果の入力、連携データの取り込み |
+| 閲覧者・公開リンクの訪問者 | 閲覧のみ |
+
+社外の方はページ右上の「共有」からメールで招待します。利用には claude.ai へのログインが必要で、AIの生成は操作した人のアカウントで実行されます。原稿には最終更新者が記録されます。
+
 ## セットアップ
 
 ```bash

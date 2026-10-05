@@ -87,6 +87,27 @@ def cmd_import(args, cfg):
     print(f"✅ {added} 件を取り込みました（投稿済みのためスキップ: {skipped} 件）")
 
 
+def cmd_sync(args, cfg):
+    """Fetch real numbers from Instagram / X / LINE for the UI's KPI view."""
+    import json
+    from pathlib import Path
+
+    from . import sync
+
+    result = sync.fetch_all(limit=args.limit)
+    Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    snap = result["snapshot"]
+    print(f"✅ {args.out}: 投稿 {len(result['posts'])} 件 / フォロワー等 "
+          + ", ".join(f"{k}={v}" for k, v in snap.items() if k != "date"))
+    for e in result["errors"]:
+        print(f"⚠️ {e}", file=sys.stderr)
+    if args.writes:
+        load = lambda f: json.loads(Path(f).read_text(encoding="utf-8")) if f else []
+        writes = sync.build_writes(result, load(args.drafts), load(args.metrics))
+        Path(args.writes).write_text(json.dumps(writes, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"✅ {args.writes}: 共有データへの書き込み {len(writes)} 件")
+
+
 def cmd_publish(args, cfg):
     from .publishers import instagram, x
 
@@ -149,6 +170,14 @@ def main(argv=None):
     sp = sub.add_parser("import", help="Web UIから書き出したJSONを取り込む")
     sp.add_argument("file")
     sp.set_defaults(fn=cmd_import)
+
+    sp = sub.add_parser("sync", help="Instagram / X / LINE の実数値を取得（UIの成果・KPIに取り込み）")
+    sp.add_argument("--out", default="baseai-sync.json")
+    sp.add_argument("--limit", type=int, default=50, help="取得する直近の投稿数")
+    sp.add_argument("--writes", help="UIの共有データ用の書き込みリストを出力するファイル")
+    sp.add_argument("--drafts", help="現在の原稿一覧（JSON配列）。照合に使う")
+    sp.add_argument("--metrics", help="現在のアカウント数値（JSON配列）")
+    sp.set_defaults(fn=cmd_sync)
 
     sp = sub.add_parser("publish", help="承認済みで予定時刻を過ぎた投稿を公開")
     sp.add_argument("--id", nargs="*", help="対象を限定")

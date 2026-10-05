@@ -290,6 +290,9 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
 .toggle input { width: 16px; height: 16px; accent-color: var(--cyan); }
 .kpi-rows { display: flex; flex-direction: column; gap: 8px; }
 .kpi-row .note { white-space: nowrap; }
+label.btn { display: inline-flex; align-items: center; }
+.who { font-size: 12px; color: var(--muted); }
+a.ext { color: var(--cyan); font-size: 12px; }
 .kpi-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) 110px auto; gap: 8px; align-items: center; }
 .formrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; align-items: end; }
 @media (max-width: 860px) {
@@ -362,6 +365,18 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
         <textarea id="i-references" rows="6"></textarea>
         <h2>気になっているトレンド・メモ</h2>
         <textarea id="i-trends" rows="5" placeholder="例: 就活の本音インタビュー形式が学生層で伸びている"></textarea>
+      </div>
+      <div class="panel">
+        <div class="row"><h2>メンバーと権限</h2><div class="spacer"></div><span class="state none" id="my-role">確認中</span></div>
+        <div class="tbl-wrap"><table class="tbl">
+          <thead><tr><th>共有メニューの権限</th><th>できること</th></tr></thead>
+          <tbody>
+            <tr><td>オーナー・編集者（Editor）</td><td class="title">すべて。方向性・KPI目標・自動修正の設定を変更できるのはこの権限だけです</td></tr>
+            <tr><td>参加者（Contributor）</td><td class="title">トレンド分析・計画・原稿の作成と編集、承認、成果やフォロワー数の入力・連携データの取り込み</td></tr>
+            <tr><td>閲覧者（Viewer / Commenter）・公開リンクの訪問者</td><td class="title">閲覧のみ</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">社外の方に入力してもらう場合は、ページ右上の「共有」からメールで招待してください。AIの生成は、操作した人の claude.ai アカウントで実行されます。</p>
       </div>
       <div class="panel">
         <label class="toggle"><input type="checkbox" id="b-autofix">生成時に適合度をチェックし、ズレを自動で修正する</label>
@@ -498,8 +513,17 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
 
       <div class="panel" id="kpi-insights"><div class="empty">「AIで振り返る」を押すと、KPIの達成状況と投稿の成果から、効いたこと・来週の打ち手をまとめます。結果は次の投稿計画に反映されます。</div></div>
 
+      <div class="panel" id="sync-panel">
+        <div class="row"><h2>アカウント連携</h2><span class="state none" id="sync-state">未連携</span><div class="spacer"></div>
+          <label class="btn" for="sync-file" id="sync-label">連携データを取り込む</label>
+          <input type="file" id="sync-file" accept="application/json,.json" hidden>
+        </div>
+        <p class="note">Instagram・X・LINE の実際のフォロワー数と投稿ごとの数値を、コマンドラインツールの <code>sync</code> で取得して取り込みます。ツールで作った原稿には数値が自動で紐づき、アプリから直接投稿したものも「アプリから投稿」として集計されます。自動連携を設定すると毎日自動で更新されます。</p>
+        <span class="note" id="sync-msg"></span>
+      </div>
+
       <div class="panel">
-        <h2>アカウントの数値を記録</h2>
+        <h2>アカウントの数値を手で記録</h2>
         <p class="note">週1回など定期的に、各アカウントのフォロワー数・LINE友だち数を記録すると推移と増加数のKPIが計算されます。</p>
         <div class="formrow">
           <label class="f">日付<input id="m-date" type="date"></label>
@@ -564,7 +588,8 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     drafts: new Map(), metrics: [], filter: "all", selected: null,
     fMode: "abs", fView: "chart", vView: "chart",
   };
-  let db = null, sample = null, downloads = null, canWrite = true;
+  let db = null, sample = null, downloads = null, user = null, me = null, canWrite = true, canAdmin = true;
+  const names = new Map();
 
   // ---------- helpers ----------
   function h(tag, attrs, ...kids) {
@@ -694,6 +719,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   $("#save-settings").addEventListener("click", async (ev) => {
     const btn = ev.currentTarget, msg = $("#settings-msg");
     if (!db) { msg.textContent = "共有データに接続できないため保存できません。"; return; }
+    if (!canAdmin) { msg.textContent = "方向性・KPIの変更はオーナーと編集者だけができます。"; return; }
     const b = Object.fromEntries(BF.map((k) => [k, $("#b-" + k).value.trim()]));
     b.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, Math.max(0, parseInt($("#c-" + k).value, 10) || 0)]));
     b.autofix = $("#b-autofix").checked;
@@ -1093,7 +1119,7 @@ ${g.shape}`;
     if (!okBody(body)) throw { code: "invalid_json" };
     const id = draftId(it, idx);
     const prev = S.drafts.get(id);
-    const doc = { id, status: "draft", format: it.format, plan: it, body, media_urls: arr(prev?.media_urls), notes: str(prev?.notes), perf: prev?.perf ?? null, fit: null, updatedAt: Date.now() };
+    const doc = { id, status: "draft", format: it.format, plan: it, body, media_urls: arr(prev?.media_urls), notes: str(prev?.notes), perf: prev?.perf ?? null, fit: null, updatedAt: Date.now(), updatedBy: me?.id || null };
     S.drafts.set(id, doc);
     if (db) await db.doc("drafts/" + id).set(doc);
     if (brand().autofix !== false) await checkAndFix(doc, signal, true);
@@ -1204,7 +1230,8 @@ ${GUIDE[d.format].shape}`;
   }
   async function saveDraft(d, fields) {
     d.updatedAt = Date.now();
-    if (db) await db.doc("drafts/" + d.id).update({ ...fields, updatedAt: d.updatedAt }).catch(() => {});
+    d.updatedBy = me?.id || d.updatedBy || null;
+    if (db) await db.doc("drafts/" + d.id).update({ ...fields, updatedAt: d.updatedAt, updatedBy: d.updatedBy }).catch(() => {});
   }
   // Check, and if it falls short (or always, when forced), rewrite once and re-check.
   async function checkAndFix(d, signal, autoFix) {
@@ -1233,7 +1260,7 @@ ${GUIDE[d.format].shape}`;
   $("#fit-all").addEventListener("click", async (ev) => {
     const btn = ev.currentTarget, msg = $("#fit-msg");
     if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
-    const todo = sortedDrafts().filter((d) => d.status === "draft" && fitState(d).cls !== "ok");
+    const todo = sortedDrafts().filter((d) => d.status === "draft" && d.source !== "sync" && fitState(d).cls !== "ok");
     if (!todo.length) { msg.textContent = "未承認の原稿はすべて基準を満たしています。"; return; }
     fitCtl = new AbortController(); btn.disabled = true; $("#stop-fit").hidden = false;
     let done = 0;
@@ -1280,7 +1307,7 @@ ${GUIDE[d.format].shape}`;
       },
         h("div", { class: "row" }, h("span", { class: "when" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), h("div", { class: "spacer" }), chip(d.format), stChip(d.status)),
         h("div", { class: "t" }, str(d.body?.title) || str(d.plan?.theme)),
-        h("div", { class: "row" }, fitBadge(d), d.perf?.views != null ? h("span", { class: "note" }, `再生 ${nfc.format(d.perf.views)}`) : null))));
+        h("div", { class: "row" }, d.source === "sync" ? h("span", { class: "chip st-draft" }, "アプリから投稿") : fitBadge(d), d.perf?.views != null ? h("span", { class: "note" }, `再生 ${nfc.format(d.perf.views)}`) : null))));
     }
     renderDetail();
   }
@@ -1291,7 +1318,7 @@ ${GUIDE[d.format].shape}`;
     clearTimeout(pending.get(d.id));
     pending.set(d.id, setTimeout(async () => {
       pending.delete(d.id);
-      if (db) await db.doc("drafts/" + d.id).update({ body: d.body, media_urls: d.media_urls, notes: d.notes, updatedAt: d.updatedAt }).catch(() => {});
+      if (db) await db.doc("drafts/" + d.id).update({ body: d.body, media_urls: d.media_urls, notes: d.notes, updatedAt: d.updatedAt, updatedBy: me?.id || null }).catch(() => {});
     }, 700));
   }
   async function setStatus(d, status) {
@@ -1348,8 +1375,17 @@ ${GUIDE[d.format].shape}`;
     if (!d) { box.replaceChildren(h("div", { class: "empty" }, "左の一覧から原稿を選んでください。")); return; }
     if (document.activeElement && box.contains(document.activeElement) && document.activeElement.tagName === "TEXTAREA") return;
     const p = d.plan || {}, b = d.body || {};
+    if (d.source === "sync") {
+      box.replaceChildren(
+        h("div", { class: "row" }, chip(d.format), stChip(d.status), h("span", { class: "chip st-draft" }, "アプリから投稿")),
+        h("h2", {}, str(b.title)),
+        h("p", { class: "note" }, `${dateLabel(str(p.date))} ${str(p.time)} にアプリから直接投稿された投稿です。数値はアカウント連携で自動更新されます。`),
+        d.permalink ? h("a", { class: "ext", href: d.permalink, target: "_blank", rel: "noopener" }, "投稿を開く ↗") : null,
+        h("dl", { class: "kv" }, PERF.filter(([k]) => d.perf?.[k] != null).flatMap(([k, l]) => [h("dt", {}, l), h("dd", {}, nf.format(d.perf[k]))])));
+      return;
+    }
     const parts = [
-      h("div", { class: "row" }, chip(d.format), stChip(d.status), h("span", { class: "mono" }, d.id)),
+      h("div", { class: "row" }, chip(d.format), stChip(d.status), h("span", { class: "mono" }, d.id), whoLine(d)),
       h("h2", {}, str(b.title) || str(p.theme)),
       h("dl", { class: "kv" },
         h("dt", {}, "日時"), h("dd", {}, `${dateLabel(str(p.date))} ${str(p.time)}`),
@@ -1732,7 +1768,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
     if (!rows.length) { $("#m-list").replaceChildren(); return; }
     $("#m-list").replaceChildren(h("div", { class: "tbl-wrap" }, h("table", { class: "tbl" },
       h("thead", {}, h("tr", {}, h("th", {}, "記録日"), SERIES.map((sr) => h("th", { class: "n" }, sr.label)), h("th", {}))),
-      h("tbody", {}, rows.map((x) => h("tr", {}, h("td", {}, x.date), SERIES.map((sr) => h("td", { class: "n" }, num(x[sr.key]) == null ? "—" : nf.format(num(x[sr.key])))),
+      h("tbody", {}, rows.map((x) => h("tr", {}, h("td", {}, x.date, x.source === "sync" ? h("span", { class: "note" }, "（連携）") : null), SERIES.map((sr) => h("td", { class: "n" }, num(x[sr.key]) == null ? "—" : nf.format(num(x[sr.key])))),
         h("td", { class: "n" }, canWrite && db ? armed(h("button", { class: "btn small danger" }, "削除"), "もう一度押すと削除", () => db.doc("metrics/" + x.date).delete().catch(() => {})) : null)))))));
   }
 
@@ -1758,6 +1794,78 @@ ${JSON.stringify(rows).slice(0, 30000)}
         })))))));
   }
 
+  // ---------- people ----------
+  function whoLine(d) {
+    if (!d.updatedBy) return null;
+    const el = h("span", { class: "who" }, "");
+    const set = () => { el.textContent = `最終更新: ${names.get(d.updatedBy) || "メンバー"}${d.updatedAt ? "（" + new Date(d.updatedAt).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) + "）" : ""}`; };
+    set();
+    if (user && !names.has(d.updatedBy)) user.profiles([d.updatedBy]).then((ps) => { names.set(d.updatedBy, ps?.[d.updatedBy]?.name || ""); set(); }).catch(() => {});
+    return el;
+  }
+
+  // ---------- account sync import ----------
+  function bigramSet(a) { a = str(a).replace(/\s+/g, ""); const out = new Set(); for (let i = 0; i < a.length - 1; i++) out.add(a.slice(i, i + 2)); return out; }
+  function textSim(a, b) { const A = bigramSet(a), B = bigramSet(b); if (!A.size || !B.size) return 0; let n = 0; for (const x of A) if (B.has(x)) n++; return n / Math.min(A.size, B.size); }
+  function matchPosts(posts) {
+    const drafts = [...S.drafts.values()], byPub = new Map(), used = new Set();
+    for (const d of drafts) for (const id of arr(d.published?.ids)) byPub.set(String(id), d);
+    return posts.map((p) => {
+      let d = byPub.get(String(p.id));
+      if (!d) {
+        const c = drafts.filter((x) => !used.has(x.id) && x.plan?.date === p.date && x.format === p.format && ["approved", "published"].includes(x.status))
+          .map((x) => [textSim(p.text, bodyText(x)), x]).sort((a, b) => b[0] - a[0]);
+        d = c.length && c[0][0] >= 0.3 ? c[0][1] : null;
+      }
+      if (d) used.add(d.id);
+      return [p, d];
+    });
+  }
+  function renderSyncState() {
+    const st = S.sync, el = $("#sync-state");
+    if (!st?.at) { el.className = "state none"; el.textContent = "未連携"; return; }
+    const hours = (Date.now() - st.at) / 36e5;
+    el.className = `state ${hours < 36 ? "ok" : "warn"}`;
+    el.textContent = `${hours < 36 ? "✓" : "!"} 最終取得 ${new Date(st.at).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}`;
+  }
+  $("#sync-file").addEventListener("change", async (ev) => {
+    const file = ev.target.files?.[0], msg = $("#sync-msg");
+    ev.target.value = "";
+    if (!file) return;
+    if (!db) { msg.textContent = "共有データに接続できないため取り込めません。"; return; }
+    let data;
+    try { data = JSON.parse(await file.text()); } catch { msg.textContent = "ファイルを読み取れませんでした。sync で出力した JSON を選んでください。"; return; }
+    if (data?.source !== "baseai-sync" || !data.snapshot) { msg.textContent = "このファイルは連携データではありません。`python -m sns_auto sync` の出力ファイルを選んでください。"; return; }
+    msg.textContent = "取り込み中…";
+    const now = Date.now(), snap = data.snapshot;
+    let posts = 0, ext = 0;
+    try {
+      const vals = Object.fromEntries(["ig", "x", "line"].filter((k) => num(snap[k]) != null).map((k) => [k, num(snap[k])]));
+      if (Object.keys(vals).length && /^\d{4}-\d{2}-\d{2}$/.test(str(snap.date))) {
+        const prev = S.metrics.find((x) => x.date === snap.date) || {};
+        await db.doc("metrics/" + snap.date).set({ date: snap.date, ig: prev.ig ?? null, x: prev.x ?? null, line: prev.line ?? null, ...vals, source: "sync", updatedAt: now });
+      }
+      for (const [p, d] of matchPosts(arr(data.posts).filter((p) => p && p.id && FMT[p.format]))) {
+        const perf = Object.fromEntries(Object.entries(p.perf || {}).filter(([, v]) => typeof v === "number"));
+        if (d) {
+          await db.doc("drafts/" + d.id).update({ perf: { ...(d.perf || {}), ...perf }, status: "published", permalink: str(p.permalink), published: { platform: p.platform, ids: [String(p.id)] }, updatedAt: now });
+          posts++;
+        } else {
+          const title = str(p.text).replace(/\s+/g, " ").trim().slice(0, 40) || `${p.platform} ${p.id}`;
+          const id = `ext_${p.platform}_${p.id}`.replace(/[^A-Za-z0-9_\-.~:@+]/g, "_");
+          await db.doc("drafts/" + id).set({ id, status: "published", format: p.format, source: "sync", permalink: str(p.permalink),
+            plan: { date: str(p.date), time: str(p.time), format: p.format, pillar: "", goal: "", theme: title, trend_angle: "", reference_angle: "", kpi: "" },
+            body: { title }, media_urls: [], notes: "", published: { platform: p.platform, ids: [String(p.id)] }, perf, updatedAt: now });
+          ext++;
+        }
+      }
+      await db.doc("sync/status").set({ at: now, fetchedAt: str(data.fetched_at), via: "upload", posts: arr(data.posts).length, errors: arr(data.errors).slice(0, 5) });
+      msg.textContent = `取り込みました：原稿に紐づいた投稿 ${posts} 件、アプリから投稿 ${ext} 件${arr(data.errors).length ? "（一部の取得エラー: " + data.errors.join(" / ") + "）" : ""}。`;
+    } catch (e) {
+      msg.textContent = e?.code === "quota_exceeded" ? "保存できる件数の上限に達しました。古い原稿を削除してください。" : "取り込みに失敗しました（編集権限がない可能性があります）。";
+    }
+  });
+
   // ---------- boot ----------
   let initial = "settings";
   try { initial = localStorage.getItem("baseai-view") || initial; } catch {}
@@ -1775,8 +1883,22 @@ ${JSON.stringify(rows).slice(0, 30000)}
   });
   claude.use("downloads").then((x) => { downloads = x; });
   claude.use("user").then(async (u) => {
-    const c = u ? await u.can("data.write") : null;
-    if (c === false) { canWrite = false; $("#save-settings").disabled = true; $("#settings-msg").textContent = "閲覧のみの権限です。"; renderDetail(); }
+    user = u;
+    if (!u) { $("#my-role").textContent = "不明"; return; }
+    const [c, admin, owner] = await Promise.all([u.can("data.write"), u.canEdit(), u.isOwner()]);
+    me = await u.me().catch(() => null);
+    if (me?.id) names.set(me.id, me.name || "あなた");
+    canAdmin = admin !== false;
+    const role = owner ? "オーナー" : admin ? "編集者" : c === false ? "閲覧者" : "参加者";
+    $("#my-role").className = `state ${c === false ? "none" : "ok"}`;
+    $("#my-role").textContent = `あなた: ${role}${me?.guest ? "（社外）" : ""}`;
+    if (!canAdmin) { $("#save-settings").disabled = true; $("#settings-msg").textContent = "方向性・KPIの変更はオーナーと編集者だけができます。"; }
+    if (c === false) {
+      canWrite = false;
+      $("#save-settings").disabled = true; $("#settings-msg").textContent = "閲覧のみの権限です。";
+      $("#sync-label").hidden = true; $("#m-save").disabled = true;
+    }
+    renderDetail();
   });
   claude.use("db").then((d) => {
     db = d;
@@ -1791,6 +1913,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
     d.doc("research/latest").onSnapshot((x) => { if (x.exists) { S.research = x.data(); renderResearch(); } }, fail);
     d.doc("insights/latest").onSnapshot((x) => { S.insights = x.exists ? x.data() : null; renderKpi(); }, fail);
     d.doc("plans/current").onSnapshot((x) => { S.plan = x.exists ? x.data() : null; renderPlan(); }, fail);
+    d.doc("sync/status").onSnapshot((x) => { S.sync = x.exists ? x.data() : null; renderSyncState(); }, fail);
     d.collection("metrics").onSnapshot((snap) => { S.metrics = snap.docs.map((x) => x.data()).filter((x) => x && x.date); renderKpi(); }, fail);
     d.collection("drafts").onSnapshot((snap) => {
       const next = new Map();
