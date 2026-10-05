@@ -1,0 +1,22 @@
+# 参考にしたいアカウント・動画。
+# AIは動画を直接視聴できないため、「なぜ参考にしたいか」「構成・フック・尺」などのメモや
+# 文字起こし（transcript）を書いておくと精度が大きく上がります。
+# url は公開ページであれば research 時に可能な範囲で読み込みます。
+
+accounts:
+  - platform: instagram
+    handle: "@example_student_community"
+    url: https://www.instagram.com/example_student_community/
+    why: 学生団体のイベント告知リールが毎回1万再生超え。冒頭1秒の顔出し＋テロップが強い
+  - platform: x
+    handle: "@example_founder"
+    url: https://x.com/example_founder
+    why: 学生起業の学びを短い箇条書きで発信し、保存・RTが多い
+
+videos:
+  - platform: instagram_reel
+    url: https://www.instagram.com/reel/XXXXXXXX/
+    why: "「〇〇な学生の1日」形式。テンポの良いカットと最後の一言オチ"
+    structure: "0-1s 結論テロップ / 1-10s 朝〜活動のカット / 10-20s 本音コメント / 20-25s CTA"
+    transcript: |
+      （ここに文字起こしを貼ると、構成をより正確に参考にできます）
