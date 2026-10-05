@@ -1,0 +1,36 @@
+# 運用しているSNSアカウントの一覧（株式会社BaseAI と 学生団体SIB）
+# owner: company = 株式会社BaseAI / student = 学生団体SIB
+
+accounts:
+  - owner: company
+    platform: tiktok
+    handle: "@baseai71"
+    url: https://www.tiktok.com/@baseai71
+  - owner: company
+    platform: youtube
+    handle: "UCUMbHkUIUvoLphvXraYbqwA"
+    url: https://www.youtube.com/channel/UCUMbHkUIUvoLphvXraYbqwA
+  - owner: company
+    platform: threads
+    handle: "@sib_business0427"
+    url: https://www.threads.com/@sib_business0427
+  - owner: student
+    platform: threads
+    handle: "@gakuseidantai_sib"
+    url: https://www.threads.com/@gakuseidantai_sib
+  - owner: student
+    platform: instagram
+    handle: "@gakuseidantai_sib"
+    url: https://www.instagram.com/gakuseidantai_sib
+  - owner: company
+    platform: instagram
+    handle: "@kabu_baseai0901"
+    url: https://www.instagram.com/kabu_baseai0901
+  - owner: student
+    platform: x
+    handle: "@sib2021494"
+    url: https://x.com/sib2021494
+  - owner: company
+    platform: x
+    handle: "@kabubaseai"
+    url: https://x.com/kabubaseai

@@ -3,8 +3,10 @@
 
 account_name: SIB（Shonan Innovation Base）
 handles:
-  instagram: "@sib_shonan"   # 実際のアカウント名に変更
-  x: "@sib_shonan"           # 実際のアカウント名に変更
+  instagram: "@gakuseidantai_sib"
+  x: "@sib2021494"
+  threads: "@gakuseidantai_sib"
+# 運用アカウントの全一覧（会社・学生団体）は config/accounts.yaml
 
 mission: >
   湘南エリアを中心に、学生に「挑戦と出会いのきっかけ」を届ける学生コミュニティ。
@@ -51,7 +53,7 @@ key_facts:   # 投稿で使ってよい事実（AIが数字を捏造しないよ
 
 cta:
   default: プロフィールのリンクから公式LINEに登録
-  url: https://example.com/line   # 公式LINEの友だち追加URLに変更
+  url: https://lin.ee/YsUdQ0e   # 公式LINE（event ページ掲載のURL）
 
 posting_cadence:   # 1週間あたりの本数
   reel: 3

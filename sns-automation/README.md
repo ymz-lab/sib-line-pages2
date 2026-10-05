@@ -34,6 +34,21 @@
 - UIのトレンド分析はWeb検索を行いません。最新のバズは「気になっているトレンド」に書き足すか、CLIの `research` を使ってください。
 - 承認済みの原稿は「投稿・書き出し」から JSON を保存し、`python -m sns_auto import baseai-approved.json` で取り込めば `publish` で自動投稿できます。
 
+## 運用アカウント
+
+| 運用元 | SNS | アカウント |
+|---|---|---|
+| 株式会社BaseAI | TikTok | [@baseai71](https://www.tiktok.com/@baseai71) |
+| 株式会社BaseAI | YouTube | [UCUMbHkUIUvoLphvXraYbqwA](https://www.youtube.com/channel/UCUMbHkUIUvoLphvXraYbqwA) |
+| 株式会社BaseAI | Threads | [@sib_business0427](https://www.threads.com/@sib_business0427) |
+| 株式会社BaseAI | Instagram | [@kabu_baseai0901](https://www.instagram.com/kabu_baseai0901) |
+| 株式会社BaseAI | X | [@kabubaseai](https://x.com/kabubaseai) |
+| 学生団体SIB | Threads | [@gakuseidantai_sib](https://www.threads.com/@gakuseidantai_sib) |
+| 学生団体SIB | Instagram | [@gakuseidantai_sib](https://www.instagram.com/gakuseidantai_sib) |
+| 学生団体SIB | X | [@sib2021494](https://x.com/sib2021494) |
+
+一覧の元データは `config/accounts.yaml`、UIでは「方向性・KPI → 運用アカウント」で編集できます。
+
 ## 実際のアカウントとの連携
 
 `sync` コマンドで Instagram・X・LINE の実数値を取得し、UIの「成果・KPI → アカウント連携」から取り込みます。

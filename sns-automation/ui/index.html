@@ -291,6 +291,16 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
 .kpi-rows { display: flex; flex-direction: column; gap: 8px; }
 .kpi-row .note { white-space: nowrap; }
 label.btn { display: inline-flex; align-items: center; }
+.acct-row { display: grid; grid-template-columns: 150px 130px minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; }
+.accts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.acct-group { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.acct-group h3 { margin: 0; font-size: 13px; }
+.acct-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.acct-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line-hi); color: var(--ink); text-decoration: none; max-width: 100%; }
+.acct-chip:hover { border-color: var(--cyan); }
+.acct-chip b { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: .08em; color: var(--muted); }
+.acct-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 860px) { .acct-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
 .who { font-size: 12px; color: var(--muted); }
 a.ext { color: var(--cyan); font-size: 12px; }
 .kpi-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.4fr) 110px auto; gap: 8px; align-items: center; }
@@ -358,6 +368,11 @@ a.ext { color: var(--cyan); font-size: 12px; }
         <div class="row"><h2>月間KPI目標</h2><div class="spacer"></div><button class="btn small" id="kpi-add">KPIを追加</button></div>
         <p class="note">ここで決めた目標に対する達成度が「成果・KPI」に表示され、遅れているKPIは次の投稿計画に自動で反映されます。</p>
         <div class="kpi-rows" id="kpi-rows"></div>
+      </div>
+      <div class="panel">
+        <div class="row"><h2>運用アカウント</h2><div class="spacer"></div><button class="btn small" id="acct-add" type="button">アカウントを追加</button></div>
+        <p class="note">会社と学生団体で運用しているSNSの一覧です。「保存」で共有され、成果・KPI画面にも表示されます。</p>
+        <div class="kpi-rows" id="acct-rows"></div>
       </div>
       <div class="panel">
         <h2>参考アカウント・動画</h2>
@@ -487,6 +502,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
         <button class="btn" id="stop-review" hidden>停止</button>
       </div>
       <span class="note" id="review-msg"></span>
+      <div class="accts" id="acct-overview"></div>
       <div class="kpis" id="kpi-cards"></div>
       <div class="tiles" id="kpi-tiles"></div>
 
@@ -583,7 +599,11 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     { key: "line", label: "LINE友だち", color: "#e4572e" },
   ];
 
+  const OWNERS = { company: "株式会社BaseAI", student: "学生団体SIB" };
+  const PLATFORMS = { instagram: "Instagram", x: "X", threads: "Threads", tiktok: "TikTok", youtube: "YouTube", line: "LINE", facebook: "Facebook", other: "その他" };
+  const SYNCABLE = new Set(["instagram", "x", "line"]);
   const S = {
+    accounts: null,
     brand: null, inputs: null, kpi: null, research: null, plan: null, insights: null,
     drafts: new Map(), metrics: [], filter: "all", selected: null,
     fMode: "abs", fView: "chart", vView: "chart",
@@ -690,6 +710,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     const i = S.inputs || {};
     for (const k of ["references", "trends"]) { const el = $("#i-" + k); if (document.activeElement !== el) el.value = str(i[k]); }
     if (!$("#kpi-rows").contains(document.activeElement)) renderKpiRows();
+    if (!$("#acct-rows").contains(document.activeElement)) renderAcctRows();
   }
   function kpiRow(k = {}) {
     const name = h("input", { placeholder: "KPI名（例: LINE登録）", "aria-label": "KPI名" }); name.value = str(k.name);
@@ -709,6 +730,46 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     $("#kpi-rows").replaceChildren(...(items.length ? items.map(kpiRow) : [kpiRow()]));
   }
   $("#kpi-add").addEventListener("click", () => $("#kpi-rows").append(kpiRow()));
+  function acctRow(a = {}) {
+    const owner = h("select", { "aria-label": "運用元" }, Object.entries(OWNERS).map(([k, v]) => h("option", { value: k }, v)));
+    owner.value = OWNERS[a.owner] ? a.owner : "company";
+    const plat = h("select", { "aria-label": "SNS" }, Object.entries(PLATFORMS).map(([k, v]) => h("option", { value: k }, v)));
+    plat.value = PLATFORMS[a.platform] ? a.platform : "instagram";
+    const handle = h("input", { placeholder: "@アカウント名", "aria-label": "アカウント名" }); handle.value = str(a.handle);
+    const url = h("input", { type: "url", placeholder: "https://…", "aria-label": "URL" }); url.value = str(a.url);
+    const del = h("button", { class: "btn small danger", type: "button" }, "削除");
+    const row = h("div", { class: "acct-row" }, owner, plat, handle, url, del);
+    del.addEventListener("click", () => row.remove());
+    return row;
+  }
+  function renderAcctRows() {
+    const items = arr(S.accounts?.items);
+    $("#acct-rows").replaceChildren(...(items.length ? items.map(acctRow) : [acctRow()]));
+  }
+  function readAcctRows() {
+    return $$("#acct-rows .acct-row").map((r) => {
+      const [owner, plat] = $$("select", r), [handle, url] = $$("input", r);
+      return { owner: owner.value, platform: plat.value, handle: handle.value.trim(), url: url.value.trim() };
+    }).filter((a) => a.handle || a.url);
+  }
+  $("#acct-add").addEventListener("click", () => $("#acct-rows").append(acctRow()));
+  // Only http(s) links are rendered as links.
+  const safeUrl = (u) => (/^https:\/\//i.test(str(u)) ? str(u) : null);
+  function renderAcctOverview() {
+    const items = arr(S.accounts?.items), box = $("#acct-overview");
+    if (!items.length) { box.replaceChildren(); return; }
+    box.replaceChildren(...Object.entries(OWNERS).map(([k, label]) => {
+      const list = items.filter((a) => a.owner === k);
+      if (!list.length) return null;
+      return h("div", { class: "acct-group" }, h("h3", {}, `${label}（${list.length}）`),
+        h("div", { class: "acct-list" }, list.map((a) => {
+          const kids = [h("b", {}, (PLATFORMS[a.platform] || a.platform).toUpperCase()), h("span", {}, a.handle || a.url)];
+          const href = safeUrl(a.url);
+          return href ? h("a", { class: "acct-chip", href, target: "_blank", rel: "noopener", title: SYNCABLE.has(a.platform) ? "数値連携に対応" : "数値連携は未対応" }, kids)
+            : h("span", { class: "acct-chip" }, kids);
+        })));
+    }).filter(Boolean));
+  }
   function readKpiRows() {
     return $$("#kpi-rows .kpi-row").map((r) => {
       const [name, metric, target] = [$("input", r), $("select", r), $("input[type=number]", r)];
@@ -726,11 +787,13 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     b.updatedAt = Date.now();
     const inputs = { references: $("#i-references").value.trim(), trends: $("#i-trends").value.trim() };
     const kpi = { items: readKpiRows() };
+    const accounts = { items: readAcctRows() };
     btn.disabled = true; msg.textContent = "保存中…"; msg.classList.remove("err");
     try {
       await db.doc("settings/brand").set(b);
       await db.doc("settings/inputs").set(inputs);
       await db.doc("settings/kpi").set(kpi);
+      await db.doc("settings/accounts").set(accounts);
       msg.textContent = "保存しました。方針を変えた場合、既存の原稿は「要再チェック」になります。";
     } catch {
       msg.textContent = "保存できませんでした（編集権限がない可能性があります）。"; msg.classList.add("err");
@@ -1909,6 +1972,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
     const refreshAll = () => { renderDrafts(); renderPlan(); renderKpi(); };
     d.doc("settings/brand").onSnapshot((x) => { S.brand = x.exists ? x.data() : null; fillSettings(); refreshAll(); }, fail);
     d.doc("settings/inputs").onSnapshot((x) => { S.inputs = x.exists ? x.data() : null; fillSettings(); }, fail);
+    d.doc("settings/accounts").onSnapshot((x) => { S.accounts = x.exists ? x.data() : null; fillSettings(); renderAcctOverview(); }, fail);
     d.doc("settings/kpi").onSnapshot((x) => { S.kpi = x.exists ? x.data() : null; fillSettings(); refreshAll(); }, fail);
     d.doc("research/latest").onSnapshot((x) => { if (x.exists) { S.research = x.data(); renderResearch(); } }, fail);
     d.doc("insights/latest").onSnapshot((x) => { S.insights = x.exists ? x.data() : null; renderKpi(); }, fail);
