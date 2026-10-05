@@ -19,6 +19,16 @@
 | ④ review | `workspace/review.md` | 全原稿を一覧できるレビュー用Markdown |
 | ⑤ publish | — | 承認済み・予定時刻到来の投稿を X / Instagram に投稿 |
 
+## Web UI（SIB SNSスタジオ）
+
+ブラウザで使えるUI: https://claude.ai/artifact/AoAMTaxbxt23r1st98gEJu （ソース: `ui/index.html`）
+
+- 方向性の設定 → トレンド分析 → 投稿計画 → 原稿生成 → 承認 までをブラウザで操作できます。
+- データはチームで共有され、編集はリアルタイムに反映されます。AI生成は開いた人の claude.ai アカウントで動くため APIキーは不要です。
+- 開くには claude.ai へのログインと、右上の「共有」からのアクセス付与が必要です（編集させたい人は Contributor 以上）。
+- UIのトレンド分析はWeb検索を行いません。最新のバズは「気になっているトレンド」に書き足すか、CLIの `research` を使ってください。
+- 承認済みの原稿は「投稿・書き出し」から JSON を保存し、`python -m sns_auto import sib-approved.json` で取り込めば `publish` で自動投稿できます。
+
 ## セットアップ
 
 ```bash

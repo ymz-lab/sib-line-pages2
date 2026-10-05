@@ -1,0 +1,857 @@
+<title>SIB SNSスタジオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: left rail of workflow steps (設定→トレンド→計画→原稿→書き出し), work area on the right; stacks on phones. */
+:root {
+  --bg: #eef3f4;
+  --surface: #ffffff;
+  --sunken: #f5f8f9;
+  --ink: #102731;
+  --muted: #5b6f78;
+  --line: #d5e0e3;
+  --accent: #0b8576;
+  --accent-soft: #dcf1ed;
+  --accent-ink: #ffffff;
+  --sun: #e2622a;
+  --reel: #c93a63;
+  --feed: #2f63c9;
+  --story: #b97a0c;
+  --x: #1d2a30;
+  --ok: #1d8a4d;
+  --warn: #b86e00;
+  --bad: #c0392b;
+  --display: "Dela Gothic One", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a161b; --surface: #11222a; --sunken: #0d1c22; --ink: #e4edef; --muted: #8ea4ad;
+    --line: #213740; --accent: #3cc2b0; --accent-soft: #123a37; --accent-ink: #062320; --sun: #ff8a52;
+    --reel: #ff6f96; --feed: #7aa2ff; --story: #f0b545; --x: #cfdade;
+    --ok: #4cc27f; --warn: #f0b545; --bad: #ff7a6b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a161b; --surface: #11222a; --sunken: #0d1c22; --ink: #e4edef; --muted: #8ea4ad;
+  --line: #213740; --accent: #3cc2b0; --accent-soft: #123a37; --accent-ink: #062320; --sun: #ff8a52;
+  --reel: #ff6f96; --feed: #7aa2ff; --story: #f0b545; --x: #cfdade;
+  --ok: #4cc27f; --warn: #f0b545; --bad: #ff7a6b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.7; }
+.shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
+.rail { background: var(--surface); border-right: 1px solid var(--line); padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; }
+.mark { font-family: var(--display); font-size: 22px; line-height: 1.2; letter-spacing: .02em; }
+.mark small { display: block; font-family: var(--body); font-size: 11px; font-weight: 500; letter-spacing: .14em; color: var(--muted); margin-top: 6px; }
+.steps { display: flex; flex-direction: column; gap: 4px; }
+.step { all: unset; cursor: pointer; display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; color: var(--muted); font-weight: 500; }
+.step b { font-family: var(--mono); font-weight: 500; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); }
+.step:hover { color: var(--ink); background: var(--sunken); }
+.step[aria-current="true"] { color: var(--ink); background: var(--accent-soft); }
+.step[aria-current="true"] b { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.conn { margin-top: auto; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); margin-right: 6px; }
+.dot.on { background: var(--ok); }
+main { padding-block: 28px 64px; padding-inline: clamp(16px, 4vw, 48px); min-width: 0; }
+.view { display: flex; flex-direction: column; gap: 20px; max-width: 1080px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(22px, 3vw, 30px); line-height: 1.3; margin: 0; text-wrap: balance; }
+h2 { font-size: 17px; margin: 0; font-weight: 700; }
+.lede { color: var(--muted); margin: 0; max-width: 62ch; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+label.f { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; }
+label.f span.h { font-weight: 400; color: var(--muted); font-size: 12px; }
+input, textarea, select { font: inherit; font-size: 14px; color: var(--ink); background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; width: 100%; }
+textarea { resize: vertical; min-height: 84px; line-height: 1.65; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.spacer { flex: 1; }
+.btn { font: inherit; font-weight: 700; font-size: 14px; border-radius: 8px; padding: 9px 16px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.small { padding: 5px 10px; font-size: 12px; }
+.btn.danger { color: var(--bad); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.note { font-size: 13px; color: var(--muted); }
+.note.err { color: var(--bad); }
+.cad { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.cad input { font-family: var(--mono); text-align: center; }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.f-reel { color: var(--reel); } .f-feed { color: var(--feed); } .f-story { color: var(--story); } .f-x { color: var(--x); }
+.st-draft { color: var(--muted); } .st-approved { color: var(--ok); } .st-rejected { color: var(--bad); } .st-published { color: var(--accent); }
+.md { max-width: 72ch; }
+.md h3 { font-size: 16px; margin: 18px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.md h3:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+.md p { margin: 6px 0; }
+.md ul { margin: 6px 0; padding-left: 1.3em; }
+.empty { border: 1px dashed var(--line); border-radius: var(--r); padding: 28px; text-align: center; color: var(--muted); }
+.days { display: flex; flex-direction: column; gap: 14px; }
+.day { display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 14px; }
+.day-h { font-family: var(--mono); font-size: 13px; color: var(--muted); padding-top: 10px; }
+.day-h strong { display: block; font-family: var(--body); font-size: 15px; color: var(--ink); }
+.items { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start; }
+.item .time { font-family: var(--mono); font-size: 13px; padding-top: 2px; }
+.item .t { font-weight: 700; }
+.item .meta { font-size: 12px; color: var(--muted); }
+.item button.open { all: unset; cursor: pointer; display: contents; }
+.split { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.list { display: flex; flex-direction: column; gap: 6px; max-height: 76vh; overflow-y: auto; padding-right: 4px; }
+.card { all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.card[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.card:focus-visible { outline: 2px solid var(--accent); }
+.card .when { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.card .t { font-weight: 700; font-size: 14px; line-height: 1.5; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { all: unset; cursor: pointer; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.detail { display: flex; flex-direction: column; gap: 16px; }
+.kv { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 4px 12px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+.scenes { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+.scenes table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 13px; }
+.scenes th, .scenes td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.scenes th { background: var(--sunken); font-size: 12px; color: var(--muted); }
+.scenes td:first-child { font-family: var(--mono); white-space: nowrap; }
+.slides { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.slide { background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; aspect-ratio: 4 / 5; max-width: 100%; overflow: auto; }
+.slide .n { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.slide .dn { font-size: 11px; color: var(--muted); margin-top: auto; }
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.frame { background: var(--sunken); border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 6px; aspect-ratio: 9 / 16; max-width: 100%; overflow: auto; }
+.sticker { font-size: 11px; font-weight: 700; color: var(--story); border: 1px dashed currentColor; border-radius: 6px; padding: 4px 6px; }
+.count { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.count.over { color: var(--bad); font-weight: 500; }
+.tags { font-size: 13px; color: var(--feed); word-break: break-word; }
+.check { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+.check li::before { content: "□ "; color: var(--muted); }
+.progress { font-size: 13px; color: var(--muted); }
+.stream { white-space: pre-wrap; font-size: 13px; color: var(--muted); max-height: 220px; overflow: auto; background: var(--sunken); border-radius: 8px; padding: 10px; }
+.banner { background: var(--accent-soft); border-radius: var(--r); padding: 12px 16px; font-size: 13px; }
+.banner.warn { background: var(--sunken); border: 1px solid var(--line); }
+code, .mono { font-family: var(--mono); font-size: 13px; }
+pre.cmd { background: var(--sunken); border: 1px solid var(--line); border-radius: 8px; padding: 12px; overflow-x: auto; font-family: var(--mono); font-size: 13px; margin: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 18px; }
+.stat { display: flex; flex-direction: column; }
+.stat b { font-family: var(--mono); font-size: 22px; font-weight: 500; }
+.stat span { font-size: 12px; color: var(--muted); }
+@media (max-width: 860px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .rail { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; height: auto; padding: 12px 16px; gap: 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .mark { font-size: 17px; } .mark small { display: none; }
+  .steps { flex-direction: row; overflow-x: auto; gap: 2px; }
+  .step { grid-template-columns: 22px auto; white-space: nowrap; padding: 6px 8px; }
+  .conn { display: none; }
+  .grid2, .split { grid-template-columns: minmax(0, 1fr); }
+  .cad { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .day { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .day-h { padding-top: 0; }
+  .list { max-height: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+
+<div class="shell">
+  <nav class="rail" aria-label="ワークフロー">
+    <div class="mark">SIB SNS<br>Studio<small>SHONAN INNOVATION BASE</small></div>
+    <div class="steps" role="tablist">
+      <button class="step" data-view="settings" role="tab"><b>1</b>方向性</button>
+      <button class="step" data-view="research" role="tab"><b>2</b>トレンド</button>
+      <button class="step" data-view="plan" role="tab"><b>3</b>投稿計画</button>
+      <button class="step" data-view="drafts" role="tab"><b>4</b>原稿・承認</button>
+      <button class="step" data-view="export" role="tab"><b>5</b>投稿・書き出し</button>
+    </div>
+    <div class="conn">
+      <div><span class="dot" id="dot-db"></span><span id="st-db">共有データ: 接続中…</span></div>
+      <div><span class="dot" id="dot-ai"></span><span id="st-ai">AI生成: 確認中…</span></div>
+    </div>
+  </nav>
+
+  <main>
+    <div id="offline" class="banner warn" hidden>このページは claude.ai 上で開いたときに、チームの共有データとAI生成が使えます。今は閲覧のみです。</div>
+
+    <!-- 1. Settings -->
+    <section class="view" id="view-settings">
+      <h1>アカウントの方向性</h1>
+      <p class="lede">ここに書いた目的・ターゲット・トーンが、すべての企画と原稿の土台になります。実績の数字は「使ってよい事実」に書いたものだけが使われます。</p>
+      <div class="panel">
+        <div class="grid2">
+          <label class="f">アカウント名<input id="b-account"></label>
+          <label class="f">CTA（行動導線）<input id="b-cta"></label>
+        </div>
+        <label class="f">ミッション<textarea id="b-mission" rows="2"></textarea></label>
+        <div class="grid2">
+          <label class="f">SNSの目的<span class="h">優先順に1行ずつ</span><textarea id="b-goals" rows="4"></textarea></label>
+          <label class="f">ターゲットと悩み・欲求<textarea id="b-audience" rows="4"></textarea></label>
+        </div>
+        <div class="grid2">
+          <label class="f">トーン（やること / やらないこと）<textarea id="b-tone" rows="4"></textarea></label>
+          <label class="f">発信の柱と比率<textarea id="b-pillars" rows="4"></textarea></label>
+        </div>
+        <label class="f">使ってよい事実・実績<span class="h">ここにない数字や実績はAIが使いません</span><textarea id="b-facts" rows="4"></textarea></label>
+        <label class="f">NGワード<span class="h">読点区切り</span><input id="b-ng"></label>
+        <div class="f"><b style="font-size:13px">1週間の投稿本数</b>
+          <div class="cad">
+            <label class="f"><span class="chip f-reel">リール</span><input id="c-reel" type="number" min="0" max="14"></label>
+            <label class="f"><span class="chip f-feed">フィード</span><input id="c-feed" type="number" min="0" max="14"></label>
+            <label class="f"><span class="chip f-story">ストーリー</span><input id="c-story" type="number" min="0" max="21"></label>
+            <label class="f"><span class="chip f-x">X</span><input id="c-x" type="number" min="0" max="21"></label>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>参考アカウント・動画</h2>
+        <p class="note">URLだけでなく「なぜ参考にするか」「冒頭の見せ方・尺・構成」を書くと精度が上がります。AIは動画を視聴できないため、文字起こしがあれば貼ってください。</p>
+        <textarea id="i-references" rows="6"></textarea>
+        <h2>気になっているトレンド・メモ</h2>
+        <textarea id="i-trends" rows="5" placeholder="例: 就活の本音インタビュー形式が学生層で伸びている"></textarea>
+      </div>
+      <div class="row"><button class="btn primary" id="save-settings">保存</button><span class="note" id="settings-msg"></span></div>
+    </section>
+
+    <!-- 2. Research -->
+    <section class="view" id="view-research" hidden>
+      <h1>トレンド分析</h1>
+      <p class="lede">参考アカウントとトレンドメモ、ブランド設定をもとに、今週使うべき型とテーマをAIが整理します。最新のバズ情報は「気になっているトレンド」に書き足すほど反映されます。</p>
+      <div class="row">
+        <button class="btn primary" id="run-research">トレンドを分析する</button>
+        <button class="btn" id="stop-research" hidden>停止</button>
+        <span class="note" id="research-msg"></span>
+      </div>
+      <div class="stream" id="research-stream" hidden></div>
+      <div class="panel" id="research-out"><div class="empty">まだ分析がありません。「トレンドを分析する」を押すと、使うべきフォーマット・テーマ・避けるべきトレンドがここに表示されます。</div></div>
+    </section>
+
+    <!-- 3. Plan -->
+    <section class="view" id="view-plan" hidden>
+      <h1>投稿計画</h1>
+      <p class="lede">目的の優先順位と発信の柱の比率に沿って、1週間の投稿カレンダーを作ります。</p>
+      <div class="panel">
+        <div class="row">
+          <label class="f" style="width:180px">開始日<input id="p-start" type="date"></label>
+          <label class="f" style="width:110px">日数<input id="p-days" type="number" min="1" max="14" value="7"></label>
+          <div class="spacer"></div>
+          <button class="btn primary" id="run-plan">計画を作る</button>
+          <button class="btn" id="stop-plan" hidden>停止</button>
+        </div>
+        <span class="note" id="plan-msg"></span>
+      </div>
+      <div id="plan-summary"></div>
+      <div class="row" id="plan-actions" hidden>
+        <button class="btn primary" id="gen-all">未作成の原稿をまとめて作る</button>
+        <button class="btn" id="stop-gen" hidden>停止</button>
+        <span class="progress" id="gen-msg"></span>
+      </div>
+      <div class="days" id="plan-days"><div class="empty">計画はまだありません。開始日を選んで「計画を作る」を押してください。</div></div>
+    </section>
+
+    <!-- 4. Drafts -->
+    <section class="view" id="view-drafts" hidden>
+      <h1>原稿・承認</h1>
+      <p class="lede">内容を確認し、必要なら直接書き換えて「承認」してください。変更はチーム全員にすぐ共有されます。</p>
+      <div class="row">
+        <div class="filters" id="filters">
+          <button data-f="all" aria-pressed="true">すべて</button>
+          <button data-f="draft">未確認</button>
+          <button data-f="approved">承認済み</button>
+          <button data-f="published">投稿済み</button>
+          <button data-f="rejected">不採用</button>
+        </div>
+        <div class="spacer"></div>
+        <div class="stats" id="stats"></div>
+      </div>
+      <div class="split">
+        <div class="list" id="draft-list"></div>
+        <div class="panel detail" id="draft-detail"><div class="empty">左の一覧から原稿を選んでください。原稿は「投稿計画」から作成できます。</div></div>
+      </div>
+    </section>
+
+    <!-- 5. Export -->
+    <section class="view" id="view-export" hidden>
+      <h1>投稿・書き出し</h1>
+      <p class="lede">承認済みの原稿は、各アプリにコピーして投稿するか、JSONに書き出してコマンドラインツールで予約投稿できます。</p>
+      <div class="panel">
+        <h2>承認済み <span class="mono" id="ex-count">0</span> 件</h2>
+        <div class="row">
+          <button class="btn primary" id="ex-save">JSONを保存</button>
+          <button class="btn" id="ex-copy">JSONをコピー</button>
+          <span class="note" id="ex-msg"></span>
+        </div>
+        <textarea id="ex-json" rows="6" readonly hidden></textarea>
+      </div>
+      <div class="panel">
+        <h2>自動投稿の手順（コマンドラインツール）</h2>
+        <p class="note">X は原稿だけで投稿できます。Instagram は撮影・制作した素材の公開URLを登録してから投稿されます。</p>
+        <pre class="cmd">cd sns-automation
+python -m sns_auto import sib-approved.json     # 承認済み原稿を取り込む
+python -m sns_auto media &lt;原稿ID&gt; https://…/reel.mp4   # Instagram の素材URL
+python -m sns_auto publish --yes                 # 予定時刻を過ぎたものを投稿</pre>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const FMT = { reel: "リール", feed: "フィード", story: "ストーリー", x: "X" };
+  const STATUS = { draft: "未確認", approved: "承認済み", rejected: "不採用", published: "投稿済み" };
+  const WD = ["日", "月", "火", "水", "木", "金", "土"];
+
+  const DEFAULT_BRAND = {
+    account: "", cta: "", mission: "", goals: "", audience: "", tone: "", pillars: "", facts: "", ng: "",
+    cadence: { reel: 3, feed: 2, story: 5, x: 7 },
+  };
+  const S = { brand: null, inputs: null, research: null, plan: null, drafts: new Map(), filter: "all", selected: null };
+  let db = null, sample = null, downloads = null, canWrite = true;
+
+  // ---------- helpers ----------
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v == null || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid);
+    return el;
+  }
+  const chip = (fmt) => h("span", { class: `chip f-${fmt}` }, FMT[fmt] || fmt);
+  const stChip = (st) => h("span", { class: `chip st-${st}` }, STATUS[st] || st);
+  const str = (v) => (v == null ? "" : String(v));
+  const arr = (v) => (Array.isArray(v) ? v : []);
+  const tagText = (tags) => arr(tags).map((t) => { t = str(t).trim(); return t.startsWith("#") ? t : "#" + t; }).join(" ");
+  // X counts CJK and most non-Latin characters as 2; URLs as 23.
+  function xWeight(t) {
+    let w = 0;
+    const s = str(t).replace(/https?:\/\/\S+/g, () => { w += 23; return ""; });
+    for (const ch of s) w += ch.codePointAt(0) <= 0x10ff ? 1 : 2;
+    return w;
+  }
+  function dateLabel(iso) {
+    const d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return iso;
+    return `${d.getMonth() + 1}/${d.getDate()}（${WD[d.getDay()]}）`;
+  }
+  function sampleErr(e) {
+    const m = {
+      not_granted: "AI生成が許可されていません。ページの権限設定から許可してください。",
+      sampling_disabled: "このアカウントではAI生成が使えません。",
+      rate_limited: "利用上限に達しました。少し時間をおいて再度お試しください。",
+      session_expired: "ログインが切れました。claude.ai に再ログインしてください。",
+      refused: "この内容では生成できませんでした。指示や設定を変えてお試しください。",
+      invalid_json: "AIの出力を読み取れませんでした。もう一度お試しください。",
+      prompt_too_large: "入力が長すぎます。参考・トレンドメモを短くしてください。",
+      cancelled: "停止しました。",
+    };
+    return m[e?.code] || "生成に失敗しました。もう一度お試しください。";
+  }
+  async function copyText(text, btn) {
+    try { await navigator.clipboard.writeText(text); flash(btn, "コピーしました"); }
+    catch { flash(btn, "コピーできませんでした"); }
+  }
+  function flash(btn, msg) {
+    if (!btn) return;
+    const old = btn.textContent; btn.textContent = msg; btn.disabled = true;
+    setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1400);
+  }
+  function copyBtn(getText, label = "コピー") {
+    const b = h("button", { class: "btn small" }, label);
+    b.addEventListener("click", () => copyText(getText(), b));
+    return b;
+  }
+
+  // ---------- navigation ----------
+  function show(view) {
+    $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
+    $$(".step").forEach((b) => b.setAttribute("aria-current", String(b.dataset.view === view)));
+    try { localStorage.setItem("sib-view", view); } catch {}
+  }
+  $$(".step").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
+  let initial = "settings";
+  try { initial = localStorage.getItem("sib-view") || initial; } catch {}
+  if (/^#(settings|research|plan|drafts|export)$/.test(location.hash)) initial = location.hash.slice(1);
+  show(initial);
+
+  // ---------- settings ----------
+  const BF = ["account", "cta", "mission", "goals", "audience", "tone", "pillars", "facts", "ng"];
+  function fillSettings() {
+    const b = { ...DEFAULT_BRAND, ...(S.brand || {}) };
+    for (const k of BF) { const el = $("#b-" + k); if (document.activeElement !== el) el.value = str(b[k]); }
+    for (const k of Object.keys(FMT)) { const el = $("#c-" + k); if (document.activeElement !== el) el.value = b.cadence?.[k] ?? DEFAULT_BRAND.cadence[k]; }
+    const i = S.inputs || {};
+    for (const k of ["references", "trends"]) { const el = $("#i-" + k); if (document.activeElement !== el) el.value = str(i[k]); }
+  }
+  $("#save-settings").addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget, msg = $("#settings-msg");
+    if (!db) { msg.textContent = "共有データに接続できないため保存できません。"; return; }
+    const brand = Object.fromEntries(BF.map((k) => [k, $("#b-" + k).value.trim()]));
+    brand.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, Math.max(0, parseInt($("#c-" + k).value, 10) || 0)]));
+    const inputs = { references: $("#i-references").value.trim(), trends: $("#i-trends").value.trim() };
+    btn.disabled = true; msg.textContent = "保存中…"; msg.classList.remove("err");
+    try {
+      await db.doc("settings/brand").set(brand);
+      await db.doc("settings/inputs").set(inputs);
+      msg.textContent = "保存しました。";
+    } catch (e) {
+      msg.textContent = "保存できませんでした（編集権限がない可能性があります）。"; msg.classList.add("err");
+    } finally { btn.disabled = false; }
+  });
+
+  // ---------- prompt context ----------
+  const RULES = `あなたは日本のSNSマーケティングに精通したコンテンツディレクターです。
+以下のブランド設定に忠実に、Instagram（リール・フィード・ストーリー）とXの発信を企画・制作します。
+
+原則:
+- 目的とターゲットの悩み・欲求から逆算し、1投稿1メッセージ、CTAは1つに絞る。
+- 数字や実績は「使ってよい事実」に書かれているものだけを使う。存在しない実績・人物・コメントを創作しない。
+- NGワードと「やらないこと」を守る。
+- トレンドや参考アカウントは型（構成・フック・尺・編集テンポ）を借り、内容は自社の文脈に置き換える。他者の文章や動画をそのまま流用しない。
+- 自然な日本語で書く。Xは全角140字以内を厳守。`;
+  function context() {
+    const b = { ...DEFAULT_BRAND, ...(S.brand || {}) }, i = S.inputs || {};
+    return `${RULES}
+
+<brand>
+アカウント: ${b.account}
+ミッション: ${b.mission}
+SNSの目的（優先順）:
+${b.goals}
+ターゲット:
+${b.audience}
+トーン:
+${b.tone}
+発信の柱と比率:
+${b.pillars}
+使ってよい事実:
+${b.facts}
+CTA: ${b.cta}
+NGワード: ${b.ng}
+</brand>
+
+<references>
+${str(i.references).slice(0, 12000)}
+</references>
+
+<trend_notes>
+${str(i.trends).slice(0, 8000)}
+</trend_notes>`;
+  }
+
+  // ---------- research ----------
+  function mdRender(text) {
+    const root = h("div", { class: "md" });
+    let ul = null;
+    for (const raw of str(text).split("\n")) {
+      const line = raw.trimEnd();
+      if (/^#{1,4}\s/.test(line)) { ul = null; root.append(h("h3", {}, line.replace(/^#+\s*/, ""))); }
+      else if (/^\s*[-*・]\s+/.test(line)) { if (!ul) { ul = h("ul"); root.append(ul); } ul.append(h("li", {}, line.replace(/^\s*[-*・]\s+/, "").replace(/\*\*/g, ""))); }
+      else if (line.trim()) { ul = null; root.append(h("p", {}, line.replace(/\*\*/g, ""))); }
+      else ul = null;
+    }
+    return root;
+  }
+  function renderResearch() {
+    const out = $("#research-out");
+    if (!S.research?.text) return;
+    out.replaceChildren(
+      h("div", { class: "row" }, h("span", { class: "note" }, "最終更新: " + new Date(S.research.at).toLocaleString("ja-JP")), h("div", { class: "spacer" }), copyBtn(() => S.research.text)),
+      mdRender(S.research.text),
+    );
+  }
+  let researchCtl = null;
+  $("#stop-research").addEventListener("click", () => researchCtl?.abort());
+  $("#run-research").addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget, msg = $("#research-msg"), stream = $("#research-stream");
+    if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
+    researchCtl = new AbortController();
+    btn.disabled = true; $("#stop-research").hidden = false; msg.textContent = "分析中…（30秒〜1分ほど）"; msg.classList.remove("err");
+    stream.hidden = false; stream.textContent = "考えています…";
+    const today = new Date().toISOString().slice(0, 10);
+    const prompt = `${context()}
+
+今日は ${today} です。上の参考アカウント・トレンドメモと、あなたが知っている日本のSNS（Instagram/TikTok/X）の傾向をもとに、
+この週に使うべきトレンドを整理してください。確かでない情報は「要確認」と明記してください。
+
+次の見出しで、Markdownで簡潔に書いてください。
+## 今使えるフォーマット・型（リール/フィード/ストーリー/X）
+## 話題のテーマ・キーワード（ターゲット別）
+## 音源・編集テンポの方向性
+## 参考アカウントから抽出した勝ちパターン
+## 自社で使うべきトレンドTOP5（理由と相性 ◎/○/△）
+## 避けるべきトレンド`;
+    try {
+      const { text } = await sample(prompt, { signal: researchCtl.signal, cache: false, onText: ({ text }) => { stream.textContent = text; } });
+      S.research = { text, at: Date.now() };
+      renderResearch();
+      msg.textContent = "分析しました。";
+      if (db) await db.doc("research/latest").set(S.research).catch(() => { msg.textContent = "分析しましたが、共有データへの保存に失敗しました。"; });
+    } catch (e) {
+      msg.textContent = sampleErr(e); if (e?.code !== "cancelled") msg.classList.add("err");
+    } finally {
+      btn.disabled = false; $("#stop-research").hidden = true; stream.hidden = true;
+    }
+  });
+
+  // ---------- plan ----------
+  const tomorrow = new Date(Date.now() + 864e5);
+  $("#p-start").value = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  const draftId = (it, idx) => `${it.date}_${String(idx + 1).padStart(2, "0")}_${it.format}`;
+
+  function renderPlan() {
+    const days = $("#plan-days"), sum = $("#plan-summary");
+    const p = S.plan;
+    if (!p?.items?.length) { $("#plan-actions").hidden = true; sum.replaceChildren(); return; }
+    $("#plan-actions").hidden = false;
+    sum.replaceChildren(h("div", { class: "banner" }, h("b", {}, "今週の方針　"), str(p.summary)));
+    const byDate = new Map();
+    p.items.forEach((it, idx) => {
+      if (!byDate.has(it.date)) byDate.set(it.date, []);
+      byDate.get(it.date).push([it, idx]);
+    });
+    days.replaceChildren(...[...byDate.keys()].sort().map((date) => {
+      const rows = byDate.get(date).sort((a, b) => str(a[0].time).localeCompare(str(b[0].time)));
+      return h("div", { class: "day" },
+        h("div", { class: "day-h" }, h("strong", {}, dateLabel(date)), date),
+        h("div", { class: "items" }, rows.map(([it, idx]) => {
+          const id = draftId(it, idx), d = S.drafts.get(id);
+          const action = d
+            ? h("button", { class: "btn small", onclick: () => { S.selected = id; renderDrafts(); show("drafts"); } }, "原稿を見る")
+            : h("button", { class: "btn small", onclick: (e) => genOne(it, idx, e.currentTarget) }, "原稿を作る");
+          return h("div", { class: "item" },
+            h("div", {}, h("div", { class: "time" }, str(it.time)), chip(it.format)),
+            h("div", {},
+              h("div", { class: "t" }, str(it.theme)),
+              h("div", { class: "meta" }, `${str(it.pillar)} ／ 目的: ${str(it.goal)} ／ KPI: ${str(it.kpi)}`),
+              it.trend_angle && it.trend_angle !== "なし" ? h("div", { class: "meta" }, "トレンド: " + it.trend_angle) : null),
+            h("div", { class: "row" }, d ? stChip(d.status) : null, action));
+        })));
+    }));
+  }
+
+  let planCtl = null;
+  $("#stop-plan").addEventListener("click", () => planCtl?.abort());
+  $("#run-plan").addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget, msg = $("#plan-msg");
+    if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
+    const start = $("#p-start").value, days = Math.min(14, Math.max(1, parseInt($("#p-days").value, 10) || 7));
+    if (!start) { msg.textContent = "開始日を選んでください。"; return; }
+    const cad = { ...DEFAULT_BRAND.cadence, ...(S.brand?.cadence || {}) };
+    const counts = Object.fromEntries(Object.entries(cad).map(([k, v]) => [k, v ? Math.max(1, Math.round((v * days) / 7)) : 0]));
+    planCtl = new AbortController();
+    btn.disabled = true; $("#stop-plan").hidden = false; msg.textContent = "計画を作成中…（1分ほど）"; msg.classList.remove("err");
+    const prompt = `${context()}
+
+<research>
+${str(S.research?.text).slice(0, 12000) || "（分析なし）"}
+</research>
+
+${start} から ${days} 日間の投稿カレンダーを作ってください。
+形式ごとの本数: リール ${counts.reel}、フィード ${counts.feed}、ストーリー ${counts.story}、X ${counts.x}
+- 発信の柱の比率に近づける
+- 目的の優先順に沿って、導線（LINE登録・イベント集客）につながる流れを設計する
+- 同じ日に同じテーマを複数形式で展開する場合は役割（認知→信頼→行動）を分ける
+- トレンドは分析の「自社で使うべきトレンド」から選び、無理に全部使わない
+
+次のJSONだけを返してください:
+{"summary": "今週の方針を3行以内で",
+ "items": [{"date": "YYYY-MM-DD", "time": "HH:MM", "format": "reel|feed|story|x", "pillar": "発信の柱の名前",
+   "goal": "狙う目的", "theme": "テーマを一文で", "trend_angle": "使うトレンドと使い方。なければ「なし」",
+   "reference_angle": "参考から借りる要素。なければ「なし」", "kpi": "主に見る指標"}]}`;
+    try {
+      const data = await sample.json(prompt, { signal: planCtl.signal, cache: false, modelTier: "complex" });
+      const items = arr(data?.items).filter((it) => it && FMT[it.format] && /^\d{4}-\d{2}-\d{2}$/.test(str(it.date)))
+        .map((it) => Object.fromEntries(["date", "time", "format", "pillar", "goal", "theme", "trend_angle", "reference_angle", "kpi"].map((k) => [k, str(it[k])])));
+      if (!items.length) throw { code: "invalid_json" };
+      S.plan = { summary: str(data.summary), items, start, days, at: Date.now() };
+      renderPlan();
+      msg.textContent = `${items.length} 件の計画を作りました。`;
+      if (db) await db.doc("plans/current").set(S.plan).catch(() => { msg.textContent += "（共有データへの保存に失敗しました）"; });
+    } catch (e) {
+      msg.textContent = sampleErr(e); if (e?.code !== "cancelled") msg.classList.add("err");
+    } finally { btn.disabled = false; $("#stop-plan").hidden = true; }
+  });
+
+  // ---------- generate drafts ----------
+  const GUIDE = {
+    reel: { text: "Instagramリール。15〜45秒。冒頭1〜2秒のフック、テンポ良いカット割り、最後にCTA。学生メンバーがスマホで撮れる内容にする。",
+      shape: `{"title": "", "hook": "冒頭1〜2秒のフック", "duration_sec": 30, "scenes": [{"time": "0-2s", "visual": "撮る画", "telop": "テロップ", "narration": "話す内容（なければ空）"}], "audio_idea": "音源の方向性", "cover_text": "カバー文字", "caption": "キャプション", "hashtags": ["タグ"], "shooting_checklist": ["必要な素材・人・場所"]}` },
+    feed: { text: "Instagramフィード（カルーセル5〜8枚）。1枚目は保存したくなる表紙、最終枚にCTA。キャプションは最初の1行で続きを読ませる。",
+      shape: `{"title": "", "slides": [{"headline": "", "body": "", "design_note": "レイアウト・写真・配色"}], "caption": "", "hashtags": [""], "alt_text": ""}` },
+    story: { text: "Instagramストーリー（3〜6フレーム）。スタンプで双方向性を作り、最後にリンク/行動導線。",
+      shape: `{"title": "", "frames": [{"visual": "画", "text": "文字", "sticker": "none|poll|quiz|question|link|countdown|slider", "sticker_detail": "設問・選択肢・リンク先など"}]}` },
+    x: { text: "Xのポスト。全角140字以内。単発か、価値が高い場合のみ3〜5件のスレッド。ハッシュタグは0〜2個。",
+      shape: `{"title": "", "posts": ["1件目（全角140字以内）"]}` },
+  };
+
+  async function generateDraft(it, idx, signal) {
+    const g = GUIDE[it.format];
+    const prompt = `${context()}
+
+<research>
+${str(S.research?.text).slice(0, 8000)}
+</research>
+
+<week_summary>${str(S.plan?.summary)}</week_summary>
+
+次の企画の投稿原稿を制作してください。
+<format_guide>${g.text}</format_guide>
+<plan_item>
+${JSON.stringify(it, null, 2)}
+</plan_item>
+
+次の形のJSONだけを返してください:
+${g.shape}`;
+    const body = await sample.json(prompt, { signal, cache: false });
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw { code: "invalid_json" };
+    const id = draftId(it, idx);
+    const doc = { id, status: "draft", format: it.format, plan: it, body, media_urls: [], notes: "", updatedAt: Date.now() };
+    S.drafts.set(id, doc);
+    if (db) await db.doc("drafts/" + id).set(doc);
+    return id;
+  }
+
+  async function genOne(it, idx, btn) {
+    if (!sample) { $("#gen-msg").textContent = "AI生成はこの表示では使えません。"; return; }
+    btn.disabled = true; btn.textContent = "作成中…";
+    try { await generateDraft(it, idx); renderPlan(); renderDrafts(); }
+    catch (e) { btn.disabled = false; btn.textContent = "原稿を作る"; $("#gen-msg").textContent = sampleErr(e); }
+  }
+
+  let genCtl = null;
+  $("#stop-gen").addEventListener("click", () => genCtl?.abort());
+  $("#gen-all").addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget, msg = $("#gen-msg");
+    if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
+    const todo = S.plan.items.map((it, idx) => [it, idx]).filter(([it, idx]) => !S.drafts.has(draftId(it, idx)));
+    if (!todo.length) { msg.textContent = "すべて作成済みです。"; return; }
+    genCtl = new AbortController();
+    btn.disabled = true; $("#stop-gen").hidden = false;
+    let done = 0;
+    try {
+      // One at a time: each call is a paid request on the viewer's account.
+      for (const [it, idx] of todo) {
+        if (genCtl.signal.aborted) break;
+        msg.textContent = `作成中 ${done + 1} / ${todo.length}：${it.theme}`;
+        await generateDraft(it, idx, genCtl.signal);
+        done++; renderPlan(); renderDrafts();
+      }
+      msg.textContent = `${done} 件の原稿を作りました。「原稿・承認」で確認してください。`;
+    } catch (e) {
+      msg.textContent = `${done} 件作成後に止まりました：${sampleErr(e)}`;
+    } finally { btn.disabled = false; $("#stop-gen").hidden = true; }
+  });
+
+  // ---------- drafts ----------
+  $$("#filters button").forEach((b) => b.addEventListener("click", () => {
+    S.filter = b.dataset.f;
+    $$("#filters button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    renderDrafts();
+  }));
+
+  const sortedDrafts = () => [...S.drafts.values()].sort((a, b) =>
+    (str(a.plan?.date) + str(a.plan?.time)).localeCompare(str(b.plan?.date) + str(b.plan?.time)));
+
+  function renderStats() {
+    const all = [...S.drafts.values()];
+    const n = (st) => all.filter((d) => d.status === st).length;
+    $("#stats").replaceChildren(...[["未確認", n("draft")], ["承認済み", n("approved")], ["投稿済み", n("published")]]
+      .map(([l, v]) => h("div", { class: "stat" }, h("b", {}, String(v)), h("span", {}, l))));
+    $("#ex-count").textContent = String(n("approved"));
+  }
+
+  function renderDrafts() {
+    renderStats();
+    const list = $("#draft-list");
+    const items = sortedDrafts().filter((d) => S.filter === "all" || d.status === S.filter);
+    if (!items.length) {
+      list.replaceChildren(h("div", { class: "empty" }, S.drafts.size ? "この条件の原稿はありません。" : "原稿はまだありません。「投稿計画」で計画を作り、原稿を作成してください。"));
+    } else {
+      list.replaceChildren(...items.map((d) => h("button", {
+        class: "card", "aria-selected": String(d.id === S.selected),
+        onclick: () => { S.selected = d.id; renderDrafts(); },
+      },
+        h("div", { class: "row" }, h("span", { class: "when" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), h("div", { class: "spacer" }), chip(d.format), stChip(d.status)),
+        h("div", { class: "t" }, str(d.body?.title) || str(d.plan?.theme)))));
+    }
+    renderDetail();
+  }
+
+  // Coalesce edits: write the body once the person pauses typing.
+  const pending = new Map();
+  function saveBody(d) {
+    d.updatedAt = Date.now();
+    clearTimeout(pending.get(d.id));
+    pending.set(d.id, setTimeout(async () => {
+      pending.delete(d.id);
+      if (db) await db.doc("drafts/" + d.id).update({ body: d.body, media_urls: d.media_urls, notes: d.notes, updatedAt: d.updatedAt }).catch(() => {});
+    }, 700));
+  }
+  async function setStatus(d, status) {
+    d.status = status; d.updatedAt = Date.now();
+    renderDrafts(); renderPlan();
+    if (db) await db.doc("drafts/" + d.id).update({ status, updatedAt: d.updatedAt }).catch(() => {});
+  }
+  function edit(d, value, onInput, rows = 3, extra) {
+    const ta = h("textarea", { rows: String(rows), readonly: !canWrite || null });
+    ta.value = str(value);
+    ta.addEventListener("input", () => { onInput(ta.value); saveBody(d); extra?.(ta.value); });
+    return ta;
+  }
+
+  function renderDetail() {
+    const box = $("#draft-detail");
+    const d = S.drafts.get(S.selected);
+    if (!d) { box.replaceChildren(h("div", { class: "empty" }, "左の一覧から原稿を選んでください。")); return; }
+    if (document.activeElement && box.contains(document.activeElement) && document.activeElement.tagName === "TEXTAREA") return;
+    const p = d.plan || {}, b = d.body || {};
+    const parts = [
+      h("div", { class: "row" }, chip(d.format), stChip(d.status), h("span", { class: "mono" }, d.id)),
+      h("h2", {}, str(b.title) || str(p.theme)),
+      h("dl", { class: "kv" },
+        h("dt", {}, "日時"), h("dd", {}, `${dateLabel(str(p.date))} ${str(p.time)}`),
+        h("dt", {}, "目的"), h("dd", {}, `${str(p.goal)}（KPI: ${str(p.kpi)}）`),
+        h("dt", {}, "テーマ"), h("dd", {}, str(p.theme)),
+        h("dt", {}, "トレンド"), h("dd", {}, str(p.trend_angle)),
+        h("dt", {}, "参考"), h("dd", {}, str(p.reference_angle))),
+    ];
+
+    if (d.format === "reel") {
+      parts.push(
+        h("label", { class: "f" }, "フック（冒頭1〜2秒）", edit(d, b.hook, (v) => (b.hook = v), 2)),
+        h("div", { class: "note" }, `尺 ${str(b.duration_sec)}秒 ／ 音源: ${str(b.audio_idea)} ／ カバー: ${str(b.cover_text)}`),
+        h("div", { class: "scenes" }, h("table", {},
+          h("thead", {}, h("tr", {}, h("th", {}, "時間"), h("th", {}, "画"), h("th", {}, "テロップ"), h("th", {}, "ナレーション"))),
+          h("tbody", {}, arr(b.scenes).map((s) => h("tr", {}, h("td", {}, str(s.time)), h("td", {}, str(s.visual)), h("td", {}, str(s.telop)), h("td", {}, str(s.narration))))))),
+        h("div", {}, h("b", { style: "font-size:13px" }, "撮影チェックリスト"), h("ul", { class: "check" }, arr(b.shooting_checklist).map((c) => h("li", {}, str(c))))));
+    }
+    if (d.format === "feed") {
+      parts.push(h("div", { class: "slides" }, arr(b.slides).map((s, i) =>
+        h("div", { class: "slide" }, h("span", { class: "n" }, `${i + 1} / ${arr(b.slides).length}`),
+          h("b", {}, str(s.headline)), h("div", { style: "font-size:13px" }, str(s.body)), h("div", { class: "dn" }, str(s.design_note))))));
+    }
+    if (d.format === "reel" || d.format === "feed") {
+      const capText = () => `${str(b.caption)}\n\n${tagText(b.hashtags)}`.trim();
+      parts.push(
+        h("div", { class: "row" }, h("b", { style: "font-size:13px" }, "キャプション"), h("div", { class: "spacer" }), copyBtn(capText, "キャプションをコピー")),
+        edit(d, b.caption, (v) => (b.caption = v), 7),
+        h("div", { class: "tags" }, tagText(b.hashtags)));
+      if (b.alt_text) parts.push(h("div", { class: "note" }, "代替テキスト: " + b.alt_text));
+    }
+    if (d.format === "story") {
+      parts.push(h("div", { class: "frames" }, arr(b.frames).map((f, i) =>
+        h("div", { class: "frame" }, h("span", { class: "count" }, `${i + 1}`),
+          h("b", { style: "font-size:13px" }, str(f.text)),
+          h("div", { class: "note" }, str(f.visual)),
+          f.sticker && f.sticker !== "none" ? h("div", { class: "sticker" }, `${f.sticker}：${str(f.sticker_detail)}`) : null))),
+        h("div", { class: "note" }, "スタンプ（投票・リンクなど）はアプリで追加してください。"));
+    }
+    if (d.format === "x") {
+      const posts = arr(b.posts);
+      posts.forEach((t, i) => {
+        const cnt = h("span", { class: "count" });
+        const upd = (v) => { const w = xWeight(v); cnt.textContent = `${Math.ceil(w / 2)} / 140（全角換算）`; cnt.classList.toggle("over", w > 280); };
+        upd(t);
+        parts.push(
+          h("div", { class: "row" }, h("b", { style: "font-size:13px" }, posts.length > 1 ? `スレッド ${i + 1} / ${posts.length}` : "ポスト"), cnt, h("div", { class: "spacer" }), copyBtn(() => str(b.posts[i]))),
+          edit(d, t, (v) => (b.posts[i] = v), 4, upd));
+      });
+    }
+
+    const media = h("textarea", { rows: "2", placeholder: "Instagram用：撮影・制作した素材の公開URL（1行に1つ）", readonly: !canWrite || null });
+    media.value = arr(d.media_urls).join("\n");
+    media.addEventListener("input", () => { d.media_urls = media.value.split("\n").map((s) => s.trim()).filter(Boolean); saveBody(d); });
+    const notes = h("textarea", { rows: "2", placeholder: "チーム向けメモ（修正依頼など）", readonly: !canWrite || null });
+    notes.value = str(d.notes);
+    notes.addEventListener("input", () => { d.notes = notes.value; saveBody(d); });
+    if (d.format !== "x") parts.push(h("label", { class: "f" }, "素材URL", media));
+    parts.push(h("label", { class: "f" }, "メモ", notes));
+
+    if (canWrite) {
+      const regen = h("button", { class: "btn small" }, "作り直す");
+      let armed = false;
+      regen.addEventListener("click", async () => {
+        if (!sample) return;
+        if (!armed) { armed = true; regen.textContent = "もう一度押すと上書き"; setTimeout(() => { armed = false; regen.textContent = "作り直す"; }, 3000); return; }
+        regen.disabled = true; regen.textContent = "作成中…";
+        const idx = S.plan?.items?.findIndex((it, i) => draftId(it, i) === d.id) ?? -1;
+        const n = idx >= 0 ? idx : parseInt(d.id.split("_")[1], 10) - 1;
+        try { await generateDraft(d.plan, n); renderDrafts(); renderPlan(); }
+        catch (e) { regen.disabled = false; regen.textContent = sampleErr(e); }
+      });
+      parts.push(h("div", { class: "row" },
+        d.status !== "approved" ? h("button", { class: "btn primary", onclick: () => setStatus(d, "approved") }, "承認") : h("button", { class: "btn", onclick: () => setStatus(d, "draft") }, "承認を取り消す"),
+        d.status === "approved" ? h("button", { class: "btn", onclick: () => setStatus(d, "published") }, "投稿済みにする") : null,
+        d.status !== "rejected" ? h("button", { class: "btn danger", onclick: () => setStatus(d, "rejected") }, "不採用") : null,
+        h("div", { class: "spacer" }), sample ? regen : null));
+    }
+    box.replaceChildren(...parts.filter(Boolean));
+  }
+
+  // ---------- export ----------
+  function exportJson() {
+    return JSON.stringify(sortedDrafts().filter((d) => d.status === "approved").map((d) => ({
+      id: d.id, status: d.status, plan: d.plan, [d.format]: d.body, media_urls: arr(d.media_urls), notes: str(d.notes),
+    })), null, 2);
+  }
+  $("#ex-copy").addEventListener("click", (ev) => {
+    const ta = $("#ex-json"); ta.value = exportJson(); ta.hidden = false;
+    copyText(ta.value, ev.currentTarget);
+  });
+  $("#ex-save").addEventListener("click", async () => {
+    const msg = $("#ex-msg");
+    if (!downloads) { const ta = $("#ex-json"); ta.value = exportJson(); ta.hidden = false; ta.select(); msg.textContent = "保存が使えないため、表示したJSONをコピーしてください。"; return; }
+    try {
+      const r = await downloads.save({ filename: "sib-approved.json", data: exportJson() });
+      msg.textContent = r.status === "saved" ? "保存しました。" : "";
+    } catch (e) { msg.textContent = e?.code === "cancelled" ? "" : "保存できませんでした。「JSONをコピー」をお使いください。"; }
+  });
+
+  // ---------- boot ----------
+  fillSettings(); renderDrafts();
+  if (!window.claude?.use) { $("#offline").hidden = false; $("#st-db").textContent = "共有データ: 未接続"; $("#st-ai").textContent = "AI生成: 未接続"; return; }
+
+  claude.use("sample").then((s) => {
+    sample = s;
+    $("#dot-ai").classList.toggle("on", !!s);
+    $("#st-ai").textContent = s ? "AI生成: 利用可能" : "AI生成: 利用不可";
+    renderDetail();
+  });
+  claude.use("downloads").then((d) => { downloads = d; });
+  claude.use("user").then(async (u) => {
+    const c = u ? await u.can("data.write") : null;
+    if (c === false) { canWrite = false; $("#save-settings").disabled = true; $("#settings-msg").textContent = "閲覧のみの権限です。"; renderDetail(); }
+  });
+  claude.use("db").then((d) => {
+    db = d;
+    $("#dot-db").classList.toggle("on", !!d);
+    $("#st-db").textContent = d ? "共有データ: 接続済み" : "共有データ: 未接続（ログインが必要です）";
+    if (!d) { $("#offline").hidden = false; return; }
+    const fail = () => { $("#st-db").textContent = "共有データ: 切断されました"; $("#dot-db").classList.remove("on"); };
+    d.doc("settings/brand").onSnapshot((s) => { S.brand = s.exists ? s.data() : null; fillSettings(); }, fail);
+    d.doc("settings/inputs").onSnapshot((s) => { S.inputs = s.exists ? s.data() : null; fillSettings(); }, fail);
+    d.doc("research/latest").onSnapshot((s) => { if (s.exists) { S.research = s.data(); renderResearch(); } }, fail);
+    d.doc("plans/current").onSnapshot((s) => { S.plan = s.exists ? s.data() : null; renderPlan(); }, fail);
+    d.collection("drafts").onSnapshot((snap) => {
+      const next = new Map();
+      for (const doc of snap.docs) {
+        // Keep local copies of drafts with an unsent edit so typing is not overwritten.
+        next.set(doc.id, pending.has(doc.id) && S.drafts.has(doc.id) ? S.drafts.get(doc.id) : structuredClone(doc.data()));
+      }
+      S.drafts = next;
+      renderDrafts(); renderPlan();
+    }, fail);
+  });
+})();
+</script>

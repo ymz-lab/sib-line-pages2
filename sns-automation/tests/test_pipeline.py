@@ -138,3 +138,21 @@ def test_x_thread_publish(env, monkeypatch):
                       {"text": "2つ目", "reply": {"in_reply_to_tweet_id": "1"}}]
     d = pipeline.load_draft("2020-01-01_02_x")[0]
     assert d.status == "published" and d.published["ids"] == ["1", "2"]
+
+
+def test_import_from_ui_export(env, tmp_path):
+    exported = [{
+        "id": "2020-01-01_01_x", "status": "approved",
+        "plan": PLAN["items"][1], "x": {"title": "t", "posts": ["UIから"]},
+        "media_urls": [], "notes": "",
+    }]
+    f = tmp_path / "sib-approved.json"
+    f.write_text(json.dumps(exported, ensure_ascii=False), encoding="utf-8")
+    cli.main(["import", str(f)])
+    d = pipeline.load_draft("2020-01-01_01_x")[0]
+    assert d.status == "approved" and d.x.posts == ["UIから"]
+
+    d.status = "published"
+    pipeline.save_draft(d, pipeline.DRAFTS_DIR / f"{d.id}.json")
+    cli.main(["import", str(f)])  # already published: must not be re-queued
+    assert pipeline.load_draft("2020-01-01_01_x")[0].status == "published"

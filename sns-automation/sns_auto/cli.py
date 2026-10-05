@@ -65,6 +65,28 @@ def cmd_media(args, cfg):
     print(f"{args.id}: 素材URLを {len(args.urls)} 件設定しました")
 
 
+def cmd_import(args, cfg):
+    """Load drafts exported from the web UI (JSON array of Draft objects)."""
+    import json
+    from pathlib import Path
+
+    from .config import DRAFTS_DIR, ensure_dirs
+    from .schemas import Draft
+
+    ensure_dirs()
+    items = json.loads(Path(args.file).read_text(encoding="utf-8"))
+    added = skipped = 0
+    for raw in items:
+        draft = Draft.model_validate(raw)
+        path = DRAFTS_DIR / f"{draft.id}.json"
+        if path.exists() and Draft.model_validate_json(path.read_text(encoding="utf-8")).status == "published":
+            skipped += 1  # never re-queue something already posted
+            continue
+        pipeline.save_draft(draft, path)
+        added += 1
+    print(f"✅ {added} 件を取り込みました（投稿済みのためスキップ: {skipped} 件）")
+
+
 def cmd_publish(args, cfg):
     from .publishers import instagram, x
 
@@ -123,6 +145,10 @@ def main(argv=None):
     sp.add_argument("id")
     sp.add_argument("urls", nargs="+")
     sp.set_defaults(fn=cmd_media)
+
+    sp = sub.add_parser("import", help="Web UIから書き出したJSONを取り込む")
+    sp.add_argument("file")
+    sp.set_defaults(fn=cmd_import)
 
     sp = sub.add_parser("publish", help="承認済みで予定時刻を過ぎた投稿を公開")
     sp.add_argument("--id", nargs="*", help="対象を限定")
