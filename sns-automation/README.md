@@ -1,4 +1,6 @@
-# SNS発信 自動化ツール（SIB向け）
+# BaseAI SNS自動化ツール
+
+株式会社BaseAI のSNS発信 自動化ツールです。
 
 自社アカウントの方向性・目的（`config/brand.yaml`）を土台に、参考アカウント・動画（`config/references.yaml`）と
 最新トレンド（Web検索 + `config/trends.yaml`）から、**リール / フィード / ストーリー / X** の投稿を企画・制作し、
@@ -13,13 +15,13 @@
 
 | ステップ | 出力 | 内容 |
 |---|---|---|
-| ① research | `workspace/research/日付.md` | Z世代・就活・湘南エリアなどのトレンド、伸びている型、使うべき/避けるべきトレンド（出典URL付き） |
+| ① research | `workspace/research/日付.md` | ターゲット層・業界・地域のトレンド、伸びている型、使うべき/避けるべきトレンド（出典URL付き） |
 | ② plan | `workspace/plans/開始日.json` | 投稿カレンダー（日時・形式・発信の柱・目的・KPI・使うトレンド） |
 | ③ generate | `workspace/drafts/*.json` | リール台本（カット割り・テロップ・音源・撮影チェックリスト）、カルーセル各スライド、ストーリー（スタンプ設計）、Xポスト/スレッド |
 | ④ review | `workspace/review.md` | 全原稿を一覧できるレビュー用Markdown |
 | ⑤ publish | — | 承認済み・予定時刻到来の投稿を X / Instagram に投稿 |
 
-## Web UI（SIB SNSスタジオ）
+## Web UI（BaseAI SNSスタジオ）
 
 ブラウザで使えるUI: https://claude.ai/artifact/AoAMTaxbxt23r1st98gEJu （ソース: `ui/index.html`）
 
@@ -30,7 +32,7 @@
 - **計画の検証**: 形式ごとの本数・発信の柱の比率・目的のカバー・遅れているKPIへの対応を集計し、ズレを自動修正します。
 - **成果・KPI**: 月間KPI目標の達成率と今日時点のペース、フォロワー/友だち数の推移、投稿ごとの再生数、形式別・柱別の成果を表示。「AIで振り返る」の結果は次の計画と原稿に反映されます。数値はアカウントのフォロワー数と各投稿のインサイトを画面から入力します。
 - UIのトレンド分析はWeb検索を行いません。最新のバズは「気になっているトレンド」に書き足すか、CLIの `research` を使ってください。
-- 承認済みの原稿は「投稿・書き出し」から JSON を保存し、`python -m sns_auto import sib-approved.json` で取り込めば `publish` で自動投稿できます。
+- 承認済みの原稿は「投稿・書き出し」から JSON を保存し、`python -m sns_auto import baseai-approved.json` で取り込めば `publish` で自動投稿できます。
 
 ## セットアップ
 

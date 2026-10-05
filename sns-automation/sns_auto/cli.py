@@ -117,7 +117,7 @@ def cmd_publish(args, cfg):
 
 
 def main(argv=None):
-    p = argparse.ArgumentParser(prog="sns_auto", description="SNS発信 自動化ツール")
+    p = argparse.ArgumentParser(prog="sns_auto", description="BaseAI SNS自動化ツール（株式会社BaseAI）")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("research", help="Web検索でトレンドを調査").set_defaults(fn=cmd_research)

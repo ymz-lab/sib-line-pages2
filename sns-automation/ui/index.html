@@ -1,10 +1,10 @@
-<title>SIB SNSスタジオ</title>
+<title>BaseAI SNSスタジオ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=JetBrains+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
 <style>
 /* Layout: a mission-control console. Glass rail of the five workflow stages on the left with a lit progress line,
-   work area on the right floating over a deep-space ground lit by a Shonan-sunset aurora. Single dark look by design. */
+   work area on the right floating over a deep-space ground lit by a sunset aurora. Single dark look by design. */
 :root {
   --void: #05070f;
   --bg: #070b16;
@@ -303,7 +303,7 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
 <div class="sky" aria-hidden="true"><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span></div>
 <div class="shell">
   <nav class="rail" aria-label="ワークフロー">
-    <div class="mark"><span class="g">SIB</span> <br>SNS STUDIO<small>SHONAN INNOVATION BASE</small></div>
+    <div class="mark"><span class="g">BaseAI</span> <br>SNS STUDIO<small>株式会社BaseAI</small></div>
     <div class="steps" role="tablist">
       <button class="step" data-view="settings" role="tab"><b>1</b>方向性・KPI</button>
       <button class="step" data-view="research" role="tab"><b>2</b>トレンド</button>
@@ -454,7 +454,7 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
         <h2>自動投稿の手順（コマンドラインツール）</h2>
         <p class="note">X は原稿だけで投稿できます。Instagram は撮影・制作した素材の公開URLを登録してから投稿されます。</p>
         <pre class="cmd">cd sns-automation
-python -m sns_auto import sib-approved.json     # 承認済み原稿を取り込む
+python -m sns_auto import baseai-approved.json     # 承認済み原稿を取り込む
 python -m sns_auto media &lt;原稿ID&gt; https://…/reel.mp4   # Instagram の素材URL
 python -m sns_auto publish --yes                 # 予定時刻を過ぎたものを投稿</pre>
       </div>
@@ -650,7 +650,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   function show(view) {
     $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
     $$(".step").forEach((b) => b.setAttribute("aria-current", String(b.dataset.view === view)));
-    try { localStorage.setItem("sib-view", view); } catch {}
+    try { localStorage.setItem("baseai-view", view); } catch {}
     if (view === "kpi") renderKpi();
   }
   $$(".step").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
@@ -1453,7 +1453,7 @@ ${GUIDE[d.format].shape}`;
     const msg = $("#ex-msg");
     if (!downloads) { const ta = $("#ex-json"); ta.value = exportJson(); ta.hidden = false; ta.select(); msg.textContent = "保存が使えないため、表示したJSONをコピーしてください。"; return; }
     try {
-      const r = await downloads.save({ filename: "sib-approved.json", data: exportJson() });
+      const r = await downloads.save({ filename: "baseai-approved.json", data: exportJson() });
       msg.textContent = r.status === "saved" ? "保存しました。" : "";
     } catch (e) { msg.textContent = e?.code === "cancelled" ? "" : "保存できませんでした。「JSONをコピー」をお使いください。"; }
   });
@@ -1760,7 +1760,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
 
   // ---------- boot ----------
   let initial = "settings";
-  try { initial = localStorage.getItem("sib-view") || initial; } catch {}
+  try { initial = localStorage.getItem("baseai-view") || initial; } catch {}
   const hash = location.hash.slice(1);
   if (VIEWS.includes(hash)) initial = hash;
   if (!VIEWS.includes(initial)) initial = "settings";

@@ -146,7 +146,7 @@ def test_import_from_ui_export(env, tmp_path):
         "plan": PLAN["items"][1], "x": {"title": "t", "posts": ["UIから"]},
         "media_urls": [], "notes": "",
     }]
-    f = tmp_path / "sib-approved.json"
+    f = tmp_path / "baseai-approved.json"
     f.write_text(json.dumps(exported, ensure_ascii=False), encoding="utf-8")
     cli.main(["import", str(f)])
     d = pipeline.load_draft("2020-01-01_01_x")[0]
