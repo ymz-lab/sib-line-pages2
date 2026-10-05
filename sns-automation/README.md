@@ -49,13 +49,20 @@
 
 一覧の元データは `config/accounts.yaml`、UIでは「方向性・KPI → 運用アカウント」で編集できます。
 
+## ブランド別の運用とカレンダー
+
+- UI左上で **BaseAI（会社）／SIB（学生団体）** を切り替えます。方向性・KPI・トレンド分析・投稿計画・原稿・成果はブランドごとに分かれ、フォロワー数も「ブランド × SNS」ごとに記録・集計されます。成果・KPI画面には両ブランドの比較も表示されます。
+- 投稿形式はリール・フィード・ストーリー・X に加え、**TikTok・YouTube・Threads** に対応しました（各ブランドの運用アカウントにある形式だけが選ばれます）。自動投稿は Instagram と X のみで、ほかはUIからコピーしてアプリで投稿します。
+- **カレンダー**で、日ごとの予定と「素材（●完成／◐制作中／○未着手／–不要）」「状態（予定／原稿／承認／投稿済）」を一覧できます。予定日を過ぎて未投稿のものは赤枠です。「両ブランドを表示」で会社と学生団体をまとめて見られます。素材の状況は原稿画面で設定します。
+
 ## 実際のアカウントとの連携
 
 `sync` コマンドで Instagram・X・LINE の実数値を取得し、UIの「成果・KPI → アカウント連携」から取り込みます。
 
 ```bash
-python -m sns_auto sync --out baseai-sync.json   # 取得（設定のないサービスはスキップ）
-# → UIの「連携データを取り込む」で baseai-sync.json を選ぶ
+python -m sns_auto sync --brand company   # 会社 → baseai-sync-company.json
+python -m sns_auto sync --brand student   # 学生団体 → baseai-sync-student.json
+# → UIの「連携データを取り込む」でファイルを選ぶ（ブランドはファイルから自動判定）
 ```
 
 | サービス | 取得する数値 | 必要な環境変数 |
@@ -64,6 +71,7 @@ python -m sns_auto sync --out baseai-sync.json   # 取得（設定のないサ�
 | X | フォロワー数、直近のポストの表示・いいね・返信・リポスト・ブックマーク | `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`（読み取りに対応したプラン） |
 | LINE公式アカウント | 友だち数（前日分） | `LINE_CHANNEL_ACCESS_TOKEN`（Messaging API のチャネルアクセストークン） |
 
+- 認証情報はブランドごとに末尾を付けて設定します（例: `IG_ACCESS_TOKEN_COMPANY`, `X_API_KEY_STUDENT`）。末尾なしの名前は学生団体として扱い、会社のアカウントには使いません。投稿（`publish`）も原稿のブランドの認証情報を使います。
 - ツールで作った原稿は、投稿IDまたは「同じ日・同じ形式・本文が近い」で自動的に紐づきます。アプリから直接投稿したものは「アプリから投稿」として集計されます。
 - 同じファイルを何度取り込んでも重複しません。
 

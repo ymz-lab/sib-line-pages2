@@ -11,6 +11,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from .creds import env
+
 TZ = ZoneInfo(os.environ.get("SNS_TZ", "Asia/Tokyo"))
 IG_BASE = os.environ.get("IG_GRAPH_BASE", "https://graph.facebook.com/v21.0")
 X_BASE = "https://api.x.com/2"
@@ -56,8 +58,8 @@ def _ig_format(media: dict, story: bool) -> str:
     return "feed"
 
 
-def fetch_instagram(limit: int = 50) -> tuple[dict, list[dict]]:
-    user, token = os.environ.get("IG_USER_ID"), os.environ.get("IG_ACCESS_TOKEN")
+def fetch_instagram(brand: str, limit: int = 50) -> tuple[dict, list[dict]]:
+    user, token = env("IG_USER_ID", brand), env("IG_ACCESS_TOKEN", brand)
     if not user or not token:
         return {}, []
     acct = _get(f"{IG_BASE}/{user}", fields="followers_count,media_count", access_token=token)
@@ -81,18 +83,18 @@ def fetch_instagram(limit: int = 50) -> tuple[dict, list[dict]]:
                 "saves": ins.get("saved"), "shares": ins.get("shares"),
             }),
         })
-    return {"ig": acct.get("followers_count")}, posts
+    return {"instagram": acct.get("followers_count")}, posts
 
 
 # ---------- X ----------
 
-def fetch_x(limit: int = 50) -> tuple[dict, list[dict]]:
+def fetch_x(brand: str, limit: int = 50) -> tuple[dict, list[dict]]:
     keys = ["X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_TOKEN_SECRET"]
-    if not all(os.environ.get(k) for k in keys):
+    if not all(env(k, brand) for k in keys):
         return {}, []
     from requests_oauthlib import OAuth1Session
 
-    s = OAuth1Session(*(os.environ[k] for k in keys))
+    s = OAuth1Session(*(env(k, brand) for k in keys))
 
     def get(url, **params):
         res = s.get(url, params=params, timeout=30)
@@ -120,8 +122,8 @@ def fetch_x(limit: int = 50) -> tuple[dict, list[dict]]:
 
 # ---------- LINE ----------
 
-def fetch_line() -> dict:
-    token = os.environ.get("LINE_CHANNEL_ACCESS_TOKEN")
+def fetch_line(brand: str) -> dict:
+    token = env("LINE_CHANNEL_ACCESS_TOKEN", brand)
     if not token:
         return {}
     # LINE publishes the follower count for completed days only; try yesterday, then the day before.
@@ -137,22 +139,23 @@ def fetch_line() -> dict:
     return {}
 
 
-def fetch_all(limit: int = 50) -> dict:
-    snapshot = {"date": dt.datetime.now(TZ).date().isoformat()}
+def fetch_all(brand: str = "student", limit: int = 50) -> dict:
+    accounts: dict = {}
     posts, errors = [], []
     for name, fn in (("instagram", fetch_instagram), ("x", fetch_x)):
         try:
-            acct, p = fn(limit)
-            snapshot.update(acct)
+            acct, p = fn(brand, limit)
+            accounts.update(acct)
             posts += p
         except Exception as e:  # one platform failing must not lose the others
             errors.append(f"{name}: {e}")
     try:
-        snapshot.update(fetch_line())
+        accounts.update(fetch_line(brand))
     except Exception as e:
         errors.append(f"line: {e}")
-    return {"source": "baseai-sync", "fetched_at": dt.datetime.now(TZ).isoformat(timespec="seconds"),
-            "snapshot": snapshot, "posts": posts, "errors": errors}
+    return {"source": "baseai-sync", "brand": brand, "fetched_at": dt.datetime.now(TZ).isoformat(timespec="seconds"),
+            "snapshot": {"date": dt.datetime.now(TZ).date().isoformat(), "accounts": accounts},
+            "posts": posts, "errors": errors}
 
 
 def _clean(d: dict) -> dict:
@@ -210,11 +213,11 @@ def match_posts(posts: list[dict], drafts: list[dict]) -> list[tuple[dict, dict 
     return pairs
 
 
-def external_draft(p: dict) -> dict:
+def external_draft(p: dict, brand: str) -> dict:
     """A record for a post made outside the tool, so it still counts in the KPI view."""
     title = re.sub(r"\s+", " ", p["text"]).strip()[:40] or f"{p['platform']} {p['id']}"
     return {
-        "id": f"ext_{p['platform']}_{p['id']}", "status": "published", "format": p["format"], "source": "sync",
+        "id": f"ext_{p['platform']}_{p['id']}", "brand": brand, "status": "published", "format": p["format"], "source": "sync",
         "plan": {"date": p["date"], "time": p["time"], "format": p["format"], "pillar": "", "goal": "",
                  "theme": title, "trend_angle": "", "reference_angle": "", "kpi": ""},
         "body": {"title": title}, "media_urls": [], "notes": "", "permalink": p["permalink"],
@@ -237,24 +240,28 @@ def build_writes(result: dict, drafts: list[dict], metrics: list[dict] | None = 
                 out.append(it)
         return out
 
-    drafts, metrics = unwrap(drafts), unwrap(metrics)
+    brand = result.get("brand", "student")
+    drafts = [d for d in unwrap(drafts) if (d.get("brand") or "student") == brand]
+    metrics = unwrap(metrics)
     now = int(dt.datetime.now().timestamp() * 1000)
     writes: list[dict] = []
 
-    snap = {k: v for k, v in result["snapshot"].items() if v is not None}
-    if len(snap) > 1:
+    # One metrics doc per date holds every brand's accounts as "<brand>:<platform>"; merge, never overwrite.
+    snap = result["snapshot"]
+    vals = {f"{brand}:{p}": v for p, v in (snap.get("accounts") or {}).items() if v is not None}
+    if vals:
         prev = next((m for m in metrics if m.get("date") == snap["date"]), None)
         w = {"op": "set", "collection": "metrics", "doc_id": snap["date"],
-             "data": {**{k: prev.get(k) for k in ("ig", "x", "line") if prev and prev.get(k) is not None},
-                      **snap, "updatedAt": now, "source": "sync"}}
+             "data": {"date": snap["date"], "accounts": {**((prev or {}).get("accounts") or {}), **vals},
+                      "updatedAt": now, "source": "sync"}}
         if prev and prev.get("_version"):
             w["if_version"] = prev["_version"]
         writes.append(w)
 
     for p, d in match_posts(result["posts"], drafts):
         if d is None:
-            writes.append({"op": "set", "collection": "drafts", "doc_id": external_draft(p)["id"],
-                           "data": {**external_draft(p), "updatedAt": now}})
+            ext = external_draft(p, brand)
+            writes.append({"op": "set", "collection": "drafts", "doc_id": ext["id"], "data": {**ext, "updatedAt": now}})
             continue
         w = {"op": "update", "collection": "drafts", "doc_id": d["id"],
              "data": {"perf": {**(d.get("perf") or {}), **p["perf"]}, "status": "published", "permalink": p["permalink"],

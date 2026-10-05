@@ -94,11 +94,12 @@ def cmd_sync(args, cfg):
 
     from . import sync
 
-    result = sync.fetch_all(limit=args.limit)
+    args.out = args.out or f"baseai-sync-{args.brand}.json"
+    result = sync.fetch_all(brand=args.brand, limit=args.limit)
     Path(args.out).write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    snap = result["snapshot"]
-    print(f"✅ {args.out}: 投稿 {len(result['posts'])} 件 / フォロワー等 "
-          + ", ".join(f"{k}={v}" for k, v in snap.items() if k != "date"))
+    accounts = result["snapshot"]["accounts"]
+    print(f"✅ {args.out}（{args.brand}）: 投稿 {len(result['posts'])} 件 / フォロワー等 "
+          + (", ".join(f"{k}={v}" for k, v in accounts.items()) or "なし（認証情報が未設定）"))
     for e in result["errors"]:
         print(f"⚠️ {e}", file=sys.stderr)
     if args.writes:
@@ -122,7 +123,12 @@ def cmd_publish(args, cfg):
     if not targets:
         print("投稿対象（approved かつ予定時刻到来）はありません")
         return
+    from .schemas import AUTO_PUBLISH
+
     for d in targets:
+        if d.plan.format not in AUTO_PUBLISH:
+            print(f"⏭ {d.id}: {d.plan.format} は自動投稿に未対応です。アプリから投稿してください")
+            continue
         if not args.yes:
             print(f"[dry-run] {d.id} を投稿します（実際に投稿するには --yes）")
             continue
@@ -172,7 +178,8 @@ def main(argv=None):
     sp.set_defaults(fn=cmd_import)
 
     sp = sub.add_parser("sync", help="Instagram / X / LINE の実数値を取得（UIの成果・KPIに取り込み）")
-    sp.add_argument("--out", default="baseai-sync.json")
+    sp.add_argument("--out", default=None, help="出力ファイル（既定: baseai-sync-<brand>.json）")
+    sp.add_argument("--brand", choices=["company", "student"], default="company", help="company=株式会社BaseAI / student=学生団体SIB")
     sp.add_argument("--limit", type=int, default=50, help="取得する直近の投稿数")
     sp.add_argument("--writes", help="UIの共有データ用の書き込みリストを出力するファイル")
     sp.add_argument("--drafts", help="現在の原稿一覧（JSON配列）。照合に使う")

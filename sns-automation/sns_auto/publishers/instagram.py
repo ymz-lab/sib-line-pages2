@@ -12,16 +12,17 @@ import time
 
 import requests
 
+from ..creds import env
 from ..schemas import Draft
 
 BASE = os.environ.get("IG_GRAPH_BASE", "https://graph.facebook.com/v21.0")
 VIDEO_EXT = (".mp4", ".mov")
 
 
-def _env() -> tuple[str, str]:
-    user, token = os.environ.get("IG_USER_ID"), os.environ.get("IG_ACCESS_TOKEN")
+def _env(brand: str) -> tuple[str, str]:
+    user, token = env("IG_USER_ID", brand), env("IG_ACCESS_TOKEN", brand)
     if not user or not token:
-        raise RuntimeError("IG_USER_ID / IG_ACCESS_TOKEN が未設定です")
+        raise RuntimeError(f"IG_USER_ID_{brand.upper()} / IG_ACCESS_TOKEN_{brand.upper()} が未設定です")
     return user, token
 
 
@@ -59,7 +60,7 @@ def _caption(text: str, tags: list[str]) -> str:
 
 
 def publish(draft: Draft) -> dict:
-    user, token = _env()
+    user, token = _env(draft.brand)
     urls = draft.media_urls
     if not urls:
         raise ValueError("media_urls が空です。撮影/制作した素材の公開URLを draft に設定してください")

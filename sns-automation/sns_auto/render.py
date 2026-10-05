@@ -43,6 +43,11 @@ def draft_to_markdown(d: Draft) -> str:
         out += [f"### 𝕏 {d.x.title}"]
         for i, post in enumerate(d.x.posts, 1):
             out += [f"**{i}/{len(d.x.posts)}** ({len(post)}字)", "", post, ""]
+    for name in ("threads", "tiktok", "youtube"):
+        extra = getattr(d, name)
+        if extra:
+            out += [f"### {name} {extra.get('title', '')}", "", *[str(p) for p in extra.get("posts", [])],
+                    str(extra.get("caption") or extra.get("description") or "")]
     if d.media_urls:
         out += ["", "**素材URL:**", *[f"- {u}" for u in d.media_urls]]
     if d.published:

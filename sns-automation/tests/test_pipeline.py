@@ -131,7 +131,7 @@ def test_x_thread_publish(env, monkeypatch):
             return type("R", (), {"status_code": 201,
                                   "json": lambda self: {"data": {"id": str(len(posted))}}})()
 
-    monkeypatch.setattr(x, "_session", lambda: FakeSession())
+    monkeypatch.setattr(x, "_session", lambda brand="student": FakeSession())
     cli.main(["approve", "2020-01-01_02_x"])
     cli.main(["publish", "--yes"])
     assert posted == [{"text": "1つ目"},
@@ -170,30 +170,59 @@ def test_sync_matching_and_writes(monkeypatch):
          "text": "協賛企業のメリット5選", "permalink": "p3", "perf": {"reach": 800, "saves": 40}},
     ]
     drafts = [
-        {"id": "2026-10-01_01_x", "version": 3, "data": {"id": "2026-10-01_01_x", "status": "published", "format": "x",
+        {"id": "student_2026-10-01_01_x", "version": 3, "data": {"id": "student_2026-10-01_01_x", "brand": "student", "status": "published", "format": "x",
          "plan": {"date": "2026-10-01"}, "body": {"posts": ["x"]}, "published": {"ids": ["111"]}}},
-        {"id": "2026-10-03_02_feed", "version": 1, "data": {"id": "2026-10-03_02_feed", "status": "approved", "format": "feed",
+        {"id": "student_2026-10-03_02_feed", "version": 1, "data": {"id": "student_2026-10-03_02_feed", "brand": "student", "status": "approved", "format": "feed",
          "plan": {"date": "2026-10-03"}, "body": {"title": "協賛企業のメリット5選", "caption": "協賛のメリット"}}},
+        # Same day/format/text but the other brand: must never be matched.
+        {"id": "company_2026-10-03_01_feed", "version": 1, "data": {"id": "company_2026-10-03_01_feed", "brand": "company", "status": "approved", "format": "feed",
+         "plan": {"date": "2026-10-03"}, "body": {"title": "協賛企業のメリット5選"}}},
     ]
-    result = {"snapshot": {"date": "2026-10-05", "ig": 1500, "x": 700, "line": None}, "posts": posts}
-    writes = sync.build_writes(result, drafts, [])
+    metrics = [{"id": "2026-10-05", "version": 4, "data": {"date": "2026-10-05", "accounts": {"company:instagram": 900}}}]
+    result = {"brand": "student", "snapshot": {"date": "2026-10-05", "accounts": {"instagram": 1500, "x": 700, "line": None}}, "posts": posts}
+    writes = sync.build_writes(result, drafts, metrics)
     by = {w["doc_id"]: w for w in writes}
-    assert by["2026-10-05"]["data"]["ig"] == 1500 and "line" not in by["2026-10-05"]["data"]
-    assert by["2026-10-01_01_x"]["if_version"] == 3 and by["2026-10-01_01_x"]["data"]["perf"]["views"] == 900
-    assert by["2026-10-03_02_feed"]["data"]["status"] == "published"  # matched by date+format+text
+    m = by["2026-10-05"]
+    assert m["if_version"] == 4
+    assert m["data"]["accounts"] == {"company:instagram": 900, "student:instagram": 1500, "student:x": 700}
+    assert by["student_2026-10-01_01_x"]["if_version"] == 3 and by["student_2026-10-01_01_x"]["data"]["perf"]["views"] == 900
+    assert by["student_2026-10-03_02_feed"]["data"]["status"] == "published"
+    assert "company_2026-10-03_01_feed" not in by
     ext = by["ext_instagram_222"]
-    assert ext["op"] == "set" and ext["data"]["perf"]["views"] == 5000 and ext["data"]["format"] == "reel"
+    assert ext["op"] == "set" and ext["data"]["brand"] == "student" and ext["data"]["perf"]["views"] == 5000
 
-    # A later sync updates the external record instead of creating it again.
     drafts.append({"id": "ext_instagram_222", "version": 2, "data": ext["data"]})
-    again = {w["doc_id"]: w for w in sync.build_writes(result, drafts, [])}
+    again = {w["doc_id"]: w for w in sync.build_writes(result, drafts, metrics)}
     assert again["ext_instagram_222"]["op"] == "update" and again["ext_instagram_222"]["if_version"] == 2
+
+
+def test_credentials_are_per_brand(monkeypatch):
+    from sns_auto.creds import env
+
+    monkeypatch.setenv("IG_ACCESS_TOKEN", "legacy")
+    monkeypatch.setenv("IG_ACCESS_TOKEN_COMPANY", "company-token")
+    assert env("IG_ACCESS_TOKEN", "company") == "company-token"
+    assert env("IG_ACCESS_TOKEN", "student") == "legacy"
+    monkeypatch.delenv("IG_ACCESS_TOKEN_COMPANY")
+    assert env("IG_ACCESS_TOKEN", "company") is None  # never borrows the student group's token
 
 
 def test_sync_skips_unconfigured_platforms(monkeypatch):
     from sns_auto import sync
 
-    for k in ["IG_USER_ID", "IG_ACCESS_TOKEN", "X_API_KEY", "LINE_CHANNEL_ACCESS_TOKEN"]:
+    for k in ["IG_USER_ID", "IG_ACCESS_TOKEN", "X_API_KEY", "LINE_CHANNEL_ACCESS_TOKEN",
+              "IG_USER_ID_COMPANY", "IG_ACCESS_TOKEN_COMPANY", "X_API_KEY_COMPANY", "LINE_CHANNEL_ACCESS_TOKEN_COMPANY"]:
         monkeypatch.delenv(k, raising=False)
-    r = sync.fetch_all()
-    assert r["posts"] == [] and r["errors"] == [] and list(r["snapshot"]) == ["date"]
+    r = sync.fetch_all("company")
+    assert r["brand"] == "company" and r["posts"] == [] and r["errors"] == [] and r["snapshot"]["accounts"] == {}
+
+
+def test_publish_skips_formats_without_api(env, capsys):
+    from sns_auto.schemas import Draft
+
+    d = Draft(id="company_2020-01-01_01_tiktok", brand="company", status="approved",
+              plan={**PLAN["items"][0], "format": "tiktok"}, tiktok={"title": "t"})
+    pipeline.DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
+    pipeline.save_draft(d, pipeline.DRAFTS_DIR / f"{d.id}.json")
+    cli.main(["publish", "--yes", "--all-due"])
+    assert "自動投稿に未対応" in capsys.readouterr().out

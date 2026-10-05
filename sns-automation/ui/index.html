@@ -23,6 +23,9 @@
   --accent: var(--cyan);
   --accent-ink: #031018;
   --reel: #ff5fa2;
+  --tiktok: #ff4fd8;
+  --youtube: #ff5a5a;
+  --threads: #c3cdf5;
   --feed: #6c9bff;
   --story: #ffc24b;
   --x: #e8efff;
@@ -128,6 +131,7 @@ input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) opacit
 .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; padding: 2px 9px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; background: color-mix(in srgb, currentColor 10%, transparent); }
 .chip::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
 .f-reel { color: var(--reel); } .f-feed { color: var(--feed); } .f-story { color: var(--story); } .f-x { color: var(--x); }
+.f-tiktok { color: var(--tiktok); } .f-youtube { color: var(--youtube); } .f-threads { color: var(--threads); }
 .st-draft { color: var(--muted); } .st-approved { color: var(--ok); } .st-rejected { color: var(--bad); } .st-published { color: var(--cyan); }
 
 /* research */
@@ -291,6 +295,50 @@ table.tbl td.title { white-space: normal; min-width: 180px; }
 .kpi-rows { display: flex; flex-direction: column; gap: 8px; }
 .kpi-row .note { white-space: nowrap; }
 label.btn { display: inline-flex; align-items: center; }
+/* brand switch */
+.brand-sw { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--well); }
+.brand-sw button { all: unset; cursor: pointer; text-align: center; font-size: 12px; font-weight: 700; padding: 7px 6px; border-radius: 9px; color: var(--muted); line-height: 1.3; }
+.brand-sw button small { display: block; font-size: 10px; font-weight: 500; opacity: .8; }
+.brand-sw button[aria-pressed="true"] { background: var(--grad); color: var(--accent-ink); }
+.brand-sw button:focus-visible { outline: 2px solid var(--cyan); }
+.bchip { font-family: var(--body); letter-spacing: .04em; text-transform: none; color: var(--ink); border: 1px solid var(--line-hi); border-radius: 999px; padding: 1px 10px; font-size: 11px; }
+/* calendar */
+.cal-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.cal-head h2 { font-size: 20px; min-width: 120px; }
+.cal-sum { display: flex; flex-wrap: wrap; gap: 8px; }
+.cal-sum .pill { display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--well); font-size: 12px; color: var(--muted); }
+.cal-sum .pill b { font-size: 18px; color: var(--ink); }
+.cal-sum .pill.bad b { color: var(--bad); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.cal .dow { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; padding: 2px 0; }
+.cal .dow.sun { color: var(--bad); } .cal .dow.sat { color: var(--feed); }
+.cell { min-height: 116px; background: var(--glass); border: 1px solid var(--line); border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cell.out { opacity: .35; }
+.cell.today { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan) inset; }
+.cell .dn { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+.cell.today .dn b { color: var(--cyan); }
+.ent { all: unset; cursor: pointer; display: grid; grid-template-columns: 3px minmax(0, 1fr); gap: 6px; padding: 4px 6px 4px 0; border-radius: 6px; background: rgba(140, 170, 255, .06); font-size: 11px; line-height: 1.35; min-width: 0; }
+.ent:hover { background: rgba(140, 170, 255, .14); }
+.ent:focus-visible { outline: 2px solid var(--cyan); }
+.ent .bar { border-radius: 2px; background: var(--ec, var(--cyan)); }
+.ent .tt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; color: var(--ink); }
+.ent .mt { display: flex; gap: 6px; align-items: center; color: var(--muted); flex-wrap: wrap; }
+.ent.plan { background: transparent; border: 1px dashed var(--line-hi); }
+.ent.late { box-shadow: 0 0 0 1px var(--bad) inset; }
+.ent.done .tt { color: var(--muted); }
+.mk { font-family: var(--mono); font-size: 10px; white-space: nowrap; }
+.mk.ok { color: var(--ok); } .mk.mid { color: var(--warn); } .mk.no { color: var(--bad); } .mk.na { color: var(--faint); }
+.btag { font-size: 9px; font-weight: 700; padding: 0 5px; border-radius: 4px; border: 1px solid var(--line-hi); color: var(--muted); }
+.asset-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.asset-row select { width: auto; }
+.cmp-brands { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+@media (max-width: 860px) {
+  .cal { grid-template-columns: minmax(0, 1fr); }
+  .cal .dow, .cell.out, .cell.blank { display: none; }
+  .cell { min-height: 0; }
+}
 .acct-row { display: grid; grid-template-columns: 150px 130px minmax(0, 1fr) minmax(0, 1.6fr) auto; gap: 8px; align-items: center; }
 .accts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
 .acct-group { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
@@ -317,13 +365,18 @@ a.ext { color: var(--cyan); font-size: 12px; }
 <div class="shell">
   <nav class="rail" aria-label="ワークフロー">
     <div class="mark"><span class="g">BaseAI</span> <br>SNS STUDIO<small>株式会社BaseAI</small></div>
+    <div class="brand-sw" id="brand-sw" role="group" aria-label="ブランド">
+      <button data-b="company" aria-pressed="false">BaseAI<small>会社</small></button>
+      <button data-b="student" aria-pressed="false">SIB<small>学生団体</small></button>
+    </div>
     <div class="steps" role="tablist">
       <button class="step" data-view="settings" role="tab"><b>1</b>方向性・KPI</button>
       <button class="step" data-view="research" role="tab"><b>2</b>トレンド</button>
       <button class="step" data-view="plan" role="tab"><b>3</b>投稿計画</button>
-      <button class="step" data-view="drafts" role="tab"><b>4</b>原稿・承認</button>
-      <button class="step" data-view="export" role="tab"><b>5</b>投稿・書き出し</button>
-      <button class="step" data-view="kpi" role="tab"><b>6</b>成果・KPI</button>
+      <button class="step" data-view="calendar" role="tab"><b>4</b>カレンダー</button>
+      <button class="step" data-view="drafts" role="tab"><b>5</b>原稿・承認</button>
+      <button class="step" data-view="export" role="tab"><b>6</b>投稿・書き出し</button>
+      <button class="step" data-view="kpi" role="tab"><b>7</b>成果・KPI</button>
     </div>
     <div class="conn">
       <div><span class="dot" id="dot-db"></span><span id="st-db">共有データ: 接続中…</span></div>
@@ -336,7 +389,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
     <!-- 1. Settings -->
     <section class="view" id="view-settings">
-      <p class="eyebrow">01 / Direction</p>
+      <p class="eyebrow">01 / Direction <span class="bchip"></span></p>
       <h1>方向性と<span class="g">KPI</span></h1>
       <p class="lede">ここに書いた目的・ターゲット・トーン・KPIが、すべての企画と原稿の土台になり、適合度チェックの基準になります。</p>
       <div class="panel">
@@ -356,12 +409,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
         <label class="f">使ってよい事実・実績<span class="h">ここにない数字や実績はAIが使わず、混入したら警告します</span><textarea id="b-facts" rows="4"></textarea></label>
         <label class="f">NGワード<span class="h">読点区切り。原稿に含まれていたら警告します</span><input id="b-ng"></label>
         <div class="f"><b style="font-size:13px">1週間の投稿本数</b>
-          <div class="cad">
-            <label class="f"><span class="chip f-reel">リール</span><input id="c-reel" type="number" min="0" max="14"></label>
-            <label class="f"><span class="chip f-feed">フィード</span><input id="c-feed" type="number" min="0" max="14"></label>
-            <label class="f"><span class="chip f-story">ストーリー</span><input id="c-story" type="number" min="0" max="21"></label>
-            <label class="f"><span class="chip f-x">X</span><input id="c-x" type="number" min="0" max="21"></label>
-          </div>
+          <div class="cad" id="cad"></div>
         </div>
       </div>
       <div class="panel">
@@ -402,7 +450,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
     <!-- 2. Research -->
     <section class="view" id="view-research" hidden>
-      <p class="eyebrow">02 / Signal</p>
+      <p class="eyebrow">02 / Signal <span class="bchip"></span></p>
       <h1><span class="g">トレンド</span>分析</h1>
       <p class="lede">参考アカウントとトレンドメモ、ブランド設定、KPIの状況をもとに、今週使うべき型とテーマをAIが整理します。</p>
       <div class="row">
@@ -416,7 +464,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
     <!-- 3. Plan -->
     <section class="view" id="view-plan" hidden>
-      <p class="eyebrow">03 / Schedule</p>
+      <p class="eyebrow">03 / Schedule <span class="bchip"></span></p>
       <h1>投稿<span class="g">計画</span></h1>
       <p class="lede">目的の優先順位・発信の柱の比率・遅れているKPIに沿って投稿カレンダーを作り、設定とのズレをチェックします。</p>
       <div class="panel">
@@ -439,9 +487,30 @@ a.ext { color: var(--cyan); font-size: 12px; }
       <div class="days" id="plan-days"><div class="empty">計画はまだありません。開始日を選んで「計画を作る」を押してください。</div></div>
     </section>
 
-    <!-- 4. Drafts -->
+    <!-- 4. Calendar -->
+    <section class="view" id="view-calendar" hidden>
+      <p class="eyebrow">04 / Calendar <span class="bchip"></span></p>
+      <h1>投稿<span class="g">カレンダー</span></h1>
+      <p class="lede">日ごとの投稿予定と、原稿・素材・承認・投稿の進み具合をひと目で確認できます。予定日を過ぎて投稿されていないものは赤枠になります。</p>
+      <div class="cal-head">
+        <button class="btn small" id="cal-prev" aria-label="前の月">‹</button>
+        <h2 id="cal-title"></h2>
+        <button class="btn small" id="cal-next" aria-label="次の月">›</button>
+        <button class="btn small" id="cal-today">今月</button>
+        <div class="spacer"></div>
+        <label class="toggle"><input type="checkbox" id="cal-both">両ブランドを表示</label>
+      </div>
+      <div class="cal-sum" id="cal-sum"></div>
+      <div class="cal-legend">
+        <span><b class="mk">素材</b><span class="mk ok">● 完成</span><span class="mk mid">◐ 制作中</span><span class="mk no">○ 未着手</span><span class="mk na">– 不要</span></span>
+        <span><b class="mk">状態</b><span class="mk na">予定</span><span class="mk mid">原稿</span><span class="mk ok">承認</span><span class="mk ok">✓投稿済</span></span>
+      </div>
+      <div class="cal" id="cal"></div>
+    </section>
+
+    <!-- 5. Drafts -->
     <section class="view" id="view-drafts" hidden>
-      <p class="eyebrow">04 / Review</p>
+      <p class="eyebrow">05 / Review <span class="bchip"></span></p>
       <h1>原稿・<span class="g">承認</span></h1>
       <p class="lede">各原稿にはKPI・方針への適合度が付きます。ズレがあれば「ミスマッチを修正」で直してから承認してください。</p>
       <div class="row">
@@ -468,7 +537,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
     <!-- 5. Export -->
     <section class="view" id="view-export" hidden>
-      <p class="eyebrow">05 / Launch</p>
+      <p class="eyebrow">06 / Launch <span class="bchip"></span></p>
       <h1>投稿・<span class="g">書き出し</span></h1>
       <p class="lede">承認済みの原稿は、各アプリにコピーして投稿するか、JSONに書き出してコマンドラインツールで予約投稿できます。投稿したら「投稿済みにする」を押すと、成果・KPIで数値を記録できるようになります。</p>
       <div class="panel">
@@ -492,7 +561,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
 
     <!-- 6. KPI -->
     <section class="view" id="view-kpi" hidden>
-      <p class="eyebrow">06 / Performance</p>
+      <p class="eyebrow">07 / Performance <span class="bchip"></span></p>
       <h1>成果と<span class="g">KPI</span></h1>
       <p class="lede">月間KPIの達成度、重要指標、フォロワーの推移、投稿ごとの再生数をまとめて確認できます。縦線は今日時点で到達しておきたいペースです。</p>
       <div class="row">
@@ -505,6 +574,11 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
       <div class="accts" id="acct-overview"></div>
       <div class="kpis" id="kpi-cards"></div>
       <div class="tiles" id="kpi-tiles"></div>
+
+      <div class="panel">
+        <h2>ブランド比較（対象月）</h2>
+        <div class="cmp-brands" id="brand-compare"></div>
+      </div>
 
       <div class="panel">
         <div class="row"><h2>フォロワー・友だち数の推移</h2><div class="spacer"></div>
@@ -540,12 +614,10 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
 
       <div class="panel">
         <h2>アカウントの数値を手で記録</h2>
-        <p class="note">週1回など定期的に、各アカウントのフォロワー数・LINE友だち数を記録すると推移と増加数のKPIが計算されます。</p>
+        <p class="note">週1回など定期的に、このブランドの各アカウントのフォロワー数・登録者数・LINE友だち数を記録すると、推移と増加数のKPIが計算されます。TikTok・YouTube・Threads は今のところ手入力です。</p>
         <div class="formrow">
           <label class="f">日付<input id="m-date" type="date"></label>
-          <label class="f">Instagram フォロワー<input id="m-ig" type="number" min="0" inputmode="numeric"></label>
-          <label class="f">X フォロワー<input id="m-x" type="number" min="0" inputmode="numeric"></label>
-          <label class="f">LINE 友だち<input id="m-line" type="number" min="0" inputmode="numeric"></label>
+          <div class="formrow" id="m-inputs" style="grid-column: 1 / -1"></div>
           <button class="btn primary" id="m-save">記録する</button>
         </div>
         <span class="note" id="m-msg"></span>
@@ -566,20 +638,31 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const FMT = { reel: "リール", feed: "フィード", story: "ストーリー", x: "X" };
+  const FMT = { reel: "リール", feed: "フィード", story: "ストーリー", x: "X", threads: "Threads", tiktok: "TikTok", youtube: "YouTube" };
+  const FMT_PLATFORM = { reel: "instagram", feed: "instagram", story: "instagram", x: "x", threads: "threads", tiktok: "tiktok", youtube: "youtube" };
+  const TEXT_FMT = new Set(["x", "threads"]);
+  // Starting values only; each brand edits its own in 方向性・KPI.
+  const DEFAULT_CADENCE = {
+    student: { reel: 3, feed: 2, story: 5, x: 7, threads: 0, tiktok: 0, youtube: 0 },
+    company: { tiktok: 3, youtube: 1, threads: 3, reel: 2, feed: 1, story: 3, x: 5 },
+  };
+  const ASSET = { none: "未着手", making: "撮影・制作中", editing: "編集中", ready: "完成" };
   const STATUS = { draft: "未確認", approved: "承認済み", rejected: "不採用", published: "投稿済み" };
   const WD = ["日", "月", "火", "水", "木", "金", "土"];
   const FIT_OK = 80, FIT_MIN = 70;
 
   const DEFAULT_BRAND = {
     account: "", cta: "", mission: "", goals: "", audience: "", tone: "", pillars: "", facts: "", ng: "",
-    cadence: { reel: 3, feed: 2, story: 5, x: 7 }, autofix: true, updatedAt: 0,
+    autofix: true, updatedAt: 0,
   };
   // KPI metrics the dashboard can compute. acct = from account snapshots (gain in month); post = sum over published posts.
   const METRICS = {
     line_gain: { label: "LINE友だち増加数", unit: "人", kind: "acct", key: "line" },
-    ig_gain: { label: "Instagramフォロワー増加数", unit: "人", kind: "acct", key: "ig" },
+    ig_gain: { label: "Instagramフォロワー増加数", unit: "人", kind: "acct", key: "instagram" },
     x_gain: { label: "Xフォロワー増加数", unit: "人", kind: "acct", key: "x" },
+    tiktok_gain: { label: "TikTokフォロワー増加数", unit: "人", kind: "acct", key: "tiktok" },
+    youtube_gain: { label: "YouTube登録者増加数", unit: "人", kind: "acct", key: "youtube" },
+    threads_gain: { label: "Threadsフォロワー増加数", unit: "人", kind: "acct", key: "threads" },
     line_signups: { label: "投稿経由のLINE登録数", unit: "件", kind: "post", key: "line_signups" },
     views: { label: "総再生・表示数", unit: "回", kind: "post", key: "views" },
     reach: { label: "総リーチ数", unit: "人", kind: "post", key: "reach" },
@@ -593,16 +676,23 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     ["views", "再生・表示"], ["reach", "リーチ"], ["likes", "いいね"], ["comments", "コメント"],
     ["saves", "保存"], ["shares", "シェア"], ["link_clicks", "リンク"], ["line_signups", "LINE登録"],
   ];
+  // Fixed order and color per platform (validated for color-vision deficiency on the dark surface).
   const SERIES = [
-    { key: "ig", label: "Instagram", color: "#00a3bb" },
-    { key: "x", label: "X", color: "#8a63f5" },
+    { key: "instagram", label: "Instagram", color: "#00a3bb" },
     { key: "line", label: "LINE友だち", color: "#e4572e" },
+    { key: "x", label: "X", color: "#8a63f5" },
+    { key: "youtube", label: "YouTube登録者", color: "#b88700" },
+    { key: "tiktok", label: "TikTok", color: "#d14d94" },
+    { key: "threads", label: "Threads", color: "#2f9e5f" },
   ];
 
   const OWNERS = { company: "株式会社BaseAI", student: "学生団体SIB" };
   const PLATFORMS = { instagram: "Instagram", x: "X", threads: "Threads", tiktok: "TikTok", youtube: "YouTube", line: "LINE", facebook: "Facebook", other: "その他" };
   const SYNCABLE = new Set(["instagram", "x", "line"]);
+  let BR = "company";
+  try { const b = localStorage.getItem("baseai-brand"); if (b === "company" || b === "student") BR = b; } catch {}
   const S = {
+    allDrafts: new Map(), sync: null,
     accounts: null,
     brand: null, inputs: null, kpi: null, research: null, plan: null, insights: null,
     drafts: new Map(), metrics: [], filter: "all", selected: null,
@@ -637,6 +727,21 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   const num = (v) => (v === "" || v == null || isNaN(Number(v)) ? null : Number(v));
   const nf = new Intl.NumberFormat("ja-JP");
   const nfc = new Intl.NumberFormat("ja-JP", { notation: "compact", maximumFractionDigits: 1 });
+  // ---- brand scoping ----
+  const brandOf = (d) => d?.brand || "student";
+  const bdoc = (path, b = BR) => `${path}__${b}`;
+  const refilter = () => { S.drafts = new Map([...S.allDrafts].filter(([, d]) => brandOf(d) === BR)); };
+  const brandAccounts = (b = BR) => arr(S.accounts?.items).filter((a) => a.owner === b);
+  const brandPlatforms = (b = BR) => new Set(brandAccounts(b).map((a) => a.platform));
+  function brandFormats(b = BR) {
+    const ps = brandPlatforms(b), f = Object.keys(FMT).filter((k) => ps.has(FMT_PLATFORM[k]));
+    return f.length ? f : Object.keys(FMT);
+  }
+  const acctKey = (platform, b = BR) => `${b}:${platform}`;
+  const snapVal = (m, platform, b = BR) => num(m?.accounts?.[acctKey(platform, b)]);
+  // Platforms whose follower counts this brand tracks: its accounts, plus LINE when it has data or is the student group's channel.
+  const trackPlatforms = (b = BR) => SERIES.map((x) => x.key).filter((p) => brandPlatforms(b).has(p) || (p === "line" && (b === "student" || S.metrics.some((m) => snapVal(m, "line", b) != null))));
+  const assetState = (d) => (TEXT_FMT.has(d.format) ? "na" : d.asset || (arr(d.media_urls).length ? "ready" : "none"));
   const fmtN = (v, unit) => (v == null ? "—" : unit === "%" ? `${(v * 100).toFixed(1)}%` : nf.format(Math.round(v)));
   const tagText = (tags) => arr(tags).map((t) => { t = str(t).trim(); return t.startsWith("#") ? t : "#" + t; }).join(" ");
   function xWeight(t) {
@@ -680,6 +785,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     return b;
   }
   const brand = () => ({ ...DEFAULT_BRAND, ...(S.brand || {}) });
+  const cadence = () => ({ ...DEFAULT_CADENCE[BR], ...(S.brand?.cadence || {}) });
   // Two-step confirm built into the button (the viewer cannot show confirm()).
   function armed(btn, label, run) {
     let on = false;
@@ -691,12 +797,13 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   }
 
   // ---------- navigation ----------
-  const VIEWS = ["settings", "research", "plan", "drafts", "export", "kpi"];
+  const VIEWS = ["settings", "research", "plan", "calendar", "drafts", "export", "kpi"];
   function show(view) {
     $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
     $$(".step").forEach((b) => b.setAttribute("aria-current", String(b.dataset.view === view)));
     try { localStorage.setItem("baseai-view", view); } catch {}
     if (view === "kpi") renderKpi();
+    if (view === "calendar") renderCalendar();
   }
   $$(".step").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
 
@@ -705,7 +812,13 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   function fillSettings() {
     const b = brand();
     for (const k of BF) { const el = $("#b-" + k); if (document.activeElement !== el) el.value = str(b[k]); }
-    for (const k of Object.keys(FMT)) { const el = $("#c-" + k); if (document.activeElement !== el) el.value = b.cadence?.[k] ?? DEFAULT_BRAND.cadence[k]; }
+    if (!$("#cad").contains(document.activeElement)) {
+      const cad = cadence();
+      $("#cad").replaceChildren(...brandFormats().map((k) => {
+        const inp = h("input", { id: "c-" + k, type: "number", min: "0", max: "21" }); inp.value = cad[k] ?? 0;
+        return h("label", { class: "f" }, chip(k), inp);
+      }));
+    }
     $("#b-autofix").checked = b.autofix !== false;
     const i = S.inputs || {};
     for (const k of ["references", "trends"]) { const el = $("#i-" + k); if (document.activeElement !== el) el.value = str(i[k]); }
@@ -782,7 +895,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     if (!db) { msg.textContent = "共有データに接続できないため保存できません。"; return; }
     if (!canAdmin) { msg.textContent = "方向性・KPIの変更はオーナーと編集者だけができます。"; return; }
     const b = Object.fromEntries(BF.map((k) => [k, $("#b-" + k).value.trim()]));
-    b.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, Math.max(0, parseInt($("#c-" + k).value, 10) || 0)]));
+    b.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, $("#c-" + k) ? Math.max(0, parseInt($("#c-" + k).value, 10) || 0) : 0]));
     b.autofix = $("#b-autofix").checked;
     b.updatedAt = Date.now();
     const inputs = { references: $("#i-references").value.trim(), trends: $("#i-trends").value.trim() };
@@ -790,9 +903,9 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     const accounts = { items: readAcctRows() };
     btn.disabled = true; msg.textContent = "保存中…"; msg.classList.remove("err");
     try {
-      await db.doc("settings/brand").set(b);
-      await db.doc("settings/inputs").set(inputs);
-      await db.doc("settings/kpi").set(kpi);
+      await db.doc(bdoc("settings/brand")).set(b);
+      await db.doc(bdoc("settings/inputs")).set(inputs);
+      await db.doc(bdoc("settings/kpi")).set(kpi);
       await db.doc("settings/accounts").set(accounts);
       msg.textContent = "保存しました。方針を変えた場合、既存の原稿は「要再チェック」になります。";
     } catch {
@@ -817,12 +930,12 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   const pv = (d, k) => num(d.perf?.[k]) ?? 0;
   function acctGain(key, ym) {
     const { start, end } = monthRange(ym);
-    const pts = S.metrics.filter((m) => num(m[key]) != null).sort((a, b) => a.date.localeCompare(b.date));
+    const pts = S.metrics.filter((m) => snapVal(m, key) != null).sort((a, b) => a.date.localeCompare(b.date));
     const before = pts.filter((m) => m.date < start).pop();
     const inMonth = pts.filter((m) => m.date >= start && m.date <= end);
     if (!inMonth.length) return null;
     const base = before || inMonth[0];
-    return num(inMonth[inMonth.length - 1][key]) - num(base[key]);
+    return snapVal(inMonth[inMonth.length - 1], key) - snapVal(base, key);
   }
   function metricValue(id, ym) {
     const m = METRICS[id]; if (!m) return null;
@@ -876,7 +989,8 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     const b = brand(), i = S.inputs || {};
     return `${RULES}
 
-<brand>
+<brand name="${OWNERS[BR]}">
+運用アカウント: ${brandAccounts().map((a) => `${PLATFORMS[a.platform] || a.platform} ${a.handle}`).join(" / ") || "（未登録）"}
 アカウント: ${b.account}
 ミッション: ${b.mission}
 SNSの目的（優先順）:
@@ -955,7 +1069,7 @@ ${str(i.trends).slice(0, 6000)}
       S.research = { text, at: Date.now() };
       renderResearch();
       msg.textContent = "分析しました。";
-      if (db) await db.doc("research/latest").set(S.research).catch(() => { msg.textContent = "分析しましたが、共有データへの保存に失敗しました。"; });
+      if (db) await db.doc(bdoc("research/latest")).set(S.research).catch(() => { msg.textContent = "分析しましたが、共有データへの保存に失敗しました。"; });
     } catch (e) {
       msg.textContent = sampleErr(e); if (e?.code !== "cancelled") msg.classList.add("err");
     } finally { btn.disabled = false; $("#stop-research").hidden = true; stream.hidden = true; }
@@ -963,10 +1077,10 @@ ${str(i.trends).slice(0, 6000)}
 
   // ---------- plan ----------
   $("#p-start").value = isoDate(new Date(Date.now() + 864e5));
-  const draftId = (it, idx) => `${it.date}_${String(idx + 1).padStart(2, "0")}_${it.format}`;
+  const draftId = (it, idx) => `${BR}_${it.date}_${String(idx + 1).padStart(2, "0")}_${it.format}`;
   const PLAN_FIELDS = ["date", "time", "format", "pillar", "goal", "theme", "trend_angle", "reference_angle", "kpi"];
-  const PLAN_SHAPE = `{"summary": "今週の方針を3行以内で",
- "items": [{"date": "YYYY-MM-DD", "time": "HH:MM", "format": "reel|feed|story|x", "pillar": "発信の柱の名前（設定の表記どおり）",
+  const planShape = () => `{"summary": "今週の方針を3行以内で",
+ "items": [{"date": "YYYY-MM-DD", "time": "HH:MM", "format": "${brandFormats().join("|")}", "pillar": "発信の柱の名前（設定の表記どおり）",
    "goal": "狙う目的（設定のSNSの目的の表記どおり）", "theme": "テーマを一文で", "trend_angle": "使うトレンドと使い方。なければ「なし」",
    "reference_angle": "参考から借りる要素。なければ「なし」", "kpi": "押し上げるKPI名（月間KPI目標の名前）"}]}`;
 
@@ -984,9 +1098,9 @@ ${str(i.trends).slice(0, 6000)}
   }
   function planCheck(plan) {
     const items = arr(plan?.items), n = items.length || 1, days = Number(plan?.days) || 7;
-    const cad = { ...DEFAULT_BRAND.cadence, ...(brand().cadence || {}) };
+    const cad = cadence();
     const issues = [];
-    const formats = Object.keys(FMT).map((f) => {
+    const formats = brandFormats().map((f) => {
       const target = cad[f] ? Math.max(1, Math.round((cad[f] * days) / 7)) : 0, actual = items.filter((i) => i.format === f).length;
       if (actual !== target) issues.push(`${FMT[f]}の本数が設定と違います（計画 ${actual} / 設定 ${target}）`);
       return { name: FMT[f], target, actual, max: Math.max(target, actual, 1) };
@@ -1065,12 +1179,13 @@ ${str(i.trends).slice(0, 6000)}
     }));
   }
   function cleanPlan(data, start, days) {
-    const items = arr(data?.items).filter((it) => it && FMT[it.format] && /^\d{4}-\d{2}-\d{2}$/.test(str(it.date)))
+    const fmts = brandFormats();
+    const items = arr(data?.items).filter((it) => it && fmts.includes(it.format) && /^\d{4}-\d{2}-\d{2}$/.test(str(it.date)))
       .map((it) => Object.fromEntries(PLAN_FIELDS.map((k) => [k, str(it[k])])));
     if (!items.length) throw { code: "invalid_json" };
     return { summary: str(data.summary), items, start, days, at: Date.now() };
   }
-  async function savePlan() { if (db) await db.doc("plans/current").set(S.plan); }
+  async function savePlan() { if (db) await db.doc(bdoc("plans/current")).set(S.plan); }
   async function revisePlan(issues, signal) {
     const prompt = `${context()}
 
@@ -1086,7 +1201,7 @@ ${JSON.stringify({ summary: S.plan.summary, items: S.plan.items })}
 </plan>
 
 修正後の計画を次のJSONだけで返してください:
-${PLAN_SHAPE}`;
+${planShape()}`;
     const data = await sample.json(prompt, { signal, cache: false, modelTier: "complex" });
     S.plan = cleanPlan(data, S.plan.start, S.plan.days);
   }
@@ -1108,8 +1223,9 @@ ${PLAN_SHAPE}`;
     if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
     const start = $("#p-start").value, days = Math.min(14, Math.max(1, parseInt($("#p-days").value, 10) || 7));
     if (!start) { msg.textContent = "開始日を選んでください。"; return; }
-    const cad = { ...DEFAULT_BRAND.cadence, ...(brand().cadence || {}) };
-    const counts = Object.fromEntries(Object.entries(cad).map(([k, v]) => [k, v ? Math.max(1, Math.round((v * days) / 7)) : 0]));
+    const cad = cadence();
+    const counts = Object.fromEntries(brandFormats().map((k) => [k, cad[k] ? Math.max(1, Math.round((cad[k] * days) / 7)) : 0]));
+    if (!Object.values(counts).some(Boolean)) { msg.textContent = "1週間の投稿本数がすべて0です。「方向性・KPI」で設定してください。"; return; }
     planCtl = new AbortController();
     btn.disabled = true; $("#stop-plan").hidden = false; msg.textContent = "計画を作成中…（1分ほど）"; msg.classList.remove("err");
     const prompt = `${context()}
@@ -1119,7 +1235,7 @@ ${str(S.research?.text).slice(0, 10000) || "（分析なし）"}
 </research>
 
 ${start} から ${days} 日間の投稿カレンダーを作ってください。
-形式ごとの本数（厳守）: リール ${counts.reel}、フィード ${counts.feed}、ストーリー ${counts.story}、X ${counts.x}
+形式ごとの本数（厳守）: ${Object.entries(counts).filter(([, v]) => v).map(([k, v]) => `${FMT[k]}(${k}) ${v}`).join("、")}
 - 発信の柱の比率に近づける（pillar は設定の柱の名前をそのまま書く）
 - SNSの目的をすべて最低1回は狙う（goal は設定の目的の表記をそのまま書く）
 - 遅れているKPIを押し上げる投稿を厚めにする（kpi は月間KPI目標の名前をそのまま書く）
@@ -1127,7 +1243,7 @@ ${start} から ${days} 日間の投稿カレンダーを作ってください�
 - トレンドは分析の「自社で使うべきトレンド」から選び、無理に全部使わない
 
 次のJSONだけを返してください:
-${PLAN_SHAPE}`;
+${planShape()}`;
     try {
       const data = await sample.json(prompt, { signal: planCtl.signal, cache: false, modelTier: "complex" });
       S.plan = cleanPlan(data, start, days);
@@ -1157,6 +1273,12 @@ ${PLAN_SHAPE}`;
       shape: `{"title": "", "frames": [{"visual": "画", "text": "文字", "sticker": "none|poll|quiz|question|link|countdown|slider", "sticker_detail": "設問・選択肢・リンク先など"}]}` },
     x: { text: "Xのポスト。全角140字以内。単発か、価値が高い場合のみ3〜5件のスレッド。ハッシュタグは0〜2個。",
       shape: `{"title": "", "posts": ["1件目（全角140字以内）"]}` },
+    threads: { text: "Threadsの投稿。1件500字以内。会話のきっかけになる問いかけや本音で、Xより少し長めで柔らかい語り口。必要なら2〜4件の連投。ハッシュタグ（トピック）は1個まで。",
+      shape: `{"title": "", "posts": ["1件目（500字以内）"]}` },
+    tiktok: { text: "TikTok動画。15〜60秒の縦型。冒頭1秒で結論か違和感を出すフック、テロップ多め、テンポ速め、最後にプロフィールへの導線。トレンド音源の方向性も書く。",
+      shape: `{"title": "", "hook": "冒頭1秒のフック", "duration_sec": 30, "scenes": [{"time": "0-1s", "visual": "撮る画", "telop": "テロップ", "narration": "話す内容（なければ空）"}], "audio_idea": "音源の方向性", "cover_text": "カバー文字", "caption": "キャプション", "hashtags": ["タグ"], "shooting_checklist": ["必要な素材・人・場所"]}` },
+    youtube: { text: "YouTube動画（ショートなら60秒以内、通常動画なら5〜12分）。検索されるタイトル、冒頭15秒のつかみ、章立て、概要欄、サムネイル文字を作る。",
+      shape: `{"title": "動画タイトル", "kind": "short|long", "hook": "冒頭のつかみ", "duration_sec": 480, "chapters": [{"time": "0:00", "heading": "章の見出し", "points": "話す内容"}], "description": "概要欄（CTAとリンクを含む）", "tags": ["タグ"], "thumbnail_text": "サムネイルの文字", "shooting_checklist": ["必要な素材・人・場所"]}` },
   };
   const okBody = (b) => b && typeof b === "object" && !Array.isArray(b);
 
@@ -1182,8 +1304,8 @@ ${g.shape}`;
     if (!okBody(body)) throw { code: "invalid_json" };
     const id = draftId(it, idx);
     const prev = S.drafts.get(id);
-    const doc = { id, status: "draft", format: it.format, plan: it, body, media_urls: arr(prev?.media_urls), notes: str(prev?.notes), perf: prev?.perf ?? null, fit: null, updatedAt: Date.now(), updatedBy: me?.id || null };
-    S.drafts.set(id, doc);
+    const doc = { id, brand: BR, status: "draft", format: it.format, plan: it, body, asset: prev?.asset || null, media_urls: arr(prev?.media_urls), notes: str(prev?.notes), perf: prev?.perf ?? null, fit: null, updatedAt: Date.now(), updatedBy: me?.id || null };
+    S.drafts.set(id, doc); S.allDrafts.set(id, doc);
     if (db) await db.doc("drafts/" + id).set(doc);
     if (brand().autofix !== false) await checkAndFix(doc, signal, true);
     return id;
@@ -1231,11 +1353,12 @@ ${g.shape}`;
     const b = brand(), body = d.body || {}, text = bodyText(d), out = [];
     for (const w of str(b.ng).split(/[、,，\n]/).map((x) => x.trim()).filter(Boolean))
       if (text.includes(w)) out.push({ level: "err", msg: `NGワード「${w}」が含まれています` });
+    if (d.format === "threads") arr(body.posts).forEach((p, i) => { if ([...str(p)].length > 500) out.push({ level: "err", msg: `${i + 1}件目が500字を超えています（${[...str(p)].length}字）` }); });
     if (d.format === "x") {
       arr(body.posts).forEach((p, i) => { if (xWeight(p) > 280) out.push({ level: "err", msg: `${i + 1}件目が全角140字を超えています（${Math.ceil(xWeight(p) / 2)}字）` }); });
       if (arr(body.posts).length > 5) out.push({ level: "warn", msg: "スレッドが5件を超えています" });
     }
-    if ((d.format === "reel" || d.format === "feed") && arr(body.hashtags).length > 30) out.push({ level: "err", msg: "ハッシュタグが30個を超えています（Instagramの上限）" });
+    if (["reel", "feed", "tiktok"].includes(d.format) && arr(body.hashtags).length > 30) out.push({ level: "err", msg: "ハッシュタグが30個を超えています（Instagramの上限）" });
     // Numbers with units must come from the facts list.
     const facts = (str(b.facts) + str(d.plan?.date)).replace(/[,，]/g, "");
     const seen = new Set();
@@ -1459,7 +1582,7 @@ ${GUIDE[d.format].shape}`;
       fitPanel(d),
     ];
 
-    if (d.format === "reel") {
+    if (d.format === "reel" || d.format === "tiktok") {
       parts.push(
         h("label", { class: "f" }, "フック（冒頭1〜2秒）", edit(d, b.hook, (v) => (b.hook = v), 2)),
         h("div", { class: "note" }, `尺 ${str(b.duration_sec)}秒 ／ 音源: ${str(b.audio_idea)} ／ カバー: ${str(b.cover_text)}`),
@@ -1473,7 +1596,20 @@ ${GUIDE[d.format].shape}`;
         h("div", { class: "slide" }, h("span", { class: "n" }, `${i + 1} / ${arr(b.slides).length}`),
           h("b", {}, str(sl.headline)), h("div", { style: "font-size:13px" }, str(sl.body)), h("div", { class: "dn" }, str(sl.design_note))))));
     }
-    if (d.format === "reel" || d.format === "feed") {
+    if (d.format === "youtube") {
+      const descText = () => `${str(b.description)}\n\n${tagText(b.tags)}`.trim();
+      parts.push(
+        h("label", { class: "f" }, "冒頭のつかみ", edit(d, b.hook, (v) => (b.hook = v), 2)),
+        h("div", { class: "note" }, `${b.kind === "short" ? "ショート" : "通常動画"} ／ 約${Math.round((num(b.duration_sec) || 0) / 60 * 10) / 10}分 ／ サムネイル: ${str(b.thumbnail_text)}`),
+        h("div", { class: "scenes" }, h("table", {},
+          h("thead", {}, h("tr", {}, h("th", {}, "時間"), h("th", {}, "章"), h("th", {}, "話す内容"))),
+          h("tbody", {}, arr(b.chapters).map((c) => h("tr", {}, h("td", {}, str(c.time)), h("td", {}, str(c.heading)), h("td", {}, str(c.points))))))),
+        h("div", { class: "row" }, h("b", { style: "font-size:13px" }, "概要欄"), h("div", { class: "spacer" }), copyBtn(descText, "概要欄をコピー")),
+        edit(d, b.description, (v) => (b.description = v), 7),
+        h("div", { class: "tags" }, tagText(b.tags)),
+        h("div", {}, h("b", { style: "font-size:13px" }, "撮影チェックリスト"), h("ul", { class: "check" }, arr(b.shooting_checklist).map((c) => h("li", {}, str(c))))));
+    }
+    if (d.format === "reel" || d.format === "feed" || d.format === "tiktok") {
       const capText = () => `${str(b.caption)}\n\n${tagText(b.hashtags)}`.trim();
       parts.push(
         h("div", { class: "row" }, h("b", { style: "font-size:13px" }, "キャプション"), h("div", { class: "spacer" }), copyBtn(capText, "キャプションをコピー")),
@@ -1489,11 +1625,13 @@ ${GUIDE[d.format].shape}`;
           fr.sticker && fr.sticker !== "none" ? h("div", { class: "sticker" }, `${fr.sticker}：${str(fr.sticker_detail)}`) : null))),
         h("div", { class: "note" }, "スタンプ（投票・リンクなど）はアプリで追加してください。"));
     }
-    if (d.format === "x") {
+    if (d.format === "x" || d.format === "threads") {
       const posts = arr(b.posts);
       posts.forEach((t, i) => {
         const cnt = h("span", { class: "count" });
-        const upd = (v) => { const w = xWeight(v); cnt.textContent = `${Math.ceil(w / 2)} / 140（全角換算）`; cnt.classList.toggle("over", w > 280); };
+        const upd = d.format === "x"
+          ? (v) => { const w = xWeight(v); cnt.textContent = `${Math.ceil(w / 2)} / 140（全角換算）`; cnt.classList.toggle("over", w > 280); }
+          : (v) => { const n = [...str(v)].length; cnt.textContent = `${n} / 500字`; cnt.classList.toggle("over", n > 500); };
         upd(t);
         parts.push(
           h("div", { class: "row" }, h("b", { style: "font-size:13px" }, posts.length > 1 ? `スレッド ${i + 1} / ${posts.length}` : "ポスト"), cnt, h("div", { class: "spacer" }), copyBtn(() => str(b.posts[i]))),
@@ -1501,13 +1639,20 @@ ${GUIDE[d.format].shape}`;
       });
     }
 
-    const media = h("textarea", { rows: "2", placeholder: "Instagram用：撮影・制作した素材の公開URL（1行に1つ）", readonly: !canWrite || null });
+    const media = h("textarea", { rows: "2", placeholder: "撮影・制作した素材の公開URL（1行に1つ。Instagramの自動投稿に使います）", readonly: !canWrite || null });
     media.value = arr(d.media_urls).join("\n");
     media.addEventListener("input", () => { d.media_urls = media.value.split("\n").map((x) => x.trim()).filter(Boolean); saveBody(d); });
     const notes = h("textarea", { rows: "2", placeholder: "チーム向けメモ（修正依頼など）", readonly: !canWrite || null });
     notes.value = str(d.notes);
     notes.addEventListener("input", () => { d.notes = notes.value; saveBody(d); });
-    if (d.format !== "x") parts.push(h("label", { class: "f" }, "素材URL", media));
+    if (!TEXT_FMT.has(d.format)) {
+      const sel = h("select", { "aria-label": "素材の状況", disabled: !canWrite || null }, Object.entries(ASSET).map(([k, v]) => h("option", { value: k }, v)));
+      sel.value = assetState(d) === "na" ? "none" : assetState(d);
+      sel.addEventListener("change", () => { d.asset = sel.value; saveDraft(d, { asset: d.asset }); renderCalendar(); });
+      parts.push(h("div", { class: "asset-row" }, h("b", { style: "font-size:13px" }, "素材の状況"), sel,
+        h("span", { class: "note" }, "カレンダーに表示されます。素材URLを入れると「完成」扱いになります。")),
+        h("label", { class: "f" }, "素材URL", media));
+    }
     parts.push(h("label", { class: "f" }, "メモ", notes));
     if (d.status === "published") {
       parts.push(h("div", { class: "row" }, h("span", { class: "note" }, d.perf ? PERF.filter(([k]) => d.perf[k] != null).map(([k, l]) => `${l} ${nf.format(d.perf[k])}`).join(" ／ ") || "成果は未入力です" : "成果は未入力です"),
@@ -1520,7 +1665,7 @@ ${GUIDE[d.format].shape}`;
         if (!sample) return;
         regen.disabled = true; regen.textContent = "作成中…";
         const idx = S.plan?.items?.findIndex((it, i) => draftId(it, i) === d.id) ?? -1;
-        const n = idx >= 0 ? idx : parseInt(d.id.split("_")[1], 10) - 1;
+        const parts = d.id.split("_"), n = idx >= 0 ? idx : parseInt(parts[parts.length - 2], 10) - 1;
         try { await generateDraft(d.plan, n); renderDrafts(); renderPlan(); }
         catch (e) { regen.disabled = false; regen.textContent = sampleErr(e); }
       });
@@ -1541,7 +1686,7 @@ ${GUIDE[d.format].shape}`;
   // ---------- export ----------
   function exportJson() {
     return JSON.stringify(sortedDrafts().filter((d) => d.status === "approved").map((d) => ({
-      id: d.id, status: d.status, plan: d.plan, [d.format]: d.body, media_urls: arr(d.media_urls), notes: str(d.notes),
+      id: d.id, brand: brandOf(d), status: d.status, plan: d.plan, [d.format]: d.body, media_urls: arr(d.media_urls), notes: str(d.notes),
     })), null, 2);
   }
   $("#ex-copy").addEventListener("click", (ev) => {
@@ -1694,14 +1839,15 @@ ${GUIDE[d.format].shape}`;
     }) : [h("div", { class: "empty" }, "月間KPI目標がまだありません。「方向性・KPI」で目標を設定してください。")]));
 
     // Key metric tiles
-    const lastSnap = (key) => S.metrics.filter((x) => x.date <= end && num(x[key]) != null).sort((a, b) => a.date.localeCompare(b.date)).pop();
+    const lastSnap = (key) => S.metrics.filter((x) => x.date <= end && snapVal(x, key) != null).sort((a, b) => a.date.localeCompare(b.date)).pop();
+    const tracked = SERIES.filter((sr) => trackPlatforms().includes(sr.key));
     const tile = (label, value, delta, sub) => h("div", { class: "tile" }, h("span", { class: "l" }, label), h("span", { class: "v" }, value),
       h("span", { class: `d ${delta == null ? "" : delta > 0 ? "up" : delta < 0 ? "down" : ""}` }, delta == null ? sub || "" : `${delta > 0 ? "▲ +" : delta < 0 ? "▼ " : "± "}${nf.format(delta)} 今月`));
     const sum = (k) => posts.reduce((a, d) => a + pv(d, k), 0);
     const reach = sum("reach");
     const planned = [...S.drafts.values()].filter((d) => str(d.plan?.date).startsWith(ym) && d.status !== "rejected").length;
     $("#kpi-tiles").replaceChildren(
-      ...SERIES.map((sr) => { const l = lastSnap(sr.key); return tile(`${sr.label}${sr.key === "line" ? "" : " フォロワー"}`, l ? nf.format(num(l[sr.key])) : "—", acctGain(sr.key, ym), l ? `${mdLabel(l.date)} 時点` : "未記録"); }),
+      ...tracked.map((sr) => { const l = lastSnap(sr.key); return tile(`${sr.label}${["line", "youtube"].includes(sr.key) ? "" : " フォロワー"}`, l ? nf.format(snapVal(l, sr.key)) : "—", acctGain(sr.key, ym), l ? `${mdLabel(l.date)} 時点` : "未記録"); }),
       tile("月間 再生・表示数", nfc.format(sum("views")), null, `${posts.length} 投稿の合計`),
       tile("保存率", reach ? `${((sum("saves") / reach) * 100).toFixed(1)}%` : "—", null, "保存 ÷ リーチ"),
       tile("エンゲージメント率", reach ? `${(((sum("likes") + sum("comments") + sum("saves") + sum("shares")) / reach) * 100).toFixed(1)}%` : "—", null, "反応 ÷ リーチ"),
@@ -1710,8 +1856,8 @@ ${GUIDE[d.format].shape}`;
     // Followers trend: the 90 days up to the end of the selected month.
     const fromD = isoDate(new Date(Date.parse(end) - 89 * 864e5));
     const snaps = S.metrics.filter((x) => x.date >= fromD && x.date <= end).sort((a, b) => a.date.localeCompare(b.date));
-    const series = SERIES.map((sr) => {
-      const pts = snaps.filter((x) => num(x[sr.key]) != null).map((x) => ({ d: x.date, v: num(x[sr.key]) }));
+    const series = tracked.map((sr) => {
+      const pts = snaps.filter((x) => snapVal(x, sr.key) != null).map((x) => ({ d: x.date, v: snapVal(x, sr.key) }));
       if (S.fMode === "gain" && pts.length) { const b0 = pts[0].v; pts.forEach((p) => (p.v -= b0)); }
       return { ...sr, points: pts };
     }).filter((sr) => sr.points.length);
@@ -1720,8 +1866,8 @@ ${GUIDE[d.format].shape}`;
     if (!series.length) fc.replaceChildren(h("div", { class: "empty" }, "まだ記録がありません。下の「アカウントの数値を記録」から最初の数値を入れてください。"));
     else if (S.fView === "table") {
       fc.replaceChildren(h("div", { class: "tbl-wrap" }, h("table", { class: "tbl" },
-        h("thead", {}, h("tr", {}, h("th", {}, "日付"), SERIES.map((sr) => h("th", { class: "n" }, sr.label)))),
-        h("tbody", {}, snaps.map((x) => h("tr", {}, h("td", {}, x.date), SERIES.map((sr) => h("td", { class: "n" }, num(x[sr.key]) == null ? "—" : nf.format(num(x[sr.key]))))))))));
+        h("thead", {}, h("tr", {}, h("th", {}, "日付"), tracked.map((sr) => h("th", { class: "n" }, sr.label)))),
+        h("tbody", {}, snaps.map((x) => h("tr", {}, h("td", {}, x.date), tracked.map((sr) => h("td", { class: "n" }, snapVal(x, sr.key) == null ? "—" : nf.format(snapVal(x, sr.key))))))))));
     } else lineChart(fc, series);
 
     // Views per post
@@ -1735,6 +1881,8 @@ ${GUIDE[d.format].shape}`;
     } else barChart(vc, vitems);
 
     renderBreakdown(posts);
+    renderBrandCompare(ym);
+    renderMetricInputs();
     renderInsights(ym);
     renderMetricList();
     renderPerfTable(posts, ym);
@@ -1804,7 +1952,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
       const { text } = await sample(prompt, { signal: reviewCtl.signal, cache: false });
       S.insights = { text, month: ym, at: Date.now() };
       renderInsights(ym); msg.textContent = "振り返りました。";
-      if (db) await db.doc("insights/latest").set(S.insights).catch(() => { msg.textContent = "振り返りましたが、保存に失敗しました。"; });
+      if (db) await db.doc(bdoc("insights/latest")).set(S.insights).catch(() => { msg.textContent = "振り返りましたが、保存に失敗しました。"; });
     } catch (e) { msg.textContent = sampleErr(e); if (e?.code !== "cancelled") msg.classList.add("err"); }
     finally { btn.disabled = false; $("#stop-review").hidden = true; }
   });
@@ -1814,25 +1962,67 @@ ${JSON.stringify(rows).slice(0, 30000)}
     const btn = ev.currentTarget, msg = $("#m-msg");
     if (!db) { msg.textContent = "共有データに接続できないため記録できません。"; return; }
     const date = $("#m-date").value;
-    const vals = { ig: num($("#m-ig").value), x: num($("#m-x").value), line: num($("#m-line").value) };
-    if (!date || Object.values(vals).every((v) => v == null)) { msg.textContent = "日付と、少なくとも1つの数値を入れてください。"; return; }
+    const vals = Object.fromEntries($$("#m-inputs input").map((i) => [acctKey(i.dataset.p), num(i.value)]).filter(([, v]) => v != null));
+    if (!date || !Object.keys(vals).length) { msg.textContent = "日付と、少なくとも1つの数値を入れてください。"; return; }
     btn.disabled = true;
     try {
-      const prev = S.metrics.find((x) => x.date === date) || {};
-      const doc = { date, ig: vals.ig ?? prev.ig ?? null, x: vals.x ?? prev.x ?? null, line: vals.line ?? prev.line ?? null, updatedAt: Date.now() };
-      await db.doc("metrics/" + date).set(doc);
-      msg.textContent = `${dateLabel(date)} の数値を記録しました。`;
-      ["#m-ig", "#m-x", "#m-line"].forEach((q) => ($(q).value = ""));
+      await saveSnapshot(date, vals, "manual");
+      msg.textContent = `${OWNERS[BR]}：${dateLabel(date)} の数値を記録しました。`;
+      $$("#m-inputs input").forEach((i) => (i.value = ""));
     } catch { msg.textContent = "記録できませんでした（編集権限がない可能性があります）。"; }
     finally { btn.disabled = false; }
   });
+  // One doc per date holds every brand's accounts; merge so brands never overwrite each other.
+  async function saveSnapshot(date, vals, source) {
+    const prev = S.metrics.find((x) => x.date === date);
+    const doc = { date, accounts: { ...(prev?.accounts || {}), ...vals }, updatedAt: Date.now(), source };
+    await db.doc("metrics/" + date).set(doc);
+  }
+  function renderMetricInputs() {
+    const box = $("#m-inputs");
+    if (box.contains(document.activeElement)) return;
+    box.replaceChildren(...SERIES.filter((sr) => trackPlatforms().includes(sr.key)).map((sr) =>
+      h("label", { class: "f" }, sr.label, h("input", { type: "number", min: "0", inputmode: "numeric", "data-p": sr.key }))));
+  }
   function renderMetricList() {
-    const rows = [...S.metrics].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
+    const tracked = SERIES.filter((sr) => trackPlatforms().includes(sr.key));
+    const rows = S.metrics.filter((x) => tracked.some((sr) => snapVal(x, sr.key) != null)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
     if (!rows.length) { $("#m-list").replaceChildren(); return; }
+    const clear = (x) => {
+      const acc = { ...(x.accounts || {}) };
+      for (const sr of tracked) delete acc[acctKey(sr.key)];
+      return Object.keys(acc).length ? db.doc("metrics/" + x.date).set({ ...x, accounts: acc, updatedAt: Date.now() }) : db.doc("metrics/" + x.date).delete();
+    };
     $("#m-list").replaceChildren(h("div", { class: "tbl-wrap" }, h("table", { class: "tbl" },
-      h("thead", {}, h("tr", {}, h("th", {}, "記録日"), SERIES.map((sr) => h("th", { class: "n" }, sr.label)), h("th", {}))),
-      h("tbody", {}, rows.map((x) => h("tr", {}, h("td", {}, x.date, x.source === "sync" ? h("span", { class: "note" }, "（連携）") : null), SERIES.map((sr) => h("td", { class: "n" }, num(x[sr.key]) == null ? "—" : nf.format(num(x[sr.key])))),
-        h("td", { class: "n" }, canWrite && db ? armed(h("button", { class: "btn small danger" }, "削除"), "もう一度押すと削除", () => db.doc("metrics/" + x.date).delete().catch(() => {})) : null)))))));
+      h("thead", {}, h("tr", {}, h("th", {}, "記録日"), tracked.map((sr) => h("th", { class: "n" }, sr.label)), h("th", {}))),
+      h("tbody", {}, rows.map((x) => h("tr", {}, h("td", {}, x.date, x.source === "sync" ? h("span", { class: "note" }, "（連携）") : null), tracked.map((sr) => h("td", { class: "n" }, snapVal(x, sr.key) == null ? "—" : nf.format(snapVal(x, sr.key)))),
+        h("td", { class: "n" }, canWrite && db ? armed(h("button", { class: "btn small danger" }, "削除"), "もう一度押すと削除", () => clear(x).catch(() => {})) : null)))))));
+  }
+
+  // Side-by-side month totals for both brands.
+  function renderBrandCompare(ym) {
+    const box = $("#brand-compare");
+    box.replaceChildren(...Object.entries(OWNERS).map(([b, label]) => {
+      const ds = [...S.allDrafts.values()].filter((d) => brandOf(d) === b && str(d.plan?.date).startsWith(ym));
+      const pub = ds.filter((d) => d.status === "published");
+      const sumK = (k) => pub.reduce((a, d) => a + pv(d, k), 0);
+      const { start, end } = monthRange(ym);
+      let gain = 0, have = false;
+      for (const p of trackPlatforms(b)) {
+        const pts = S.metrics.filter((m) => snapVal(m, p, b) != null).sort((x, y) => x.date.localeCompare(y.date));
+        const inM = pts.filter((m) => m.date >= start && m.date <= end);
+        if (!inM.length) continue;
+        const base = pts.filter((m) => m.date < start).pop() || inM[0];
+        gain += snapVal(inM[inM.length - 1], p, b) - snapVal(base, p, b); have = true;
+      }
+      const row = (l, v) => h("div", { class: "tr", style: "display:flex;justify-content:space-between;font-size:13px" }, h("span", { class: "note" }, l), h("b", {}, v));
+      return h("div", { class: "tile", style: b === BR ? "border-color:var(--cyan)" : "" },
+        h("span", { class: "l" }, label + (b === BR ? "（表示中）" : "")),
+        row("投稿済み / 予定", `${pub.length} / ${ds.filter((d) => d.status !== "rejected").length}`),
+        row("再生・表示数", nf.format(sumK("views"))),
+        row("フォロワー等の増加（全アカウント計）", have ? (gain >= 0 ? "+" : "") + nf.format(gain) : "—"),
+        row("投稿経由のLINE登録", nf.format(sumK("line_signups"))));
+    }));
   }
 
   // Post performance entry
@@ -1870,8 +2060,8 @@ ${JSON.stringify(rows).slice(0, 30000)}
   // ---------- account sync import ----------
   function bigramSet(a) { a = str(a).replace(/\s+/g, ""); const out = new Set(); for (let i = 0; i < a.length - 1; i++) out.add(a.slice(i, i + 2)); return out; }
   function textSim(a, b) { const A = bigramSet(a), B = bigramSet(b); if (!A.size || !B.size) return 0; let n = 0; for (const x of A) if (B.has(x)) n++; return n / Math.min(A.size, B.size); }
-  function matchPosts(posts) {
-    const drafts = [...S.drafts.values()], byPub = new Map(), used = new Set();
+  function matchPosts(posts, b) {
+    const drafts = [...S.allDrafts.values()].filter((d) => brandOf(d) === b), byPub = new Map(), used = new Set();
     for (const d of drafts) for (const id of arr(d.published?.ids)) byPub.set(String(id), d);
     return posts.map((p) => {
       let d = byPub.get(String(p.id));
@@ -1901,14 +2091,15 @@ ${JSON.stringify(rows).slice(0, 30000)}
     if (data?.source !== "baseai-sync" || !data.snapshot) { msg.textContent = "このファイルは連携データではありません。`python -m sns_auto sync` の出力ファイルを選んでください。"; return; }
     msg.textContent = "取り込み中…";
     const now = Date.now(), snap = data.snapshot;
+    const b = OWNERS[data.brand] ? data.brand : BR;
     let posts = 0, ext = 0;
     try {
-      const vals = Object.fromEntries(["ig", "x", "line"].filter((k) => num(snap[k]) != null).map((k) => [k, num(snap[k])]));
-      if (Object.keys(vals).length && /^\d{4}-\d{2}-\d{2}$/.test(str(snap.date))) {
-        const prev = S.metrics.find((x) => x.date === snap.date) || {};
-        await db.doc("metrics/" + snap.date).set({ date: snap.date, ig: prev.ig ?? null, x: prev.x ?? null, line: prev.line ?? null, ...vals, source: "sync", updatedAt: now });
-      }
-      for (const [p, d] of matchPosts(arr(data.posts).filter((p) => p && p.id && FMT[p.format]))) {
+      // New files carry snapshot.accounts by platform; older ones ig/x/line at the top level.
+      const legacy = { instagram: snap.ig, x: snap.x, line: snap.line };
+      const src = snap.accounts && typeof snap.accounts === "object" ? snap.accounts : legacy;
+      const vals = Object.fromEntries(Object.entries(src).filter(([p, v]) => PLATFORMS[p] && num(v) != null).map(([p, v]) => [acctKey(p, b), num(v)]));
+      if (Object.keys(vals).length && /^\d{4}-\d{2}-\d{2}$/.test(str(snap.date))) await saveSnapshot(snap.date, vals, "sync");
+      for (const [p, d] of matchPosts(arr(data.posts).filter((p) => p && p.id && FMT[p.format]), b)) {
         const perf = Object.fromEntries(Object.entries(p.perf || {}).filter(([, v]) => typeof v === "number"));
         if (d) {
           await db.doc("drafts/" + d.id).update({ perf: { ...(d.perf || {}), ...perf }, status: "published", permalink: str(p.permalink), published: { platform: p.platform, ids: [String(p.id)] }, updatedAt: now });
@@ -1916,18 +2107,122 @@ ${JSON.stringify(rows).slice(0, 30000)}
         } else {
           const title = str(p.text).replace(/\s+/g, " ").trim().slice(0, 40) || `${p.platform} ${p.id}`;
           const id = `ext_${p.platform}_${p.id}`.replace(/[^A-Za-z0-9_\-.~:@+]/g, "_");
-          await db.doc("drafts/" + id).set({ id, status: "published", format: p.format, source: "sync", permalink: str(p.permalink),
+          await db.doc("drafts/" + id).set({ id, brand: b, status: "published", format: p.format, source: "sync", permalink: str(p.permalink),
             plan: { date: str(p.date), time: str(p.time), format: p.format, pillar: "", goal: "", theme: title, trend_angle: "", reference_angle: "", kpi: "" },
             body: { title }, media_urls: [], notes: "", published: { platform: p.platform, ids: [String(p.id)] }, perf, updatedAt: now });
           ext++;
         }
       }
-      await db.doc("sync/status").set({ at: now, fetchedAt: str(data.fetched_at), via: "upload", posts: arr(data.posts).length, errors: arr(data.errors).slice(0, 5) });
-      msg.textContent = `取り込みました：原稿に紐づいた投稿 ${posts} 件、アプリから投稿 ${ext} 件${arr(data.errors).length ? "（一部の取得エラー: " + data.errors.join(" / ") + "）" : ""}。`;
+      await db.doc(bdoc("sync/status", b)).set({ at: now, fetchedAt: str(data.fetched_at), via: "upload", posts: arr(data.posts).length, errors: arr(data.errors).slice(0, 5) });
+      msg.textContent = `${OWNERS[b]} に取り込みました：原稿に紐づいた投稿 ${posts} 件、アプリから投稿 ${ext} 件${arr(data.errors).length ? "（一部の取得エラー: " + data.errors.join(" / ") + "）" : ""}。`;
     } catch (e) {
       msg.textContent = e?.code === "quota_exceeded" ? "保存できる件数の上限に達しました。古い原稿を削除してください。" : "取り込みに失敗しました（編集権限がない可能性があります）。";
     }
   });
+
+  // ---------- brand switching ----------
+  let brandUnsubs = [], failFn = () => {};
+  function refreshAll() { renderDrafts(); renderPlan(); renderKpi(); renderCalendar(); }
+  function subscribeBrand() {
+    brandUnsubs.forEach((u) => u()); brandUnsubs = [];
+    if (!db) return;
+    const sub = (path, fn) => brandUnsubs.push(db.doc(bdoc(path)).onSnapshot((x) => fn(x.exists ? x.data() : null), failFn));
+    sub("settings/brand", (v) => { S.brand = v; fillSettings(); refreshAll(); });
+    sub("settings/inputs", (v) => { S.inputs = v; fillSettings(); });
+    sub("settings/kpi", (v) => { S.kpi = v; fillSettings(); refreshAll(); });
+    sub("research/latest", (v) => { S.research = v; if (v) renderResearch(); else $("#research-out").replaceChildren(h("div", { class: "empty" }, "まだ分析がありません。「トレンドを分析する」を押すと、使うべきフォーマット・テーマ・避けるべきトレンドがここに表示されます。")); });
+    sub("insights/latest", (v) => { S.insights = v; renderKpi(); });
+    sub("plans/current", (v) => { S.plan = v; renderPlan(); renderCalendar(); });
+    sub("sync/status", (v) => { S.sync = v; renderSyncState(); });
+  }
+  function applyBrandUI() {
+    $$("#brand-sw button").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.b === BR)));
+    $$(".bchip").forEach((x) => (x.textContent = OWNERS[BR]));
+    document.title = `BaseAI SNSスタジオ｜${OWNERS[BR]}`;
+  }
+  $$("#brand-sw button").forEach((x) => x.addEventListener("click", () => {
+    if (x.dataset.b === BR) return;
+    BR = x.dataset.b;
+    try { localStorage.setItem("baseai-brand", BR); } catch {}
+    Object.assign(S, { brand: null, inputs: null, kpi: null, research: null, plan: null, insights: null, sync: null, selected: null });
+    refilter(); applyBrandUI(); fillSettings(); renderSyncState(); renderAcctOverview();
+    $("#research-out").replaceChildren(h("div", { class: "empty" }, "読み込み中…"));
+    subscribeBrand(); refreshAll();
+  }));
+
+  // ---------- calendar ----------
+  let calMonth = curMonth();
+  $("#cal-prev").addEventListener("click", () => { calMonth = shiftMonth(calMonth, -1); renderCalendar(); });
+  $("#cal-next").addEventListener("click", () => { calMonth = shiftMonth(calMonth, 1); renderCalendar(); });
+  $("#cal-today").addEventListener("click", () => { calMonth = curMonth(); renderCalendar(); });
+  $("#cal-both").addEventListener("change", () => renderCalendar());
+  function shiftMonth(ym, n) { const [y, m] = ym.split("-").map(Number); const d = new Date(y, m - 1 + n, 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`; }
+  const ASSET_MARK = { ready: ["ok", "●"], making: ["mid", "◐"], editing: ["mid", "◐"], none: ["no", "○"], na: ["na", "–"] };
+  const STAGE = (d) => (d.status === "published" ? ["ok", "✓投稿済"] : d.status === "approved" ? ["ok", "承認"] : ["mid", "原稿"]);
+  function calEntries(ym) {
+    const both = $("#cal-both").checked, t = today(), out = [];
+    for (const d of S.allDrafts.values()) {
+      if (d.status === "rejected" || !str(d.plan?.date).startsWith(ym)) continue;
+      if (!both && brandOf(d) !== BR) continue;
+      out.push({ kind: "draft", d, date: d.plan.date, time: str(d.plan.time), fmt: d.format, title: str(d.body?.title) || str(d.plan?.theme), brand: brandOf(d),
+        late: d.plan.date < t && d.status !== "published" });
+    }
+    // Plan items with no draft yet (current brand's plan only).
+    arr(S.plan?.items).forEach((it, idx) => {
+      if (!str(it.date).startsWith(ym) || S.allDrafts.has(draftId(it, idx))) return;
+      out.push({ kind: "plan", it, idx, date: it.date, time: str(it.time), fmt: it.format, title: str(it.theme), brand: BR, late: it.date < t });
+    });
+    return out.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  }
+  function renderCalendar() {
+    if ($("#view-calendar").hidden) return;
+    const ym = calMonth, [y, m] = ym.split("-").map(Number), t = today();
+    $("#cal-title").textContent = `${y}年${m}月`;
+    const ents = calEntries(ym);
+    const drafts = ents.filter((e) => e.kind === "draft");
+    const cnt = (f) => ents.filter(f).length;
+    const pill = (label, v, bad) => h("span", { class: `pill${bad && v ? " bad" : ""}` }, label, h("b", {}, String(v)));
+    $("#cal-sum").replaceChildren(
+      pill("予定", ents.length), pill("原稿あり", drafts.length),
+      pill("素材完成", drafts.filter((e) => ["ready", "na"].includes(assetState(e.d))).length),
+      pill("承認済み", drafts.filter((e) => ["approved", "published"].includes(e.d.status)).length),
+      pill("投稿済み", drafts.filter((e) => e.d.status === "published").length),
+      pill("遅れ", cnt((e) => e.late), true));
+    const first = new Date(y, m - 1, 1), startDow = first.getDay(), days = new Date(y, m, 0).getDate();
+    const byDate = new Map();
+    for (const e of ents) { if (!byDate.has(e.date)) byDate.set(e.date, []); byDate.get(e.date).push(e); }
+    const both = $("#cal-both").checked;
+    const entEl = (e) => {
+      const color = `var(--${e.fmt})`;
+      let marks;
+      if (e.kind === "plan") marks = [h("span", { class: "mk na" }, "予定のみ")];
+      else {
+        const [ac, am] = ASSET_MARK[assetState(e.d)], [sc, sm] = STAGE(e.d);
+        marks = [h("span", { class: `mk ${ac}`, title: "素材: " + (ASSET[assetState(e.d)] || "不要") }, `素材${am}`), h("span", { class: `mk ${sc}` }, sm)];
+      }
+      const label = `${e.date} ${e.time} ${FMT[e.fmt]} ${e.title}`;
+      const btn = h("button", { class: `ent${e.kind === "plan" ? " plan" : ""}${e.late ? " late" : ""}${e.kind === "draft" && e.d.status === "published" ? " done" : ""}`, "aria-label": label, title: label },
+        h("span", { class: "bar", style: `--ec:${color}` }),
+        h("span", {}, h("div", { class: "tt" }, e.title),
+          h("div", { class: "mt" }, h("span", { class: "mk" }, e.time), h("span", { class: `chip f-${e.fmt}`, style: "font-size:9px;padding:0 5px" }, FMT[e.fmt]),
+            both ? h("span", { class: "btag" }, e.brand === "company" ? "BaseAI" : "SIB") : null, ...marks)));
+      btn.addEventListener("click", () => {
+        if (e.kind === "plan") { show("plan"); return; }
+        if (brandOf(e.d) !== BR) $(`#brand-sw button[data-b="${brandOf(e.d)}"]`).click();
+        S.selected = e.d.id; renderDrafts(); show("drafts");
+      });
+      return btn;
+    };
+    const cells = [...WD.map((w, i) => h("div", { class: `dow${i === 0 ? " sun" : i === 6 ? " sat" : ""}` }, w))];
+    for (let i = 0; i < startDow; i++) cells.push(h("div", { class: "cell out blank" }));
+    for (let dnum = 1; dnum <= days; dnum++) {
+      const iso = `${ym}-${String(dnum).padStart(2, "0")}`, list = byDate.get(iso) || [];
+      cells.push(h("div", { class: `cell${iso === t ? " today" : ""}${list.length ? "" : " blank"}` },
+        h("div", { class: "dn" }, h("b", {}, `${dnum}（${WD[(startDow + dnum - 1) % 7]}）`), list.length ? h("span", {}, `${list.length}件`) : null),
+        list.map(entEl)));
+    }
+    $("#cal").replaceChildren(...cells);
+  }
 
   // ---------- boot ----------
   let initial = "settings";
@@ -1935,7 +2230,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
   const hash = location.hash.slice(1);
   if (VIEWS.includes(hash)) initial = hash;
   if (!VIEWS.includes(initial)) initial = "settings";
-  fillSettings(); renderDrafts(); show(initial);
+  applyBrandUI(); fillSettings(); renderDrafts(); show(initial);
   if (!window.claude?.use) { $("#offline").hidden = false; $("#st-db").textContent = "共有データ: 未接続"; $("#st-ai").textContent = "AI生成: 未接続"; return; }
 
   claude.use("sample").then((x) => {
@@ -1969,25 +2264,19 @@ ${JSON.stringify(rows).slice(0, 30000)}
     $("#st-db").textContent = d ? "共有データ: 接続済み" : "共有データ: 未接続（ログインが必要です）";
     if (!d) { $("#offline").hidden = false; return; }
     const fail = () => { $("#st-db").textContent = "共有データ: 切断されました"; $("#dot-db").classList.remove("on"); };
-    const refreshAll = () => { renderDrafts(); renderPlan(); renderKpi(); };
-    d.doc("settings/brand").onSnapshot((x) => { S.brand = x.exists ? x.data() : null; fillSettings(); refreshAll(); }, fail);
-    d.doc("settings/inputs").onSnapshot((x) => { S.inputs = x.exists ? x.data() : null; fillSettings(); }, fail);
-    d.doc("settings/accounts").onSnapshot((x) => { S.accounts = x.exists ? x.data() : null; fillSettings(); renderAcctOverview(); }, fail);
-    d.doc("settings/kpi").onSnapshot((x) => { S.kpi = x.exists ? x.data() : null; fillSettings(); refreshAll(); }, fail);
-    d.doc("research/latest").onSnapshot((x) => { if (x.exists) { S.research = x.data(); renderResearch(); } }, fail);
-    d.doc("insights/latest").onSnapshot((x) => { S.insights = x.exists ? x.data() : null; renderKpi(); }, fail);
-    d.doc("plans/current").onSnapshot((x) => { S.plan = x.exists ? x.data() : null; renderPlan(); }, fail);
-    d.doc("sync/status").onSnapshot((x) => { S.sync = x.exists ? x.data() : null; renderSyncState(); }, fail);
+    failFn = fail;
+    d.doc("settings/accounts").onSnapshot((x) => { S.accounts = x.exists ? x.data() : null; fillSettings(); renderAcctOverview(); refreshAll(); }, fail);
     d.collection("metrics").onSnapshot((snap) => { S.metrics = snap.docs.map((x) => x.data()).filter((x) => x && x.date); renderKpi(); }, fail);
     d.collection("drafts").onSnapshot((snap) => {
       const next = new Map();
       for (const doc of snap.docs) {
-        const busy = (pending.has(doc.id) || perfTimers.has(doc.id)) && S.drafts.has(doc.id);
-        next.set(doc.id, busy ? S.drafts.get(doc.id) : structuredClone(doc.data()));
+        const busy = (pending.has(doc.id) || perfTimers.has(doc.id)) && S.allDrafts.has(doc.id);
+        next.set(doc.id, busy ? S.allDrafts.get(doc.id) : structuredClone(doc.data()));
       }
-      S.drafts = next;
+      S.allDrafts = next; refilter();
       refreshAll();
     }, fail);
+    subscribeBrand();
   });
 })();
 </script>
