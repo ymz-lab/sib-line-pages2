@@ -16,6 +16,17 @@
 - 書き込みは `batch`（1回50件まで）。既存ドキュメントを更新するときは読んだ `version` を `if_version` に入れる。
 - 1回の実行で、ブランドごとに参考は最大8件、原稿は最大12件、画像は最大8件まで。
 
+## 確実性の方針（KPI達成を最優先にした保守的な運用）
+
+`settings/brand__<b>.quality` に従う（ない場合は threshold 85 / explore 20 / stock 7）。
+
+- 計画の (100 − explore)% は「実績のある型」で組む。実績とは、`drafts` の `perf`（再生・保存率・LINE登録など）が高かった形式・発信の柱・時間帯と、`status: "adopted"` の参考の型。成果データが少ないうちは、各SNSで定番として確立した型（ノウハウ系カルーセル、本音インタビュー、1分解説、ビフォーアフター等）を使う。
+- 新しいトレンドは explore% 以内にとどめ、`status: "adopted"` の参考に基づくものだけを使う。未確認の流行は使わない。
+- 月間KPIのうちペースが遅れているものを押し上げる投稿を優先し、各投稿の `kpi` に必ず紐づける。
+- 原稿は自分で採点し、threshold 未満なら書き直してから書く（最大2回）。それでも届かないものは `fit.issues` に理由を書き、点数は正直に書く。
+- 画像は今日から stock 日先までの分を、日付の近い順に確保する（上限の範囲内）。
+- 根拠のない数字、誇大表現、他者批判、炎上しうる時事ネタ、他人の動画・音源の無断利用につながる指示は書かない。
+
 ## ブランド
 
 `company`（株式会社BaseAI）と `student`（学生団体SIB）の順に、以下を行う。
@@ -23,7 +34,7 @@
 ### 0. 読む
 - `settings/accounts`（`items[].owner` がブランド）、`settings/brand__<b>`、`settings/inputs__<b>`、`settings/kpi__<b>`
 - `plans/current__<b>`、`research/latest__<b>`
-- コレクション `refs`、`drafts`、`creatives`（`brand` が一致するもの）
+- コレクション `refs`、`drafts`、`creatives`（`brand` が一致するもの）、`metrics`（`accounts["<b>:<platform>"]` がそのブランドのフォロワー数）
 - `settings/brand__<b>` の `mission` と `goals` が空なら、そのブランドは **1（参考集め）だけ** 行い、2〜4は飛ばす（ステータスに「方向性が未入力のため下書きは未作成」と書く）。
 
 ### 1. 参考・トレンドを集める
@@ -39,7 +50,7 @@
 - `plans/current__<b>` がない、または最後の `items[].date` が「今日+6日」より前なら、新しい7日分の計画をつくる。開始日は「明日」と「既存計画の最終日の翌日」の遅いほう。
 - 本数は `settings/brand__<b>.cadence`（1週間の本数）。形式はそのブランドの運用アカウントにあるSNSのものだけ:
   instagram → `reel` `feed` `story`、x → `x`、threads → `threads`、tiktok → `tiktok`、youtube → `youtube`。
-- 発信の柱の比率（`pillars` の「名前 35%」）、目的（`goals`）、遅れているKPI、`status: "adopted"` の参考を反映する。
+- 発信の柱の比率（`pillars` の「名前 35%」）、目的（`goals`）、遅れているKPI、確実性の方針を反映する。
 - 書く: `plans/current__<b>` = `{summary, items: [{date, time, format, pillar, goal, theme, trend_angle, reference_angle, kpi}], start, days: 7, at, status: "proposed", by: "autopilot"}`
   - `pillar` と `goal` と `kpi` は設定の表記をそのまま使う。
 
@@ -57,7 +68,7 @@
 - `fit` = `{score（0〜100）, criteria: [{name, score（0〜5）, comment}]（KPI・目的との整合／ターゲットへの刺さり／トーン・方針／発信の柱との一致／CTAの明確さ／事実の正確さ）, issues: [], rules: [], checkedAt, brandAt: <settings/brand__<b> の updatedAt または 0>, fixed: 0}`
 
 ### 4. 画像（クリエイティブ）をつくる
-- 今日〜今日+7日の `story` と `feed` の原稿で、`creatives/<原稿ID>` がないものについて書く。
+- 今日〜今日+stock日の `story` と `feed` の原稿で、`creatives/<原稿ID>` がないものについて書く。
 - `creatives/<id>` = `{id, draftId: id, brand, format, date, time, status: "generated", engine: "builtin", style: {palette: {bg, fg, accent}, font: "gothic"|"maru"|"mincho", mood}, pages: [{template: "bold"|"list"|"quote"|"cta"|"photo", eyebrow, headline, sub, bullets: [], cta, photo: "", sticker: "none"|...}], version: 1, updatedAt, updatedBy: null}`
   - ページ数はfeedならスライド数、storyならフレーム数。1枚目はフック、最後は `cta`。
   - 見出しはfeed全角24字・story全角20字以内（`\n` で改行可）、補足40字以内、箇条書きは5個・各18字以内。

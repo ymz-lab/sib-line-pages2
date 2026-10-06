@@ -339,6 +339,18 @@ label.btn { display: inline-flex; align-items: center; }
   .crow { grid-template-columns: minmax(0, 1fr); grid-template-areas: "meta" "title" "thumbs" "act"; }
   .ceditor { grid-template-columns: minmax(0, 1fr); }
 }
+/* goals & alerts */
+.goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.goal { background: var(--glass); border: 1px solid var(--line); border-left: 4px solid var(--muted); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.goal.ok { border-left-color: var(--ok); } .goal.warn { border-left-color: var(--warn); } .goal.bad { border-left-color: var(--bad); }
+.goal .gl { font-size: 13px; font-weight: 700; color: var(--muted); }
+.goal .gv { font-size: 30px; font-weight: 900; line-height: 1.15; }
+.goal .gs { font-size: 12px; color: var(--muted); }
+.alerts { display: flex; flex-direction: column; gap: 6px; }
+.alert { display: flex; gap: 10px; align-items: center; font-size: 13px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--well); }
+.alert b { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; flex: none; }
+.alert.bad { border-color: var(--bad); } .alert.bad b { background: var(--bad); color: var(--bg); }
+.alert.warn { border-color: var(--warn); } .alert.warn b { background: var(--warn); color: var(--bg); }
 /* home */
 .refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
 .ref { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 13px; }
@@ -449,6 +461,8 @@ a.ext { color: var(--cyan); font-size: 12px; }
       <h1>今日の<span class="g">判断</span></h1>
       <p class="lede">参考動画・トレンドの収集、計画・原稿・画像の下書きは自動運用が毎朝行います。ここでは採用・承認を決め、手動で投稿するものはコピーと画像の保存で投稿します。</p>
       <div class="row" id="home-auto"></div>
+      <div class="goals" id="home-goals"></div>
+      <div class="alerts" id="home-alerts"></div>
       <div class="cal-sum" id="home-sum"></div>
       <div class="panel"><h2>今日・明日の投稿（投稿キット）</h2><p class="note">コピーと画像の保存だけで投稿できるようにまとめています。投稿したら「投稿した」を押してください。</p><div class="kits" id="home-kit"></div></div>
       <div class="panel"><h2>新着の参考・トレンド</h2><p class="note">採用したものは、次の計画・原稿・画像づくりに使われます。</p><div class="refs" id="home-refs"></div></div>
@@ -520,6 +534,20 @@ a.ext { color: var(--cyan); font-size: 12px; }
           <label class="f" style="width:150px">書体<select id="v-font"><option value="gothic">ゴシック</option><option value="maru">丸ゴシック</option><option value="mincho">明朝</option></select></label>
           <label class="f" style="width:160px">画像に入れる名前<input id="v-name"></label>
           <label class="f" style="width:200px">アカウント名<input id="v-handle"></label>
+        </div>
+        <label class="f">素材フォルダのリンク（Googleドライブなど）<span class="h">このブランドの写真・画像・動画をまとめたフォルダ。投稿ごとのフォルダは原稿画面で設定できます</span><input id="b-drive" type="url" placeholder="https://drive.google.com/drive/folders/…"></label>
+      </div>
+      <div class="panel">
+        <h2>品質と確実性</h2>
+        <p class="note">KPI達成を確実にするための守りの設定です。自動運用もこの基準で下書きを作ります。</p>
+        <div class="row">
+          <label class="f" style="width:220px">承認できる適合度の基準<select id="q-threshold"><option value="80">80点以上</option><option value="85">85点以上（推奨）</option><option value="90">90点以上</option></select></label>
+          <label class="toggle"><input type="checkbox" id="q-strict">基準未満は編集者以外承認できない</label>
+          <label class="toggle"><input type="checkbox" id="q-double">ダブルチェック（2人の承認が必要）</label>
+        </div>
+        <div class="row">
+          <label class="f" style="width:260px">新しい試みの上限<select id="q-explore"><option value="10">10%（最も保守的）</option><option value="20">20%（推奨）</option><option value="30">30%</option></select><span class="h">残りは成果の出た型・柱・時間帯で組みます</span></label>
+          <label class="f" style="width:200px">画像のストック目標<select id="q-stock"><option value="3">3日先まで</option><option value="7">7日先まで（推奨）</option><option value="14">14日先まで</option></select></label>
         </div>
       </div>
       <div class="panel">
@@ -760,7 +788,10 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   const ASSET = { none: "未着手", making: "撮影・制作中", editing: "編集中", ready: "完成" };
   const STATUS = { draft: "未確認", approved: "承認済み", rejected: "不採用", published: "投稿済み" };
   const WD = ["日", "月", "火", "水", "木", "金", "土"];
-  const FIT_OK = 80, FIT_MIN = 70;
+  // Quality bar comes from 方向性・KPI → 品質と確実性 (default: 85, strict, single approval).
+  const quality = () => ({ threshold: 85, strict: true, double: false, ...(S.brand?.quality || {}) });
+  const fitOk = () => Number(quality().threshold) || 85;
+  const fitMin = () => fitOk() - 10;
 
   const DEFAULT_BRAND = {
     account: "", cta: "", mission: "", goals: "", audience: "", tone: "", pillars: "", facts: "", ng: "",
@@ -942,6 +973,10 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     const vis = visual();
     for (const k of ["primary", "accent", "secondary"]) { const el = $("#v-" + k); if (document.activeElement !== el) el.value = vis[k]; }
     for (const k of ["font", "name", "handle"]) { const el = $("#v-" + k); if (document.activeElement !== el) el.value = str(vis[k]); }
+    if (document.activeElement !== $("#b-drive")) $("#b-drive").value = str(b.driveUrl);
+    const q = { explore: 20, stock: 7, ...quality() };
+    $("#q-threshold").value = String(q.threshold); $("#q-strict").checked = q.strict !== false; $("#q-double").checked = !!q.double;
+    $("#q-explore").value = String(q.explore); $("#q-stock").value = String(q.stock);
     const i = S.inputs || {};
     for (const k of ["references", "trends"]) { const el = $("#i-" + k); if (document.activeElement !== el) el.value = str(i[k]); }
     if (!$("#kpi-rows").contains(document.activeElement)) renderKpiRows();
@@ -1020,6 +1055,8 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     b.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, $("#c-" + k) ? Math.max(0, parseInt($("#c-" + k).value, 10) || 0) : 0]));
     b.autofix = $("#b-autofix").checked;
     b.visual = Object.fromEntries(["primary", "accent", "secondary", "font", "name", "handle"].map((k) => [k, $("#v-" + k).value.trim()]));
+    b.driveUrl = $("#b-drive").value.trim();
+    b.quality = { threshold: Number($("#q-threshold").value), strict: $("#q-strict").checked, double: $("#q-double").checked, explore: Number($("#q-explore").value), stock: Number($("#q-stock").value) };
     b.updatedAt = Date.now();
     const inputs = { references: $("#i-references").value.trim(), trends: $("#i-trends").value.trim() };
     const kpi = { items: readKpiRows() };
@@ -1536,7 +1573,7 @@ ${GUIDE[d.format].shape}`;
     if (!okBody(body)) throw { code: "invalid_json" };
     return body;
   }
-  const needsFix = (fit) => fit.score < FIT_OK || fit.rules.some((r) => r.level === "err");
+  const needsFix = (fit) => fit.score < fitOk() || fit.rules.some((r) => r.level === "err");
   async function runCheck(d, signal) {
     const ai = await aiCheck(d, signal);
     return { ...ai, rules: ruleCheck(d), checkedAt: Date.now(), brandAt: brand().updatedAt || 0, fixed: d.fit?.fixed || 0 };
@@ -1563,7 +1600,7 @@ ${GUIDE[d.format].shape}`;
     if (!d.fit) return { cls: "none", text: "未チェック" };
     if ((d.fit.brandAt || 0) < (brand().updatedAt || 0)) return { cls: "warn", text: `要再チェック` };
     const err = d.fit.rules?.some((r) => r.level === "err");
-    const cls = err || d.fit.score < FIT_MIN ? "bad" : d.fit.score < FIT_OK ? "warn" : "ok";
+    const cls = err || d.fit.score < fitMin() ? "bad" : d.fit.score < fitOk() ? "warn" : "ok";
     return { cls, text: `適合 ${d.fit.score}${err ? " ・要修正" : ""}` };
   };
   const fitBadge = (d) => { const f = fitState(d); return h("span", { class: `fitbadge ${f.cls}` }, f.text); };
@@ -1634,10 +1671,32 @@ ${GUIDE[d.format].shape}`;
       if (db) await db.doc("drafts/" + d.id).update({ body: d.body, media_urls: d.media_urls, notes: d.notes, updatedAt: d.updatedAt, updatedBy: me?.id || null }).catch(() => {});
     }, 700));
   }
+  // Approval gate: below the quality bar only editors can override (two clicks); with double check on,
+  // a draft needs approvals from two different people.
+  function approveButton(d, small) {
+    const f = fitState(d), q = quality();
+    const mine = me?.id && arr(d.approvals).includes(me.id);
+    const label = q.double ? (mine ? "承認済み（2人目待ち）" : arr(d.approvals).length ? "2人目として承認" : "承認（1人目）") : "承認";
+    const b = h("button", { class: `btn${small ? " small" : ""} primary`, disabled: mine || null }, label);
+    const run = () => approveDraft(d);
+    if (f.cls === "ok") b.addEventListener("click", run);
+    else if (q.strict && !canAdmin) { b.disabled = true; b.title = "品質基準に届いていません。「ミスマッチを修正」で直してください"; b.textContent = small ? "基準未満" : "基準未満のため承認不可"; }
+    else armed(b, f.cls === "none" ? "未チェックです。もう一度で承認" : "基準未満です。もう一度で承認", run);
+    return b;
+  }
+  async function approveDraft(d) {
+    if (!quality().double || !me?.id) return setStatus(d, "approved");
+    const approvals = [...new Set([...arr(d.approvals), me.id])];
+    d.approvals = approvals;
+    if (approvals.length >= 2) return setStatus(d, "approved");
+    renderDrafts(); renderHome();
+    await saveDraft(d, { approvals });
+  }
   async function setStatus(d, status) {
+    if (status !== "approved" && status !== "published") d.approvals = [];
     d.status = status;
     renderDrafts(); renderPlan();
-    await saveDraft(d, { status });
+    await saveDraft(d, { status, approvals: arr(d.approvals) });
   }
   function edit(d, value, onInput, rows = 3, extra) {
     const ta = h("textarea", { rows: String(rows), readonly: !canWrite || null });
@@ -1780,6 +1839,10 @@ ${GUIDE[d.format].shape}`;
         h("span", { class: "note" }, "カレンダーに表示されます。素材URLを入れると「完成」扱いになります。")),
         h("label", { class: "f" }, "素材URL", media));
     }
+    const drive = h("input", { type: "url", placeholder: "https://drive.google.com/…（この投稿の画像・動画をまとめたフォルダ）", readonly: !canWrite || null });
+    drive.value = str(d.driveUrl);
+    drive.addEventListener("input", () => { d.driveUrl = drive.value.trim(); clearTimeout(drive._t); drive._t = setTimeout(() => saveDraft(d, { driveUrl: d.driveUrl }), 700); });
+    parts.push(h("label", { class: "f" }, h("span", {}, "素材フォルダ（Googleドライブなど）", safeUrl(d.driveUrl || brand().driveUrl) ? h("a", { class: "ext", href: d.driveUrl || brand().driveUrl, target: "_blank", rel: "noopener", style: "margin-left:8px" }, "開く ↗") : null), drive));
     parts.push(h("label", { class: "f" }, "メモ", notes));
     if (d.status === "published") {
       parts.push(h("div", { class: "row" }, h("span", { class: "note" }, d.perf ? PERF.filter(([k]) => d.perf[k] != null).map(([k, l]) => `${l} ${nf.format(d.perf[k])}`).join(" ／ ") || "成果は未入力です" : "成果は未入力です"),
@@ -1796,10 +1859,7 @@ ${GUIDE[d.format].shape}`;
         try { await generateDraft(d.plan, n); renderDrafts(); renderPlan(); }
         catch (e) { regen.disabled = false; regen.textContent = sampleErr(e); }
       });
-      const f = fitState(d);
-      const approve = h("button", { class: "btn primary" }, "承認");
-      if (f.cls === "ok") approve.addEventListener("click", () => setStatus(d, "approved"));
-      else armed(approve, f.cls === "none" ? "未チェックです。もう一度押すと承認" : "適合度が基準未満です。もう一度押すと承認", () => setStatus(d, "approved"));
+      const approve = approveButton(d, false);
       parts.push(h("div", { class: "row" },
         d.status !== "approved" && d.status !== "published" ? approve : null,
         d.status === "approved" ? h("button", { class: "btn", onclick: () => setStatus(d, "draft") }, "承認を取り消す") : null,
@@ -2800,6 +2860,7 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
       h("div", { class: "row" }, h("span", { class: "mono" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), chip(d.format), stChip(d.status),
         h("b", {}, str(b.title) || str(d.plan?.theme)), h("div", { class: "spacer" }),
         safeUrl(acct?.url) ? h("a", { class: "ext", href: acct.url, target: "_blank", rel: "noopener" }, `${acct.handle} を開く ↗`) : null),
+      safeUrl(d.driveUrl || brand().driveUrl) ? h("div", { class: "kitrow" }, h("span", {}, "素材フォルダ"), h("a", { class: "ext", href: d.driveUrl || brand().driveUrl, target: "_blank", rel: "noopener" }, d.driveUrl ? "この投稿の素材を開く ↗" : "ブランドの素材フォルダを開く ↗")) : null,
       d.status !== "approved" ? h("p", { class: "note" }, "まだ承認されていません。内容を確認して承認してから投稿してください。") : null,
       ...blocks,
       h("ol", { class: "steps-list" }, steps.map((t) => h("li", {}, t))),
@@ -2819,6 +2880,23 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
       h("span", { class: `state ${auto?.at ? ((Date.now() - auto.at) / 36e5 < 30 ? "ok" : "warn") : "none"}` }, auto?.at ? `自動運用 最終実行 ${new Date(auto.at).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : "自動運用はまだ実行されていません"),
       auto?.summary ? h("span", { class: "note" }, auto.summary) : null);
 
+    renderGoals();
+    // Things that would make a post slip if nobody acts today.
+    const alerts = [];
+    const tmr = sortedDrafts().filter((d) => d.plan?.date === tomorrow && d.status !== "rejected" && d.source !== "sync");
+    const unapproved = tmr.filter((d) => d.status === "draft").length;
+    if (unapproved) alerts.push(["bad", `明日の投稿のうち ${unapproved} 件がまだ承認されていません`]);
+    const noImg = tmr.filter((d) => needsCreative(d) && S2.creatives.get(d.id)?.status !== "approved").length;
+    if (noImg) alerts.push(["warn", `明日のストーリー・フィードのうち ${noImg} 件は画像が未承認です`]);
+    const late = due.filter((d) => d.plan.date < t).length;
+    if (late) alerts.push(["bad", `予定日を過ぎて未投稿のものが ${late} 件あります`]);
+    const stockDays = Number(quality().stock || 7);
+    const gap = stockItems(stockDays).find((e) => !["approved", "generated"].includes(creState(e)));
+    if (gap) alerts.push(["warn", `画像のストックが目標（${stockDays}日先）に届いていません：${dateLabel(gap.date)} の分から不足`]);
+    const lagging = arr(S.kpi?.items).map((k) => [k, kpiStatus(k, curMonth())]).filter(([, st]) => st.state === "bad");
+    for (const [k] of lagging) alerts.push(["bad", `KPI「${k.name}」がペースより遅れています。次の計画で重点的に押し上げます`]);
+    $("#home-alerts").replaceChildren(...alerts.map(([c, m]) => h("div", { class: `alert ${c}` }, h("b", {}, c === "bad" ? "!" : "▲"), m)));
+
     const pill = (l, v, bad) => h("span", { class: `pill${bad && v ? " bad" : ""}` }, l, h("b", {}, String(v)));
     $("#home-sum").replaceChildren(pill("今日・明日の投稿", due.length), pill("遅れ", due.filter((d) => d.plan.date < t).length, true),
       pill("新着の参考・トレンド", newRefs.length), pill("承認待ちの原稿", pendingDrafts.length), pill("承認待ちの画像", pendingCre.length));
@@ -2828,9 +2906,7 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
     $("#home-refs").replaceChildren(...(newRefs.length ? newRefs.slice(0, 12).map((r) => refCard(r, true)) : [h("div", { class: "empty" }, "新しい参考・トレンドはありません。自動運用が毎朝集めてここに届けます。")]));
 
     $("#home-drafts").replaceChildren(...(pendingDrafts.length ? pendingDrafts.slice(0, 20).map((d) => {
-      const f = fitState(d);
-      const ok = h("button", { class: "btn small primary" }, "承認");
-      if (f.cls === "ok") ok.addEventListener("click", () => setStatus(d, "approved")); else armed(ok, "基準未満です。もう一度で承認", () => setStatus(d, "approved"));
+      const ok = approveButton(d, true);
       return h("div", { class: "hrow" }, h("span", { class: "mono" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), chip(d.format), fitBadge(d),
         h("span", { class: "ht" }, str(d.body?.title) || str(d.plan?.theme)), h("div", { class: "spacer" }),
         h("button", { class: "btn small", onclick: () => { S.selected = d.id; renderDrafts(); show("drafts"); } }, "中身を見る"), canWrite ? ok : null);
@@ -2841,6 +2917,31 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
       h("button", { class: "btn small", onclick: () => { S2.creSel = c.id; S2.crePage = 0; show("creative"); } }, "編集"),
       canWrite ? h("button", { class: "btn small primary", onclick: () => { c.status = "approved"; saveCreative(c); renderHome(); renderStock(); renderCalendar(); } }, "承認") : null))
       : [h("div", { class: "empty" }, "承認待ちの画像はありません。")]));
+  }
+
+  // "目標まであと○○": remaining amount, days left, and the pace needed per day.
+  function renderGoals() {
+    const box = $("#home-goals"), ym = curMonth(), { days, elapsed } = monthRange(ym), left = Math.max(1, days - elapsed + 1);
+    const kpis = arr(S.kpi?.items);
+    if (!kpis.length) { box.replaceChildren(h("div", { class: "empty" }, "KPI目標が未設定です。「方向性・KPI」で月間目標を入れると、ここに「目標まであと○○」が出ます。")); return; }
+    box.replaceChildren(...kpis.map((k) => {
+      const m = METRICS[k.metric] || {}, st = kpiStatus(k, ym), u = m.unit === "%" ? "" : m.unit;
+      if (st.actual == null) return h("div", { class: "goal none" }, h("span", { class: "gl" }, k.name), h("b", { class: "gv" }, "—"), h("span", { class: "gs" }, "まだ数値がありません（成果・KPIで入力または連携）"));
+      if (m.unit === "%") {
+        const done = st.actual >= k.target;
+        return h("div", { class: `goal ${done ? "ok" : st.state}` }, h("span", { class: "gl" }, k.name),
+          h("b", { class: "gv" }, done ? "達成中 ✓" : `あと ${((k.target - st.actual) * 100).toFixed(1)}pt`),
+          h("span", { class: "gs" }, `今月 ${fmtN(st.actual, "%")} ／ 目標 ${fmtN(k.target, "%")}`));
+      }
+      const remain = Math.max(0, k.target - st.actual);
+      const proj = elapsed ? (st.actual / elapsed) * days : 0;
+      return h("div", { class: `goal ${remain === 0 ? "ok" : st.state}` },
+        h("span", { class: "gl" }, k.name),
+        h("b", { class: "gv" }, remain === 0 ? "達成 ✓" : `あと ${nf.format(Math.ceil(remain))}${u}`),
+        h("div", { class: "meter" }, h("i", { style: `width:${Math.min(100, st.ratio * 100)}%;--m:var(--${st.state === "none" ? "faint" : st.state})` }), h("span", { class: "pace", style: `left:calc(${Math.min(100, (st.paceRatio || 0) * 100)}% - 1px)` })),
+        h("span", { class: "gs" }, remain === 0 ? `今月 ${nf.format(st.actual)}${u}（目標 ${nf.format(k.target)}${u}）`
+          : `残り${left}日・1日あたり ${nf.format(Math.ceil(remain / left))}${u} ／ このペースだと月末 ${nf.format(Math.round(proj))}${u}（目標の${Math.round((proj / k.target) * 100)}%）`));
+    }));
   }
 
   function renderRefsPanel() {
