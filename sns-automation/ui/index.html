@@ -1576,7 +1576,7 @@ ${GUIDE[d.format].shape}`;
   const needsFix = (fit) => fit.score < fitOk() || fit.rules.some((r) => r.level === "err");
   async function runCheck(d, signal) {
     const ai = await aiCheck(d, signal);
-    return { ...ai, rules: ruleCheck(d), checkedAt: Date.now(), brandAt: brand().updatedAt || 0, fixed: d.fit?.fixed || 0 };
+    return { ...ai, rules: ruleCheck(d), checkedAt: Date.now(), reviewedAt: Date.now(), brandAt: brand().updatedAt || 0, fixed: d.fit?.fixed || 0 };
   }
   async function saveDraft(d, fields) {
     d.updatedAt = Date.now();
@@ -1599,10 +1599,13 @@ ${GUIDE[d.format].shape}`;
   const fitState = (d) => {
     if (!d.fit) return { cls: "none", text: "未チェック" };
     if ((d.fit.brandAt || 0) < (brand().updatedAt || 0)) return { cls: "warn", text: `要再チェック` };
-    const err = d.fit.rules?.some((r) => r.level === "err");
+    // Rule checks always run live; a stored "no problems" from elsewhere is not trusted.
+    const err = ruleCheck(d).some((r) => r.level === "err");
     const cls = err || d.fit.score < fitMin() ? "bad" : d.fit.score < fitOk() ? "warn" : "ok";
-    return { cls, text: `適合 ${d.fit.score}${err ? " ・要修正" : ""}` };
+    return { cls, text: `${selfScored(d) ? "自己採点" : "適合"} ${d.fit.score}${err ? " ・要修正" : ""}`, self: selfScored(d) };
   };
+  // Drafts scored only by the autopilot that wrote them get an independent check before approval.
+  const selfScored = (d) => d.source === "autopilot" && !d.fit?.reviewedAt;
   const fitBadge = (d) => { const f = fitState(d); return h("span", { class: `fitbadge ${f.cls}` }, f.text); };
 
   let fitCtl = null;
@@ -1679,6 +1682,19 @@ ${GUIDE[d.format].shape}`;
     const label = q.double ? (mine ? "承認済み（2人目待ち）" : arr(d.approvals).length ? "2人目として承認" : "承認（1人目）") : "承認";
     const b = h("button", { class: `btn${small ? " small" : ""} primary`, disabled: mine || null }, label);
     const run = () => approveDraft(d);
+    if (f.self && q.strict && sample) {
+      // Independent check first; approve only if it still meets the bar.
+      b.textContent = small ? "確認して承認" : "確認チェックして承認";
+      b.addEventListener("click", async () => {
+        b.disabled = true; b.textContent = "確認中…";
+        try {
+          await checkAndFix(d, undefined, false);
+          if (fitState(d).cls === "ok") await run();
+          else { renderDrafts(); renderHome(); }
+        } catch (e) { b.disabled = false; b.textContent = sampleErr(e); }
+      });
+      return b;
+    }
     if (f.cls === "ok") b.addEventListener("click", run);
     else if (q.strict && !canAdmin) { b.disabled = true; b.title = "品質基準に届いていません。「ミスマッチを修正」で直してください"; b.textContent = small ? "基準未満" : "基準未満のため承認不可"; }
     else armed(b, f.cls === "none" ? "未チェックです。もう一度で承認" : "基準未満です。もう一度で承認", run);
@@ -1726,7 +1742,7 @@ ${GUIDE[d.format].shape}`;
       box.append(msg);
     }
     // Rules can be shown even before an AI check.
-    const rules = d.fit?.rules || ruleCheck(d);
+    const rules = ruleCheck(d);
     if (d.fit?.criteria?.length) {
       box.append(...d.fit.criteria.map((c) => {
         const r = c.score / 5, cls = r >= 0.8 ? "--ok" : r >= 0.6 ? "--warn" : "--bad";
