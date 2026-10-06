@@ -306,11 +306,29 @@
     ['company','会社名'],['person','担当者'],['email','メール'],['industry','業種'],['area','エリア'],['segment','セグメント'],['score','スコア'],['sourceUrl','公表元URL'],['personalNote','個別の一言'],['template','文面バージョン'],['status','状態'],['nextAction','次回アクション日'],['replyType','返信区分'],['meetingDate','商談日'],['meetingResult','結果'],['owner','担当'],['memo','メモ'],['step','ステップ'],['lastSent','最終送信日']
   ];
   const csvCell = value => `"${String(value ?? '').replace(/"/g,'""')}"`;
+  let preparedCsv = '';
   function exportCsv() {
     const rows = [CSV_FIELDS.map(([,label]) => csvCell(label)).join(','), ...state.contacts.map(c => CSV_FIELDS.map(([key]) => csvCell(key === 'status' ? STATUS[c[key]] || c[key] : c[key])).join(','))];
-    const blob = new Blob(['\ufeff' + rows.join('\r\n')], {type:'text/csv;charset=utf-8'});
-    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `relay-contacts-${today()}.csv`; link.click(); URL.revokeObjectURL(link.href);
-    showToast(`${state.contacts.length}件をCSV出力しました`);
+    preparedCsv = rows.join('\r\n');
+    $('#exportFilename').textContent = `relay-contacts-${today()}.csv（${state.contacts.length}件）`;
+    $('#csvPreview').value = preparedCsv;
+    $('#exportDialog').showModal();
+  }
+  function downloadCsv() {
+    const blob = new Blob(['\ufeff' + preparedCsv], {type:'text/csv;charset=utf-8'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob); link.download = `relay-contacts-${today()}.csv`;
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    showToast('CSVのダウンロードを開始しました');
+  }
+  async function copyCsv() {
+    const preview = $('#csvPreview');
+    let copied = false;
+    try { await navigator.clipboard.writeText(preparedCsv); copied = true; } catch (error) {
+      preview.focus(); preview.select(); copied = document.execCommand('copy');
+    }
+    showToast(copied ? 'CSVをコピーしました' : 'コピーできませんでした。CSV欄を選択してコピーしてください');
   }
   function parseCsv(text) {
     const rows=[]; let row=[],cell='',quoted=false;
@@ -350,6 +368,8 @@
   $('#openAddBtn').addEventListener('click',()=>openContact());
   $$('.close-dialog').forEach(button=>button.addEventListener('click',()=>$('#contactDialog').close()));
   $$('.close-action').forEach(button=>button.addEventListener('click',()=>$('#actionDialog').close()));
+  $$('.close-export').forEach(button=>button.addEventListener('click',()=>$('#exportDialog').close()));
+  $('#downloadCsvBtn').addEventListener('click',downloadCsv); $('#copyCsvBtn').addEventListener('click',copyCsv);
   $('#contactForm').addEventListener('submit',submitContact); $('#actionForm').addEventListener('submit',submitAction);
   $('#searchInput').addEventListener('input',renderContacts); $('#statusFilter').addEventListener('change',renderContacts);
   $('#exportBtn').addEventListener('click',exportCsv); $('#csvInput').addEventListener('change',event=>{if(event.target.files[0])importCsv(event.target.files[0]);});

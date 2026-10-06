@@ -158,6 +158,15 @@
     </form>
   </dialog>
 
+  <dialog id="exportDialog" class="export-dialog">
+    <div class="export-content">
+      <div class="dialog-head"><div><span class="eyebrow">CSV EXPORT</span><h2>コンタクトを書き出す</h2></div><button type="button" class="icon-btn close-export" aria-label="閉じる">×</button></div>
+      <p class="export-note"><b id="exportFilename"></b><br>ダウンロードが制限されている環境では「CSVをコピー」を使い、Excelやスプレッドシートへ貼り付けて保存してください。</p>
+      <label class="stack-label"><span>CSVプレビュー</span><textarea id="csvPreview" class="csv-preview" rows="10" readonly></textarea></label>
+      <div class="dialog-actions"><button type="button" class="btn btn-ghost close-export">閉じる</button><button type="button" class="btn btn-ghost" id="copyCsvBtn">CSVをコピー</button><button type="button" class="btn btn-primary" id="downloadCsvBtn">ダウンロード</button></div>
+    </div>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="./app.js"></script>
 </body>
