@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <?!= include('Styles'); ?>
+</head>
+<body>
+  <div id="loading" class="loading"><span class="loader"></span><p>読み込んでいます</p></div>
+  <div id="errorView" class="center-card hidden">
+    <div class="error-mark">!</div><h1>アクセスできません</h1><p id="errorMessage"></p>
+  </div>
+
+  <div id="portalView" class="hidden">
+    <header class="portal-header">
+      <a class="portal-brand" href="?">TOOLS<span>社内ツールポータル</span></a>
+      <div class="user-menu"><span id="portalUserName"></span><span class="avatar" id="portalAvatar"></span></div>
+    </header>
+    <main class="portal-main">
+      <section class="portal-hero"><span class="eyebrow">INTERNAL WORKSPACE</span><h1>仕事を、ひとつ先へ。</h1><p>必要なツールを選んで開始してください。</p></section>
+      <section><div class="section-head"><div><h2>マイツール</h2><p>あなたが利用できる社内ツール</p></div><button id="openAdminBtn" class="button secondary hidden">管理設定</button></div><div id="toolGrid" class="tool-grid"></div></section>
+    </main>
+  </div>
+
+  <div id="relayView" class="app hidden">
+    <aside class="sidebar">
+      <a class="relay-brand" href="?"><span class="brand-mark">R</span><span><b>Relay</b><small>Sales follow-up</small></span></a>
+      <nav><button class="nav active" data-view="home">⌂<span>ホーム</span></button><button class="nav" data-view="contacts">◎<span>コンタクト</span></button><button class="nav" data-view="reports">↗<span>レポート</span></button></nav>
+      <a class="back-portal" href="?">← ツール一覧へ</a>
+    </aside>
+    <main class="relay-main">
+      <header class="topbar"><div><p id="relayDate"></p><h1 id="relayTitle">おはようございます</h1></div><div class="actions"><button class="button secondary" id="exportBtn">CSV出力</button><label class="button secondary file-button">CSV取込<input id="csvInput" type="file" accept=".csv,text/csv"></label><button class="button primary" id="addContactBtn">＋ コンタクト追加</button></div></header>
+      <section id="relay-home" class="relay-section active"><div class="focus-card"><div><span class="eyebrow light">TODAY'S FOCUS</span><h2><b id="dueCount">0</b>件のフォローがあります</h2><p>送信後に記録すると、次回アクション日を自動計算します。</p></div></div><div id="metricGrid" class="metric-grid"></div><section class="panel"><div class="panel-head"><div><h2>今日送るべきリスト</h2><p>メールは自動送信されません。</p></div><span id="dueBadge" class="badge">0件</span></div><div id="dueList"></div></section></section>
+      <section id="relay-contacts" class="relay-section"><section class="panel"><div class="toolbar"><label class="search">⌕<input id="searchInput" placeholder="会社名、担当者、メールで検索"></label><select id="statusFilter"><option value="all">すべての状態</option><option value="active">フォロー中</option><option value="pending">保留</option><option value="replied">返信あり</option><option value="meeting">商談化</option><option value="won">成約</option><option value="unsubscribed">配信停止</option><option value="bounced">バウンス</option><option value="completed">完了</option></select></div><div class="table-wrap"><table><thead><tr><th>コンタクト</th><th>セグメント</th><th>スコア</th><th>状態</th><th>次回</th><th>担当</th><th></th></tr></thead><tbody id="contactRows"></tbody></table></div><div class="table-foot" id="contactCount"></div></section></section>
+      <section id="relay-reports" class="relay-section"><div id="reportMetrics" class="metric-grid report-metrics"></div><div class="report-grid"><section class="panel"><div class="panel-head"><div><h2>ステップ別の返信貢献</h2><p>返信につながったフォロー</p></div></div><div id="stepChart" class="bar-chart"></div></section><section class="panel"><div class="panel-head"><div><h2>セグメント別実績</h2><p>返信率と商談化率</p></div></div><div id="segmentReport" class="segment-list"></div></section></div></section>
+    </main>
+    <nav class="mobile-nav"><button class="nav active" data-view="home">⌂<small>ホーム</small></button><button class="nav" data-view="contacts">◎<small>コンタクト</small></button><button class="nav" data-view="reports">↗<small>レポート</small></button></nav>
+  </div>
+
+  <dialog id="contactDialog"><form id="contactForm"><div class="dialog-head"><div><span class="eyebrow">CONTACT</span><h2 id="contactDialogTitle">コンタクト追加</h2></div><button type="button" class="icon-button" data-close="contactDialog">×</button></div><input type="hidden" name="id"><div class="form-grid"><label>会社名<input name="company" required></label><label>担当者名<input name="person" required></label><label class="wide">メール<input type="email" name="email" required></label><label>業種<input name="industry"></label><label>エリア<input name="area"></label><label>セグメント<select name="segment"><option>新規開拓</option><option>紹介</option><option>イベント</option><option>過去接点</option><option>その他</option></select></label><label>スコア<input type="number" min="0" max="100" name="score" value="50"></label><label>担当<input name="owner"></label><label>文面バージョン<select name="template"><option>A：課題起点</option><option>B：事例起点</option><option>C：紹介起点</option></select></label><label class="wide">公表元URL<input type="url" name="sourceUrl"></label><label class="wide">個別の一言<textarea name="personalNote"></textarea></label><label>状態<select name="status"><option value="active">フォロー中</option><option value="pending">保留</option><option value="replied">返信あり</option><option value="meeting">商談化</option><option value="won">成約</option><option value="unsubscribed">配信停止</option><option value="bounced">バウンス</option><option value="completed">完了</option></select></label><label>次回アクション<input type="date" name="nextAction"></label><label>返信区分<select name="replyType"><option value="">未返信</option><option>前向き</option><option>情報収集</option><option>時期尚早</option><option>お断り</option></select></label><label>商談日<input type="date" name="meetingDate"></label><label class="wide">商談結果<input name="meetingResult"></label><label class="wide">メモ<textarea name="memo"></textarea></label></div><div class="dialog-actions"><button type="button" class="button secondary" data-close="contactDialog">キャンセル</button><button class="button primary">保存</button></div></form></dialog>
+
+  <dialog id="actionDialog" class="small-dialog"><form id="actionForm"><div class="dialog-head"><div><span class="eyebrow">UPDATE</span><h2 id="actionTitle">対応結果</h2></div><button type="button" class="icon-button" data-close="actionDialog">×</button></div><input type="hidden" name="contactId"><input type="hidden" name="action"><div id="actionExtra"></div><label>メモ<textarea name="memo"></textarea></label><div class="dialog-actions"><button type="button" class="button secondary" data-close="actionDialog">キャンセル</button><button class="button primary">記録</button></div></form></dialog>
+
+  <dialog id="adminDialog"><div class="dialog-body"><div class="dialog-head"><div><span class="eyebrow">ADMIN</span><h2>ポータル管理</h2></div><button type="button" class="icon-button" data-close="adminDialog">×</button></div><div class="admin-tabs"><button class="active" data-admin-tab="users">利用者</button><button data-admin-tab="tools">ツール</button></div><div id="adminContent"></div></div></dialog>
+
+  <dialog id="csvDialog" class="small-dialog"><div class="dialog-body"><div class="dialog-head"><div><span class="eyebrow">CSV EXPORT</span><h2>コンタクトを書き出す</h2></div><button type="button" class="icon-button" data-close="csvDialog">×</button></div><p class="notice">ダウンロードが制限されている場合は、CSVをコピーしてExcelへ貼り付けてください。</p><textarea id="csvPreview" class="csv-preview" readonly></textarea><div class="dialog-actions"><button class="button secondary" id="copyCsvBtn">CSVをコピー</button><button class="button primary" id="downloadCsvBtn">ダウンロード</button></div></div></dialog>
+  <div id="toast" class="toast"></div>
+  <script>window.BOOTSTRAP = <?!= bootstrapJson ?>;</script>
+  <?!= include('Client'); ?>
+</body>
+</html>
