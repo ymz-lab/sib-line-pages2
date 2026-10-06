@@ -339,6 +339,23 @@ label.btn { display: inline-flex; align-items: center; }
   .crow { grid-template-columns: minmax(0, 1fr); grid-template-areas: "meta" "title" "thumbs" "act"; }
   .ceditor { grid-template-columns: minmax(0, 1fr); }
 }
+/* home */
+.refs { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.ref { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: 13px; }
+.ref p { margin: 0; }
+.ref a.ext { font-size: 14px; word-break: break-word; }
+.kits { display: flex; flex-direction: column; gap: 12px; }
+.kit { background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.kitrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; }
+.kitrow > span:first-child { min-width: 170px; color: var(--muted); }
+.kitprev { color: var(--muted); font-size: 12px; min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.steps-list { margin: 0; padding-left: 1.3em; font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+.kit input[type=url] { flex: 1; min-width: 200px; }
+.hrows { display: flex; flex-direction: column; gap: 6px; }
+.hrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--well); }
+.hrow .ht { font-weight: 700; font-size: 13px; min-width: 0; }
+.hrow .cthumbs { display: flex; gap: 4px; }
+.hrow .cthumb { height: 52px; }
 /* calendar */
 .cal-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .cal-head h2 { font-size: 20px; min-width: 120px; }
@@ -407,6 +424,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
       <button data-b="student" aria-pressed="false">SIB<small>学生団体</small></button>
     </div>
     <div class="steps" role="tablist">
+      <button class="step" data-view="home" role="tab"><b>◎</b>ホーム（判断）</button>
       <button class="step" data-view="settings" role="tab"><b>1</b>方向性・KPI</button>
       <button class="step" data-view="research" role="tab"><b>2</b>トレンド</button>
       <button class="step" data-view="plan" role="tab"><b>3</b>投稿計画</button>
@@ -424,6 +442,19 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
   <main>
     <div id="offline" class="banner warn" hidden>このページは claude.ai 上で開いたときに、チームの共有データとAI生成が使えます。今は閲覧のみです。</div>
+
+    <!-- 0. Home -->
+    <section class="view" id="view-home" hidden>
+      <p class="eyebrow">00 / Decide <span class="bchip"></span></p>
+      <h1>今日の<span class="g">判断</span></h1>
+      <p class="lede">参考動画・トレンドの収集、計画・原稿・画像の下書きは自動運用が毎朝行います。ここでは採用・承認を決め、手動で投稿するものはコピーと画像の保存で投稿します。</p>
+      <div class="row" id="home-auto"></div>
+      <div class="cal-sum" id="home-sum"></div>
+      <div class="panel"><h2>今日・明日の投稿（投稿キット）</h2><p class="note">コピーと画像の保存だけで投稿できるようにまとめています。投稿したら「投稿した」を押してください。</p><div class="kits" id="home-kit"></div></div>
+      <div class="panel"><h2>新着の参考・トレンド</h2><p class="note">採用したものは、次の計画・原稿・画像づくりに使われます。</p><div class="refs" id="home-refs"></div></div>
+      <div class="panel"><h2>承認待ちの原稿</h2><div class="hrows" id="home-drafts"></div></div>
+      <div class="panel"><h2>承認待ちの画像</h2><div class="hrows" id="home-cre"></div></div>
+    </section>
 
     <!-- 1. Settings -->
     <section class="view" id="view-settings">
@@ -509,6 +540,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
         <span class="note" id="research-msg"></span>
       </div>
       <div class="stream" id="research-stream" hidden></div>
+      <div class="panel"><h2>集めた参考動画・ストーリー・トレンド</h2><p class="note">自動運用が毎朝Web検索で集めたものです。採用すると企画に反映されます。</p><div class="refs" id="refs-all"></div></div>
       <div class="panel" id="research-out"><div class="empty">まだ分析がありません。「トレンドを分析する」を押すと、使うべきフォーマット・テーマ・避けるべきトレンドがここに表示されます。</div></div>
     </section>
 
@@ -881,13 +913,15 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   }
 
   // ---------- navigation ----------
-  const VIEWS = ["settings", "research", "plan", "calendar", "creative", "drafts", "export", "kpi"];
+  const VIEWS = ["home", "settings", "research", "plan", "calendar", "creative", "drafts", "export", "kpi"];
   function show(view) {
     $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
     $$(".step").forEach((b) => b.setAttribute("aria-current", String(b.dataset.view === view)));
     try { localStorage.setItem("baseai-view", view); } catch {}
     if (view === "kpi") renderKpi();
     if (view === "calendar") renderCalendar();
+    if (view === "home") renderHome();
+    if (view === "research") renderRefsPanel();
     if (view === "creative") { renderStock(); renderPhotos(); }
   }
   $$(".step").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
@@ -1105,8 +1139,12 @@ ${str(S.insights?.text).slice(0, 4000) || "（振り返りなし）"}
 </last_review>
 
 <references>
-${str(i.references).slice(0, 10000)}
+${str(i.references).slice(0, 8000)}
 </references>
+
+<adopted_references note="チームが採用した参考動画・ストーリー・トレンド。型や切り口を優先的に取り入れる">
+${adoptedRefsText() || "（なし）"}
+</adopted_references>
 
 <trend_notes>
 ${str(i.trends).slice(0, 6000)}
@@ -2691,9 +2729,130 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
       : [h("p", { class: "note" }, "まだ写真がありません。活動やイベントの写真を追加すると、写真を使ったデザインが作られます。")]));
   }
 
+  // ---------- home: decisions + posting kit ----------
+  // The autopilot routine fills refs / research / plans / drafts / creatives; people only decide here.
+  const REF_TYPE = { video: "参考動画", story: "参考ストーリー", account: "参考アカウント", trend: "トレンド", sound: "音源・編集", article: "記事・データ", idea: "企画のタネ" };
+  const S3 = { refs: new Map(), auto: null };
+  const brandRefs = (st) => [...S3.refs.values()].filter((r) => brandOf(r) === BR && (!st || (r.status || "new") === st))
+    .sort((a, b) => (b.foundAt || 0) - (a.foundAt || 0));
+  const adoptedRefsText = () => brandRefs("adopted").slice(0, 15)
+    .map((r) => `- [${REF_TYPE[r.type] || r.type}] ${str(r.title)} ${str(r.url)}\n  使い方: ${str(r.howToUse || r.why)}`).join("\n");
+
+  async function setRef(r, status) {
+    r.status = status;
+    renderHome();
+    if (db) await db.doc("refs/" + r.id).update({ status, decidedAt: Date.now(), decidedBy: me?.id || null }).catch(() => {});
+  }
+  function refCard(r, compact) {
+    const href = safeUrl(r.url);
+    return h("div", { class: "ref" },
+      h("div", { class: "row" }, h("span", { class: "chip st-draft" }, REF_TYPE[r.type] || r.type), r.platform ? h("span", { class: "note" }, PLATFORMS[r.platform] || r.platform) : null,
+        h("div", { class: "spacer" }), r.foundAt ? h("span", { class: "note" }, new Date(r.foundAt).toLocaleDateString("ja-JP")) : null),
+      h("b", {}, href ? h("a", { href, target: "_blank", rel: "noopener", class: "ext" }, str(r.title) + " ↗") : str(r.title)),
+      r.why ? h("p", { class: "note" }, "なぜ参考になるか：" + r.why) : null,
+      !compact && r.structure ? h("p", { class: "note" }, "構成・型：" + r.structure) : null,
+      r.howToUse ? h("p", {}, h("b", { style: "font-size:12px" }, "自社での使い方 "), r.howToUse) : null,
+      canWrite && (r.status || "new") === "new" ? h("div", { class: "row" },
+        h("button", { class: "btn small primary", onclick: () => setRef(r, "adopted") }, "採用"),
+        h("button", { class: "btn small", onclick: () => setRef(r, "rejected") }, "不採用")) : h("span", { class: `mk ${r.status === "adopted" ? "ok" : "na"}` }, r.status === "adopted" ? "✓ 採用済み（企画に反映）" : "不採用"));
+  }
+
+  // What to copy / save / do in the app for one post.
+  function kitFor(d) {
+    const b = d.body || {}, cre = typeof S2 !== "undefined" ? S2.creatives.get(d.id) : null, steps = [], blocks = [];
+    const caption = () => `${str(b.caption)}\n\n${tagText(b.hashtags)}`.trim();
+    const copyRow = (label, get) => { const t = str(get()); return h("div", { class: "kitrow" }, h("span", {}, label), copyBtn(get, "コピー"), h("span", { class: "kitprev" }, t.length > 70 ? t.slice(0, 70) + "…" : t)); };
+    const acct = brandAccounts().find((a) => a.platform === FMT_PLATFORM[d.format]);
+    if (cre) {
+      const all = h("button", { class: "btn small" }, `画像${cre.pages.length}枚を保存`);
+      all.addEventListener("click", () => saveImages(cre, cre.pages.map((_, k) => k), all));
+      blocks.push(h("div", { class: "kitrow" }, h("span", {}, "画像"), h("div", { class: "cthumbs" }, cre.pages.map((_, k) => thumbImg(cre, k, 0.08))), all));
+    }
+    if (d.format === "feed") {
+      if (!cre) steps.push("画像がまだありません。「クリエイティブ」で生成するか、別途用意してください。");
+      blocks.push(copyRow("キャプション＋ハッシュタグ", caption));
+      steps.push("Instagramで＋ → 投稿 → 保存した画像を順番に選択", "キャプションを貼り付けて投稿");
+    } else if (d.format === "story") {
+      if (!cre) steps.push("画像がまだありません。「クリエイティブ」で生成するか、別途用意してください。");
+      arr(b.frames).forEach((f, i) => {
+        if (f.sticker && f.sticker !== "none") blocks.push(copyRow(`${i + 1}枚目の${STICKER_JA[f.sticker] || "スタンプ"}`, () => str(f.sticker_detail)));
+      });
+      steps.push("Instagramで＋ → ストーリーズ → 保存した画像を1枚ずつ投稿", "点線の枠の位置にスタンプを追加し、内容を貼り付ける");
+    } else if (d.format === "reel" || d.format === "tiktok") {
+      blocks.push(copyRow("キャプション＋ハッシュタグ", caption), copyRow("カバーの文字", () => str(b.cover_text)), copyRow("撮影台本", () => arr(b.scenes).map((s) => `${s.time} ${s.visual}／テロップ: ${s.telop}${s.narration ? "／" + s.narration : ""}`).join("\n")));
+      steps.push(`撮影チェックリストに沿って撮影（${arr(b.shooting_checklist).join("、") || "原稿を参照"}）`, `音源は「${str(b.audio_idea) || "アプリのおすすめ"}」の方向でアプリ内から選ぶ`, "キャプションを貼り付けて投稿");
+    } else if (d.format === "youtube") {
+      blocks.push(copyRow("タイトル", () => str(b.title)), copyRow("概要欄＋タグ", () => `${str(b.description)}\n\n${tagText(b.tags)}`.trim()), copyRow("サムネイルの文字", () => str(b.thumbnail_text)));
+      steps.push("撮影・編集後、YouTube Studioでアップロードし、タイトル・概要欄を貼り付け");
+    } else if (d.format === "x" || d.format === "threads") {
+      arr(b.posts).forEach((p, i) => blocks.push(copyRow(arr(b.posts).length > 1 ? `${i + 1}件目` : "本文", () => str(p))));
+      steps.push(arr(b.posts).length > 1 ? "1件目を投稿し、2件目以降は返信としてつなげる" : "本文を貼り付けて投稿");
+      if (d.format === "x") steps.push("Xの認証情報を登録すると、承認済みのものは自動投稿できます");
+    }
+    const link = h("input", { type: "url", placeholder: "投稿のURL（任意。成果の取り込みに使います）", "aria-label": "投稿のURL" });
+    const done = h("button", { class: "btn small primary" }, "投稿した");
+    done.addEventListener("click", async () => {
+      d.status = "published"; if (link.value.trim()) d.permalink = link.value.trim();
+      renderHome(); renderCalendar();
+      await saveDraft(d, { status: "published", permalink: d.permalink || null, publishedAt: Date.now() });
+    });
+    return h("div", { class: "kit" },
+      h("div", { class: "row" }, h("span", { class: "mono" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), chip(d.format), stChip(d.status),
+        h("b", {}, str(b.title) || str(d.plan?.theme)), h("div", { class: "spacer" }),
+        safeUrl(acct?.url) ? h("a", { class: "ext", href: acct.url, target: "_blank", rel: "noopener" }, `${acct.handle} を開く ↗`) : null),
+      d.status !== "approved" ? h("p", { class: "note" }, "まだ承認されていません。内容を確認して承認してから投稿してください。") : null,
+      ...blocks,
+      h("ol", { class: "steps-list" }, steps.map((t) => h("li", {}, t))),
+      canWrite ? h("div", { class: "row" }, link, done) : null);
+  }
+
+  function renderHome() {
+    if ($("#view-home").hidden) return;
+    const t = today(), tomorrow = isoDate(new Date(Date.now() + 864e5));
+    const due = sortedDrafts().filter((d) => d.status !== "rejected" && d.status !== "published" && d.source !== "sync" && str(d.plan?.date) <= tomorrow);
+    const newRefs = brandRefs("new");
+    const pendingDrafts = sortedDrafts().filter((d) => d.status === "draft" && d.source !== "sync" && str(d.plan?.date) >= t);
+    const pendingCre = [...(typeof S2 !== "undefined" ? S2.creatives.values() : [])].filter((c) => brandOf(c) === BR && c.status !== "approved" && c.date >= t && S.drafts.has(c.id));
+
+    const auto = S3.auto;
+    $("#home-auto").replaceChildren(
+      h("span", { class: `state ${auto?.at ? ((Date.now() - auto.at) / 36e5 < 30 ? "ok" : "warn") : "none"}` }, auto?.at ? `自動運用 最終実行 ${new Date(auto.at).toLocaleString("ja-JP", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })}` : "自動運用はまだ実行されていません"),
+      auto?.summary ? h("span", { class: "note" }, auto.summary) : null);
+
+    const pill = (l, v, bad) => h("span", { class: `pill${bad && v ? " bad" : ""}` }, l, h("b", {}, String(v)));
+    $("#home-sum").replaceChildren(pill("今日・明日の投稿", due.length), pill("遅れ", due.filter((d) => d.plan.date < t).length, true),
+      pill("新着の参考・トレンド", newRefs.length), pill("承認待ちの原稿", pendingDrafts.length), pill("承認待ちの画像", pendingCre.length));
+
+    $("#home-kit").replaceChildren(...(due.length ? due.map(kitFor) : [h("div", { class: "empty" }, "今日・明日に投稿するものはありません。")]));
+
+    $("#home-refs").replaceChildren(...(newRefs.length ? newRefs.slice(0, 12).map((r) => refCard(r, true)) : [h("div", { class: "empty" }, "新しい参考・トレンドはありません。自動運用が毎朝集めてここに届けます。")]));
+
+    $("#home-drafts").replaceChildren(...(pendingDrafts.length ? pendingDrafts.slice(0, 20).map((d) => {
+      const f = fitState(d);
+      const ok = h("button", { class: "btn small primary" }, "承認");
+      if (f.cls === "ok") ok.addEventListener("click", () => setStatus(d, "approved")); else armed(ok, "基準未満です。もう一度で承認", () => setStatus(d, "approved"));
+      return h("div", { class: "hrow" }, h("span", { class: "mono" }, `${dateLabel(str(d.plan?.date))} ${str(d.plan?.time)}`), chip(d.format), fitBadge(d),
+        h("span", { class: "ht" }, str(d.body?.title) || str(d.plan?.theme)), h("div", { class: "spacer" }),
+        h("button", { class: "btn small", onclick: () => { S.selected = d.id; renderDrafts(); show("drafts"); } }, "中身を見る"), canWrite ? ok : null);
+    }) : [h("div", { class: "empty" }, "承認待ちの原稿はありません。")]));
+
+    $("#home-cre").replaceChildren(...(pendingCre.length ? pendingCre.slice(0, 12).map((c) => h("div", { class: "hrow" },
+      h("span", { class: "mono" }, dateLabel(c.date)), chip(c.format), h("div", { class: "cthumbs" }, c.pages.map((_, k) => thumbImg(c, k, 0.08))), h("div", { class: "spacer" }),
+      h("button", { class: "btn small", onclick: () => { S2.creSel = c.id; S2.crePage = 0; show("creative"); } }, "編集"),
+      canWrite ? h("button", { class: "btn small primary", onclick: () => { c.status = "approved"; saveCreative(c); renderHome(); renderStock(); renderCalendar(); } }, "承認") : null))
+      : [h("div", { class: "empty" }, "承認待ちの画像はありません。")]));
+  }
+
+  function renderRefsPanel() {
+    const box = $("#refs-all");
+    if (!box) return;
+    const all = brandRefs();
+    box.replaceChildren(...(all.length ? all.slice(0, 60).map((r) => refCard(r, false)) : [h("div", { class: "empty" }, "まだ集めた参考がありません。")]));
+  }
+
   // ---------- brand switching ----------
   let brandUnsubs = [], failFn = () => {};
-  function refreshAll() { renderDrafts(); renderPlan(); renderKpi(); renderCalendar(); renderStock(); }
+  function refreshAll() { renderDrafts(); renderPlan(); renderKpi(); renderCalendar(); renderStock(); renderHome(); }
   function subscribeBrand() {
     brandUnsubs.forEach((u) => u()); brandUnsubs = [];
     if (!db) return;
@@ -2705,6 +2864,7 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
     sub("insights/latest", (v) => { S.insights = v; renderKpi(); });
     sub("plans/current", (v) => { S.plan = v; renderPlan(); renderCalendar(); });
     sub("sync/status", (v) => { S.sync = v; renderSyncState(); });
+    sub("autopilot/status", (v) => { S3.auto = v; renderHome(); });
   }
   function applyBrandUI() {
     $$("#brand-sw button").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.b === BR)));
@@ -2716,7 +2876,7 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
     BR = x.dataset.b;
     try { localStorage.setItem("baseai-brand", BR); } catch {}
     Object.assign(S, { brand: null, inputs: null, kpi: null, research: null, plan: null, insights: null, sync: null, selected: null });
-    S2.creSel = null;
+    S2.creSel = null; S3.auto = null;
     refilter(); applyBrandUI(); fillSettings(); renderSyncState(); renderAcctOverview(); renderPhotos();
     $("#research-out").replaceChildren(h("div", { class: "empty" }, "読み込み中…"));
     subscribeBrand(); refreshAll();
@@ -2797,11 +2957,11 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
   }
 
   // ---------- boot ----------
-  let initial = "settings";
+  let initial = "home";
   try { initial = localStorage.getItem("baseai-view") || initial; } catch {}
   const hash = location.hash.slice(1);
   if (VIEWS.includes(hash)) initial = hash;
-  if (!VIEWS.includes(initial)) initial = "settings";
+  if (!VIEWS.includes(initial)) initial = "home";
   applyBrandUI(); fillSettings(); renderDrafts(); show(initial);
   if (!window.claude?.use) { $("#offline").hidden = false; $("#st-db").textContent = "共有データ: 未接続"; $("#st-ai").textContent = "AI生成: 未接続"; return; }
 
@@ -2838,6 +2998,10 @@ ${d.format === "story" ? "- ストーリーで投票・質問などのスタン�
     const fail = () => { $("#st-db").textContent = "共有データ: 切断されました"; $("#dot-db").classList.remove("on"); };
     failFn = fail;
     d.doc("settings/accounts").onSnapshot((x) => { S.accounts = x.exists ? x.data() : null; fillSettings(); renderAcctOverview(); refreshAll(); }, fail);
+    d.collection("refs").onSnapshot((snap) => {
+      S3.refs = new Map(snap.docs.map((x) => [x.id, structuredClone(x.data())]));
+      renderHome(); renderRefsPanel();
+    }, fail);
     d.collection("creatives").onSnapshot((snap) => {
       const next = new Map();
       for (const x of snap.docs) next.set(x.id, creTimers.has(x.id) && S2.creatives.has(x.id) ? S2.creatives.get(x.id) : structuredClone(x.data()));
