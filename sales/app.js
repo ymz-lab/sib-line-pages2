@@ -2,6 +2,18 @@
   'use strict';
 
   const STORAGE_KEY = 'relay-sales-v1';
+  const storage = (() => {
+    try {
+      const testKey = '__relay_storage_test__';
+      localStorage.setItem(testKey, '1');
+      localStorage.removeItem(testKey);
+      return localStorage;
+    } catch (error) {
+      const memory = new Map();
+      console.info('localStorageが利用できないため、プレビュー中はメモリに保存します。');
+      return { getItem:key => memory.get(key) ?? null, setItem:(key,value) => memory.set(key,value) };
+    }
+  })();
   const STATUS = {
     active: 'フォロー中', pending: '保留', replied: '返信あり', meeting: '商談化',
     won: '成約', unsubscribed: '配信停止', bounced: 'バウンス', completed: '完了'
@@ -68,11 +80,11 @@
 
   function loadState() {
     try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const saved = JSON.parse(storage.getItem(STORAGE_KEY));
       if (saved && Array.isArray(saved.contacts)) return saved;
     } catch (error) { console.warn('Relayの保存データを読み込めませんでした。', error); }
     const seeded = seedData();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
+    storage.setItem(STORAGE_KEY, JSON.stringify(seeded));
     return seeded;
   }
 
@@ -81,7 +93,7 @@
   let activeView = 'home';
 
   function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    storage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
   function addActivity(text, type = 'update') {
     state.activities = state.activities || [];
