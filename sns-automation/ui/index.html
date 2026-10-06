@@ -1,7 +1,8 @@
 <title>BaseAI SNSスタジオ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=JetBrains+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=JetBrains+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&family=Shippori+Mincho:wght@500;700;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 /* Layout: a mission-control console. Glass rail of the five workflow stages on the left with a lit progress line,
    work area on the right floating over a deep-space ground lit by a sunset aurora. Single dark look by design. */
@@ -302,6 +303,42 @@ label.btn { display: inline-flex; align-items: center; }
 .brand-sw button[aria-pressed="true"] { background: var(--grad); color: var(--accent-ink); }
 .brand-sw button:focus-visible { outline: 2px solid var(--cyan); }
 .bchip { font-family: var(--body); letter-spacing: .04em; text-transform: none; color: var(--ink); border: 1px solid var(--line-hi); border-radius: 999px; padding: 1px 10px; font-size: 11px; }
+/* creatives */
+.swatch { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
+.swatch input[type=color] { width: 40px; height: 32px; padding: 2px; border-radius: 8px; cursor: pointer; }
+.strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(34px, 1fr); gap: 4px; overflow-x: auto; padding-bottom: 4px; }
+.sday { display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.sday .sq { display: flex; flex-direction: column-reverse; gap: 3px; min-height: 64px; justify-content: flex-start; }
+.sday .sq i, .lg { display: block; width: 18px; height: 12px; border-radius: 3px; }
+.lg { display: inline-block; vertical-align: middle; margin-right: 4px; }
+.s-approved { background: var(--ok); } .s-generated { background: var(--warn); }
+.s-missing { border: 2px solid var(--bad); } .s-nodraft { border: 1px dashed var(--faint); }
+.crows { display: flex; flex-direction: column; gap: 8px; }
+.crow { background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; grid-template-columns: 230px minmax(0, 1fr) auto; grid-template-areas: "meta thumbs act" "title thumbs act"; gap: 6px 14px; align-items: center; }
+.crow.sel { border-color: var(--cyan); box-shadow: var(--glow); }
+.crow .cmeta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.crow .ctitle { grid-area: title; font-weight: 700; font-size: 13px; }
+.crow .cthumbs { grid-area: thumbs; display: flex; gap: 6px; overflow-x: auto; min-width: 0; }
+.crow > .row { grid-area: act; }
+.cthumb { height: 86px; width: auto; border-radius: 6px; border: 1px solid var(--line); background: var(--well); flex: none; }
+.ceditor { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 20px; }
+.cleft, .cright { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.cprev img { width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--line-hi); }
+.cprev.story { max-width: 320px; }
+.cpages { display: flex; gap: 6px; flex-wrap: wrap; }
+.cpage { all: unset; cursor: pointer; border-radius: 6px; outline: 2px solid transparent; }
+.cpage img { height: 70px; display: block; border-radius: 6px; }
+.cpage.on { outline-color: var(--cyan); }
+.cpage:focus-visible { outline-color: var(--cyan); }
+.phgrid .note { grid-column: 1 / -1; }
+.cright .f { white-space: nowrap; }
+.phgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.ph { margin: 0; display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--muted); }
+.ph img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); max-width: 100%; }
+@media (max-width: 860px) {
+  .crow { grid-template-columns: minmax(0, 1fr); grid-template-areas: "meta" "title" "thumbs" "act"; }
+  .ceditor { grid-template-columns: minmax(0, 1fr); }
+}
 /* calendar */
 .cal-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .cal-head h2 { font-size: 20px; min-width: 120px; }
@@ -374,9 +411,10 @@ a.ext { color: var(--cyan); font-size: 12px; }
       <button class="step" data-view="research" role="tab"><b>2</b>トレンド</button>
       <button class="step" data-view="plan" role="tab"><b>3</b>投稿計画</button>
       <button class="step" data-view="calendar" role="tab"><b>4</b>カレンダー</button>
-      <button class="step" data-view="drafts" role="tab"><b>5</b>原稿・承認</button>
-      <button class="step" data-view="export" role="tab"><b>6</b>投稿・書き出し</button>
-      <button class="step" data-view="kpi" role="tab"><b>7</b>成果・KPI</button>
+      <button class="step" data-view="creative" role="tab"><b>5</b>クリエイティブ</button>
+      <button class="step" data-view="drafts" role="tab"><b>6</b>原稿・承認</button>
+      <button class="step" data-view="export" role="tab"><b>7</b>投稿・書き出し</button>
+      <button class="step" data-view="kpi" role="tab"><b>8</b>成果・KPI</button>
     </div>
     <div class="conn">
       <div><span class="dot" id="dot-db"></span><span id="st-db">共有データ: 接続中…</span></div>
@@ -440,6 +478,18 @@ a.ext { color: var(--cyan); font-size: 12px; }
           </tbody>
         </table></div>
         <p class="note">社外の方に入力してもらう場合は、ページ右上の「共有」からメールで招待してください。AIの生成は、操作した人の claude.ai アカウントで実行されます。</p>
+      </div>
+      <div class="panel">
+        <h2>ビジュアル（画像の色・書体）</h2>
+        <p class="note">クリエイティブ画像の自動生成に使います。AIはこの範囲で配色を選びます。</p>
+        <div class="row">
+          <label class="swatch"><input type="color" id="v-primary">メインカラー</label>
+          <label class="swatch"><input type="color" id="v-accent">アクセント</label>
+          <label class="swatch"><input type="color" id="v-secondary">サブカラー</label>
+          <label class="f" style="width:150px">書体<select id="v-font"><option value="gothic">ゴシック</option><option value="maru">丸ゴシック</option><option value="mincho">明朝</option></select></label>
+          <label class="f" style="width:160px">画像に入れる名前<input id="v-name"></label>
+          <label class="f" style="width:200px">アカウント名<input id="v-handle"></label>
+        </div>
       </div>
       <div class="panel">
         <label class="toggle"><input type="checkbox" id="b-autofix">生成時に適合度をチェックし、ズレを自動で修正する</label>
@@ -508,9 +558,38 @@ a.ext { color: var(--cyan); font-size: 12px; }
       <div class="cal" id="cal"></div>
     </section>
 
-    <!-- 5. Drafts -->
+    <!-- 5. Creative -->
+    <section class="view" id="view-creative" hidden>
+      <p class="eyebrow">05 / Creative <span class="bchip"></span></p>
+      <h1>クリエイティブ<span class="g">ストック</span></h1>
+      <p class="lede">ストーリー・フィードの画像を、方向性・トレンド分析・原稿に沿ってAIがデザインし、投稿スケジュール順にストックします。何日先まで画像が揃っているかをここで確認できます。</p>
+      <div class="row">
+        <label class="f" style="width:150px">対象期間<select id="cre-range"><option value="7">今日から7日</option><option value="14" selected>今日から14日</option><option value="30">今日から30日</option></select></label>
+        <div class="spacer"></div>
+        <button class="btn primary" id="cre-gen-all">不足分をまとめて生成</button>
+        <button class="btn" id="cre-stop" hidden>停止</button>
+      </div>
+      <span class="progress" id="cre-msg"></span>
+      <div class="cal-sum" id="cre-sum"></div>
+      <div class="panel"><div class="row"><h2>日別のストック</h2><div class="spacer"></div>
+        <span class="cal-legend"><span><i class="lg s-approved"></i>承認済み</span><span><i class="lg s-generated"></i>生成済み</span><span><i class="lg s-missing"></i>未生成</span><span><i class="lg s-nodraft"></i>原稿なし</span></span></div>
+        <div class="strip" id="cre-strip"></div>
+      </div>
+      <div class="panel" id="cre-editor" hidden></div>
+      <div class="crows" id="cre-list"></div>
+      <div class="panel">
+        <div class="row"><h2>写真ライブラリ</h2><div class="spacer"></div>
+          <label class="btn small" for="photo-file" id="photo-label">写真を追加</label>
+          <input type="file" id="photo-file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+        </div>
+        <span class="note" id="photo-msg"></span>
+        <div class="phgrid" id="photo-grid"></div>
+      </div>
+    </section>
+
+    <!-- 6. Drafts -->
     <section class="view" id="view-drafts" hidden>
-      <p class="eyebrow">05 / Review <span class="bchip"></span></p>
+      <p class="eyebrow">06 / Review <span class="bchip"></span></p>
       <h1>原稿・<span class="g">承認</span></h1>
       <p class="lede">各原稿にはKPI・方針への適合度が付きます。ズレがあれば「ミスマッチを修正」で直してから承認してください。</p>
       <div class="row">
@@ -537,7 +616,7 @@ a.ext { color: var(--cyan); font-size: 12px; }
 
     <!-- 5. Export -->
     <section class="view" id="view-export" hidden>
-      <p class="eyebrow">06 / Launch <span class="bchip"></span></p>
+      <p class="eyebrow">07 / Launch <span class="bchip"></span></p>
       <h1>投稿・<span class="g">書き出し</span></h1>
       <p class="lede">承認済みの原稿は、各アプリにコピーして投稿するか、JSONに書き出してコマンドラインツールで予約投稿できます。投稿したら「投稿済みにする」を押すと、成果・KPIで数値を記録できるようになります。</p>
       <div class="panel">
@@ -561,7 +640,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
 
     <!-- 6. KPI -->
     <section class="view" id="view-kpi" hidden>
-      <p class="eyebrow">07 / Performance <span class="bchip"></span></p>
+      <p class="eyebrow">08 / Performance <span class="bchip"></span></p>
       <h1>成果と<span class="g">KPI</span></h1>
       <p class="lede">月間KPIの達成度、重要指標、フォロワーの推移、投稿ごとの再生数をまとめて確認できます。縦線は今日時点で到達しておきたいペースです。</p>
       <div class="row">
@@ -741,7 +820,12 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   const snapVal = (m, platform, b = BR) => num(m?.accounts?.[acctKey(platform, b)]);
   // Platforms whose follower counts this brand tracks: its accounts, plus LINE when it has data or is the student group's channel.
   const trackPlatforms = (b = BR) => SERIES.map((x) => x.key).filter((p) => brandPlatforms(b).has(p) || (p === "line" && (b === "student" || S.metrics.some((m) => snapVal(m, "line", b) != null))));
-  const assetState = (d) => (TEXT_FMT.has(d.format) ? "na" : d.asset || (arr(d.media_urls).length ? "ready" : "none"));
+  function assetState(d) {
+    if (TEXT_FMT.has(d.format)) return "na";
+    const cre = typeof S2 !== "undefined" ? S2.creatives.get(d.id) : null;
+    if (cre && !d.asset) return cre.status === "approved" ? "ready" : "editing";
+    return d.asset || (arr(d.media_urls).length ? "ready" : "none");
+  }
   const fmtN = (v, unit) => (v == null ? "—" : unit === "%" ? `${(v * 100).toFixed(1)}%` : nf.format(Math.round(v)));
   const tagText = (tags) => arr(tags).map((t) => { t = str(t).trim(); return t.startsWith("#") ? t : "#" + t; }).join(" ");
   function xWeight(t) {
@@ -797,13 +881,14 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
   }
 
   // ---------- navigation ----------
-  const VIEWS = ["settings", "research", "plan", "calendar", "drafts", "export", "kpi"];
+  const VIEWS = ["settings", "research", "plan", "calendar", "creative", "drafts", "export", "kpi"];
   function show(view) {
     $$(".view").forEach((v) => (v.hidden = v.id !== "view-" + view));
     $$(".step").forEach((b) => b.setAttribute("aria-current", String(b.dataset.view === view)));
     try { localStorage.setItem("baseai-view", view); } catch {}
     if (view === "kpi") renderKpi();
     if (view === "calendar") renderCalendar();
+    if (view === "creative") { renderStock(); renderPhotos(); }
   }
   $$(".step").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
 
@@ -820,6 +905,9 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
       }));
     }
     $("#b-autofix").checked = b.autofix !== false;
+    const vis = visual();
+    for (const k of ["primary", "accent", "secondary"]) { const el = $("#v-" + k); if (document.activeElement !== el) el.value = vis[k]; }
+    for (const k of ["font", "name", "handle"]) { const el = $("#v-" + k); if (document.activeElement !== el) el.value = str(vis[k]); }
     const i = S.inputs || {};
     for (const k of ["references", "trends"]) { const el = $("#i-" + k); if (document.activeElement !== el) el.value = str(i[k]); }
     if (!$("#kpi-rows").contains(document.activeElement)) renderKpiRows();
@@ -897,6 +985,7 @@ python -m sns_auto publish --yes                 # 予定時刻を過ぎたも�
     const b = Object.fromEntries(BF.map((k) => [k, $("#b-" + k).value.trim()]));
     b.cadence = Object.fromEntries(Object.keys(FMT).map((k) => [k, $("#c-" + k) ? Math.max(0, parseInt($("#c-" + k).value, 10) || 0) : 0]));
     b.autofix = $("#b-autofix").checked;
+    b.visual = Object.fromEntries(["primary", "accent", "secondary", "font", "name", "handle"].map((k) => [k, $("#v-" + k).value.trim()]));
     b.updatedAt = Date.now();
     const inputs = { references: $("#i-references").value.trim(), trends: $("#i-trends").value.trim() };
     const kpi = { items: readKpiRows() };
@@ -2120,9 +2209,491 @@ ${JSON.stringify(rows).slice(0, 30000)}
     }
   });
 
+  // ---------- creatives: in-tool image generation ----------
+  // A creative is a design spec (template + text + palette per page) stored in `creatives/<draftId>`;
+  // images are drawn from the spec on a canvas, so stored data stays small and edits re-render instantly.
+  const CRE_FMT = { story: [1080, 1920], feed: [1080, 1350] };
+  const TEMPLATES = { bold: "大見出し", photo: "写真", list: "リスト", quote: "引用・本音", cta: "行動導線" };
+  const FONTS = { gothic: ["Zen Kaku Gothic New", "ゴシック"], maru: ["Zen Maru Gothic", "丸ゴシック"], mincho: ["Shippori Mincho", "明朝"] };
+  const DEFAULT_VISUAL = {
+    // Student group: the colors used on the SIB pages in this repository.
+    student: { primary: "#0b2c7a", accent: "#ff963f", secondary: "#18b978", font: "gothic", name: "SIB", handle: "@gakuseidantai_sib" },
+    // Company: starting values; edit in 方向性・KPI.
+    company: { primary: "#0b1020", accent: "#4ff0ff", secondary: "#9b7bff", font: "gothic", name: "BaseAI", handle: "@kabu_baseai0901" },
+  };
+  const visual = () => ({ ...DEFAULT_VISUAL[BR], ...(S.brand?.visual || {}) });
+  const isHex = (c) => /^#[0-9a-f]{6}$/i.test(str(c));
+  const S2 = { creatives: new Map(), photos: new Map(), creSel: null, crePage: 0, range: 14 };
+  const creFor = (d) => S2.creatives.get(d.id);
+  const needsCreative = (d) => d && (d.format === "story" || d.format === "feed") && d.status !== "rejected";
+
+  function lum(hex) {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const readableOn = (bg) => (contrast(bg, "#ffffff") >= contrast(bg, "#111111") ? "#ffffff" : "#111111");
+  function shade(hex, amt) {
+    const n = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return "#" + n.map((v) => Math.max(0, Math.min(255, Math.round(v + (amt < 0 ? v : 255 - v) * amt))).toString(16).padStart(2, "0")).join("");
+  }
+  function palette(cre) {
+    const v = visual(), p = cre?.style?.palette || {};
+    const bg = isHex(p.bg) ? p.bg : v.primary, accent = isHex(p.accent) ? p.accent : v.accent;
+    let fg = isHex(p.fg) ? p.fg : readableOn(bg);
+    if (contrast(fg, bg) < 4.5) fg = readableOn(bg);
+    return { bg, fg, accent, accentInk: readableOn(accent), secondary: v.secondary };
+  }
+
+  // Japanese-aware wrapping: break between characters, keep Latin words whole, never start a line with closing punctuation.
+  const NO_START = "、。，．）」』】！？ー…ぁぃぅぇぉっゃゅょ・：；";
+  function tokens(text) { return str(text).match(/[A-Za-z0-9@#%&.\-_/:+']+|\s+|./gu) || []; }
+  function wrap(ctx, text, maxW) {
+    const lines = [];
+    for (const para of str(text).split("\n")) {
+      let line = "";
+      for (const t of tokens(para)) {
+        if (/^\s+$/.test(t) && !line) continue;
+        const test = line + t;
+        if (ctx.measureText(test).width <= maxW || !line || NO_START.includes(t[0])) line = test;
+        else { lines.push(line.trimEnd()); line = /^\s+$/.test(t) ? "" : t; }
+      }
+      lines.push(line.trimEnd());
+    }
+    return lines.filter((l, i, a) => l || (i > 0 && i < a.length - 1));
+  }
+  function fit(ctx, text, maxW, maxH, maxSize, minSize, weight, family, lh = 1.25) {
+    let size = maxSize, lines = [];
+    for (; size >= minSize; size -= 4) {
+      ctx.font = `${weight} ${size}px "${family}", sans-serif`;
+      lines = wrap(ctx, text, maxW);
+      if (lines.length * size * lh <= maxH) break;
+    }
+    size = Math.max(size, minSize);
+    ctx.font = `${weight} ${size}px "${family}", sans-serif`;
+    return { size, lines: wrap(ctx, text, maxW), lh };
+  }
+  function drawLines(ctx, block, x, y, align = "left") {
+    ctx.textAlign = align; ctx.textBaseline = "top";
+    block.lines.forEach((l, i) => ctx.fillText(l, x, y + i * block.size * block.lh));
+    return y + block.lines.length * block.size * block.lh;
+  }
+  function rrect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+  function coverImage(ctx, img, W, H) {
+    const s = Math.max(W / img.width, H / img.height), w = img.width * s, h = img.height * s;
+    ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+  }
+  const imgCache = new Map();
+  function loadImg(src) {
+    if (!imgCache.has(src)) imgCache.set(src, new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; }));
+    return imgCache.get(src);
+  }
+  async function ensureFonts(family) {
+    try { await Promise.all([500, 700, 900].map((w) => document.fonts.load(`${w} 48px "${family}"`, "あA"))); } catch {}
+  }
+
+  // Draw one page. `scale` renders thumbnails without changing the layout.
+  async function drawPage(cre, idx, scale = 1) {
+    const [W, H] = CRE_FMT[cre.format], page = cre.pages[idx] || {}, pal = palette(cre), v = visual();
+    const family = FONTS[cre.style?.font || v.font]?.[0] || FONTS.gothic[0];
+    await ensureFonts(family);
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(W * scale); cv.height = Math.round(H * scale);
+    const ctx = cv.getContext("2d");
+    ctx.scale(scale, scale);
+    const story = cre.format === "story";
+    const top = story ? 250 : 110, bottom = story ? H - 380 : H - 150, mx = story ? 96 : 90, cw = W - mx * 2;
+    const photo = page.photo && S2.photos.get(page.photo) ? await loadImg(S2.photos.get(page.photo).dataUrl) : null;
+    const tpl = page.template === "photo" && !photo ? "bold" : page.template;
+
+    // Background
+    if (tpl === "cta") {
+      const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, pal.accent); g.addColorStop(1, shade(pal.accent, -0.25));
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    } else {
+      const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, pal.bg); g.addColorStop(1, shade(pal.bg, -0.3));
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+    if (tpl === "photo" && photo) {
+      coverImage(ctx, photo, W, H);
+      const g = ctx.createLinearGradient(0, H * 0.35, 0, H); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.82)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    } else if (tpl !== "cta") {
+      // One quiet accent shape.
+      ctx.globalAlpha = 0.18; ctx.fillStyle = pal.accent;
+      ctx.beginPath(); ctx.arc(W + 40, story ? 420 : 160, story ? 420 : 340, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.12; ctx.fillStyle = pal.secondary;
+      ctx.beginPath(); ctx.arc(-120, H - 260, 300, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    const fg = tpl === "photo" ? "#ffffff" : tpl === "cta" ? pal.accentInk : pal.fg;
+    const accentText = tpl === "cta" ? pal.accentInk : pal.accent;
+
+    // Eyebrow
+    let y = top;
+    if (page.eyebrow && tpl !== "photo") {
+      ctx.font = `700 ${story ? 40 : 34}px "${family}", sans-serif`;
+      ctx.fillStyle = accentText; ctx.textBaseline = "top"; ctx.textAlign = "left";
+      ctx.fillText(str(page.eyebrow).slice(0, 24), mx, y);
+      y += story ? 80 : 66;
+    }
+
+    if (tpl === "bold") {
+      ctx.fillStyle = pal.accent; ctx.fillRect(mx, y, 120, 10); y += 46;
+      ctx.fillStyle = fg;
+      const hb = fit(ctx, page.headline, cw, (bottom - y) * 0.62, story ? 112 : 96, 52, 900, family, 1.22);
+      y = drawLines(ctx, hb, mx, y) + 36;
+      if (page.sub) { ctx.globalAlpha = 0.85; const sb = fit(ctx, page.sub, cw, bottom - y, 46, 30, 500, family, 1.5); drawLines(ctx, sb, mx, y); ctx.globalAlpha = 1; }
+    } else if (tpl === "photo") {
+      let yb = bottom;
+      ctx.fillStyle = "#ffffff";
+      const sb = page.sub ? fit(ctx, page.sub, cw, 200, 42, 28, 500, family, 1.5) : null;
+      const hb = fit(ctx, page.headline, cw, (bottom - top) * 0.4, story ? 116 : 100, 52, 900, family, 1.2);
+      const total = hb.lines.length * hb.size * hb.lh + (sb ? 30 + sb.lines.length * sb.size * sb.lh : 0);
+      yb = bottom - total;
+      if (page.eyebrow) {
+        ctx.font = `700 34px "${family}", sans-serif`;
+        const w = ctx.measureText(page.eyebrow).width + 48;
+        ctx.fillStyle = pal.accent; rrect(ctx, mx, yb - 84, w, 60, 30); ctx.fill();
+        ctx.fillStyle = pal.accentInk; ctx.textBaseline = "middle"; ctx.fillText(page.eyebrow, mx + 24, yb - 54);
+      }
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `900 ${hb.size}px "${family}", sans-serif`;
+      let yy = drawLines(ctx, hb, mx, yb) + 30;
+      if (sb) { ctx.font = `500 ${sb.size}px "${family}", sans-serif`; ctx.globalAlpha = 0.9; drawLines(ctx, sb, mx, yy); ctx.globalAlpha = 1; }
+    } else if (tpl === "list") {
+      ctx.fillStyle = fg;
+      const hb = fit(ctx, page.headline, cw, (bottom - y) * 0.3, story ? 96 : 84, 48, 900, family, 1.22);
+      y = drawLines(ctx, hb, mx, y) + 56;
+      const items = arr(page.bullets).slice(0, 5);
+      const rowH = Math.min(story ? 200 : 160, (bottom - y) / Math.max(1, items.length));
+      items.forEach((b, i) => {
+        const cy = y + i * rowH;
+        ctx.fillStyle = pal.accent; ctx.beginPath(); ctx.arc(mx + 34, cy + 34, 34, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = pal.accentInk; ctx.font = `900 36px "${family}", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(String(i + 1), mx + 34, cy + 36);
+        ctx.fillStyle = fg;
+        const bb = fit(ctx, b, cw - 100, rowH - 24, story ? 52 : 46, 30, 700, family, 1.35);
+        drawLines(ctx, bb, mx + 100, cy + 6);
+      });
+    } else if (tpl === "quote") {
+      ctx.fillStyle = pal.accent; ctx.font = `900 300px "${family}", serif`; ctx.textAlign = "left"; ctx.textBaseline = "top";
+      ctx.fillText("“", mx - 20, y - 60);
+      y += 200;
+      ctx.fillStyle = fg;
+      const qb = fit(ctx, page.headline, cw, (bottom - y) * 0.7, story ? 88 : 76, 44, 700, family, 1.45);
+      y = drawLines(ctx, qb, mx, y) + 40;
+      if (page.sub) { ctx.globalAlpha = 0.8; ctx.font = `500 38px "${family}", sans-serif`; ctx.fillText("— " + page.sub, mx, y); ctx.globalAlpha = 1; }
+    } else if (tpl === "cta") {
+      y = top + (story ? 120 : 40);
+      ctx.fillStyle = fg;
+      const hb = fit(ctx, page.headline, cw, (bottom - y) * 0.5, story ? 116 : 100, 52, 900, family, 1.22);
+      y = drawLines(ctx, hb, mx, y) + 50;
+      if (page.sub) { const sb = fit(ctx, page.sub, cw, 220, 44, 30, 500, family, 1.5); y = drawLines(ctx, sb, mx, y) + 60; }
+      const label = str(page.cta || "プロフィールのリンクから");
+      ctx.font = `900 ${story ? 50 : 44}px "${family}", sans-serif`;
+      const bw = Math.min(cw, ctx.measureText(label).width + 120), bh = story ? 120 : 108;
+      ctx.fillStyle = pal.accentInk; rrect(ctx, mx, y, bw, bh, bh / 2); ctx.fill();
+      ctx.fillStyle = pal.accent; ctx.textBaseline = "middle"; ctx.textAlign = "center"; ctx.fillText(label, mx + bw / 2, y + bh / 2 + 2);
+    }
+
+    // Story sticker placeholder, so the person posting knows where the poll/link goes.
+    if (story && page.sticker && page.sticker !== "none") {
+      const sy = H - 700, sw = 760, sh = 220, sx = (W - sw) / 2;
+      ctx.setLineDash([18, 14]); ctx.lineWidth = 4; ctx.strokeStyle = tpl === "photo" ? "#ffffff" : fg; ctx.globalAlpha = 0.6;
+      rrect(ctx, sx, sy, sw, sh, 36); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 0.75;
+      ctx.fillStyle = tpl === "photo" ? "#ffffff" : fg; ctx.font = `700 34px "${family}", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(`${STICKER_JA[page.sticker] || "スタンプ"}をここに（アプリで追加）`, W / 2, sy + sh / 2);
+      ctx.globalAlpha = 1;
+    }
+
+    // Footer: brand name, page number, swipe hint on the first feed page.
+    ctx.globalAlpha = 0.75; ctx.fillStyle = tpl === "photo" ? "#ffffff" : fg; ctx.textBaseline = "alphabetic";
+    ctx.font = `700 30px "${family}", sans-serif`; ctx.textAlign = "left";
+    ctx.fillText(str(v.name), mx, story ? H - 300 : H - 70);
+    if (!story) {
+      ctx.textAlign = "right"; ctx.fillText(`${idx + 1} / ${cre.pages.length}`, W - mx, H - 70);
+      if (idx === 0 && cre.pages.length > 1) { ctx.fillText("スワイプ →", W - mx, 96); }
+    }
+    ctx.globalAlpha = 1;
+    return cv;
+  }
+  const STICKER_JA = { poll: "投票スタンプ", quiz: "クイズスタンプ", question: "質問スタンプ", link: "リンクスタンプ", countdown: "カウントダウン", slider: "スライダー" };
+
+  const thumbCache = new Map();
+  async function thumb(cre, idx, scale = 0.24) {
+    const key = JSON.stringify([cre.format, cre.pages[idx], cre.style, visual(), scale, cre.pages.length, cre.pages[idx]?.photo ? !!S2.photos.get(cre.pages[idx].photo) : 0]);
+    if (!thumbCache.has(key)) thumbCache.set(key, drawPage(cre, idx, scale).then((cv) => cv.toDataURL("image/jpeg", 0.85)));
+    return thumbCache.get(key);
+  }
+  function thumbImg(cre, idx, scale, cls = "cthumb") {
+    const img = h("img", { class: cls, alt: `${idx + 1}枚目`, loading: "lazy" });
+    thumb(cre, idx, scale).then((u) => { img.src = u; });
+    return img;
+  }
+
+  // ---- AI design spec ----
+  function creativeSourcePages(d) {
+    const b = d.body || {};
+    if (d.format === "feed") return arr(b.slides).map((s) => ({ headline: s.headline, body: s.body, design_note: s.design_note }));
+    return arr(b.frames).map((f) => ({ text: f.text, visual: f.visual, sticker: f.sticker, sticker_detail: f.sticker_detail }));
+  }
+  async function designCreative(d, signal) {
+    const v = visual(), src = creativeSourcePages(d), n = Math.max(1, Math.min(10, src.length || (d.format === "feed" ? 6 : 4)));
+    const photos = [...S2.photos.values()].filter((p) => brandOf(p) === BR).map((p) => ({ id: p.id, name: p.name }));
+    const prompt = `${context()}
+
+<research>
+${str(S.research?.text).slice(0, 4000)}
+</research>
+
+あなたはSNSのアートディレクターです。次の${d.format === "feed" ? "Instagramフィード（カルーセル、4:5）" : "Instagramストーリー（9:16）"}の画像を、
+ブランドの方向性・トレンド分析・投稿の目的に沿ってデザインしてください。全${n}枚です。
+
+<visual_identity>
+メインカラー ${v.primary} / アクセント ${v.accent} / サブ ${v.secondary} / 書体 ${FONTS[v.font]?.[1] || "ゴシック"}
+</visual_identity>
+<plan_item>${JSON.stringify(d.plan)}</plan_item>
+<draft_pages>${JSON.stringify(src)}</draft_pages>
+<photo_library>${JSON.stringify(photos)}</photo_library>
+
+ルール:
+- 各ページの文字は短く。見出しは${d.format === "feed" ? "全角24字" : "全角20字"}以内（\\nで改行可）、補足は40字以内、箇条書きは5個・各18字以内。
+- 1枚目は止まって読みたくなるフック、最後の1枚は行動導線（cta）。
+- template は bold（大見出し）/ photo（写真の上に文字。photo_library の id を photo に指定。写真がなければ使わない）/ list（箇条書き）/ quote（本音・引用）/ cta（行動導線）から選ぶ。
+- 色はビジュアルアイデンティティの範囲で。文字と背景のコントラストを十分に取る。
+- 数字や実績は「使ってよい事実」にあるものだけ。
+${d.format === "story" ? "- ストーリーで投票・質問などのスタンプを使うページは sticker にその種類（poll/quiz/question/link/countdown/slider）を入れる。" : ""}
+
+次のJSONだけを返してください:
+{"style": {"palette": {"bg": "#RRGGBB", "fg": "#RRGGBB", "accent": "#RRGGBB"}, "font": "gothic|maru|mincho", "mood": "一言"},
+ "pages": [{"template": "bold", "eyebrow": "", "headline": "", "sub": "", "bullets": [], "cta": "", "photo": "", "sticker": "none"}]}`;
+    const r = await sample.json(prompt, { signal, cache: false });
+    const pages = arr(r?.pages).slice(0, 10).map((p) => ({
+      template: TEMPLATES[p?.template] ? p.template : "bold",
+      eyebrow: str(p?.eyebrow).slice(0, 24), headline: str(p?.headline).slice(0, 80), sub: str(p?.sub).slice(0, 120),
+      bullets: arr(p?.bullets).map(str).slice(0, 5), cta: str(p?.cta).slice(0, 30),
+      photo: S2.photos.has(str(p?.photo)) ? str(p.photo) : "", sticker: STICKER_JA[p?.sticker] ? p.sticker : "none",
+    })).filter((p) => p.headline || p.bullets.length);
+    if (!pages.length) throw { code: "invalid_json" };
+    const pal = r?.style?.palette || {};
+    const style = { palette: { bg: isHex(pal.bg) ? pal.bg : v.primary, fg: isHex(pal.fg) ? pal.fg : "", accent: isHex(pal.accent) ? pal.accent : v.accent },
+      font: FONTS[r?.style?.font] ? r.style.font : v.font, mood: str(r?.style?.mood).slice(0, 40) };
+    const prev = creFor(d);
+    const cre = { id: d.id, draftId: d.id, brand: BR, format: d.format, date: str(d.plan?.date), time: str(d.plan?.time),
+      status: "generated", engine: "builtin", style, pages, version: (prev?.version || 0) + 1, updatedAt: Date.now(), updatedBy: me?.id || null };
+    S2.creatives.set(d.id, cre);
+    if (db) await db.doc("creatives/" + d.id).set(cre);
+    return cre;
+  }
+
+  // ---- stock view ----
+  function stockItems(days) {
+    const t = today(), end = isoDate(new Date(Date.now() + (days - 1) * 864e5));
+    const fromDrafts = [...S.drafts.values()].filter((d) => needsCreative(d) && d.plan?.date >= t && d.plan?.date <= end)
+      .map((d) => ({ kind: "draft", d, date: d.plan.date, time: str(d.plan.time), cre: creFor(d) }));
+    const fromPlan = arr(S.plan?.items).map((it, idx) => [it, idx]).filter(([it, idx]) => (it.format === "story" || it.format === "feed") && it.date >= t && it.date <= end && !S.allDrafts.has(draftId(it, idx)))
+      .map(([it, idx]) => ({ kind: "plan", it, idx, date: it.date, time: str(it.time) }));
+    return [...fromDrafts, ...fromPlan].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+  }
+  const creState = (e) => (e.kind === "plan" ? "nodraft" : !e.cre ? "missing" : e.cre.status === "approved" ? "approved" : "generated");
+  const CRE_STATE = { approved: ["ok", "● 承認済み"], generated: ["mid", "◐ 生成済み"], missing: ["no", "○ 未生成"], nodraft: ["na", "– 原稿なし"] };
+
+  function renderStock() {
+    if ($("#view-creative").hidden) return;
+    const items = stockItems(S2.range);
+    const cnt = (st) => items.filter((e) => creState(e) === st).length;
+    // Runway: the stock covers every scheduled post up to the day before the first one without an image.
+    const firstGap = items.find((e) => !["approved", "generated"].includes(creState(e)));
+    const runway = !items.length ? "予定なし" : firstGap ? (firstGap.date <= today() ? "今日の分から不足" : `${dateLabel(isoDate(new Date(Date.parse(firstGap.date) - 864e5)))}分まで`) : `${S2.range}日先まで確保`;
+    const pill = (l, v, cls = "") => h("span", { class: `pill ${cls}` }, l, h("b", {}, String(v)));
+    $("#cre-sum").replaceChildren(
+      pill("ストック", runway, firstGap ? "bad" : ""),
+      pill("必要", items.length), pill("承認済み", cnt("approved")), pill("生成済み", cnt("generated")),
+      pill("未生成", cnt("missing"), cnt("missing") ? "bad" : ""), pill("原稿なし", cnt("nodraft")));
+
+    // Day strip: one column per day, one square per post, colored by state.
+    const strip = [];
+    for (let i = 0; i < S2.range; i++) {
+      const iso = isoDate(new Date(Date.now() + i * 864e5)), list = items.filter((e) => e.date === iso);
+      strip.push(h("div", { class: "sday", title: `${dateLabel(iso)}：${list.length}件` },
+        h("div", { class: "sq" }, list.map((e) => h("i", { class: `s-${creState(e)}`, title: `${FMT[e.kind === "plan" ? e.it.format : e.d.format]} ${CRE_STATE[creState(e)][1]}` }))),
+        h("span", {}, `${Number(iso.slice(8))}`)));
+    }
+    $("#cre-strip").replaceChildren(...strip);
+
+    const list = $("#cre-list");
+    if (!items.length) { list.replaceChildren(h("div", { class: "empty" }, `今日から${S2.range}日間に、ストーリー・フィードの予定がありません。「投稿計画」で計画を作ってください。`)); renderCreEditor(); return; }
+    list.replaceChildren(...items.map((e) => {
+      const [cls, label] = CRE_STATE[creState(e)];
+      const fmt = e.kind === "plan" ? e.it.format : e.d.format, title = e.kind === "plan" ? e.it.theme : str(e.d.body?.title) || e.d.plan?.theme;
+      const row = h("div", { class: `crow${e.kind === "draft" && S2.creSel === e.d.id ? " sel" : ""}` },
+        h("div", { class: "cmeta" }, h("span", { class: "mono" }, `${dateLabel(e.date)} ${e.time}`), chip(fmt), h("span", { class: `mk ${cls}` }, label)),
+        h("div", { class: "ctitle" }, str(title)),
+        h("div", { class: "cthumbs" }, e.cre ? e.cre.pages.map((_, i) => thumbImg(e.cre, i, 0.14)) : h("span", { class: "note" }, e.kind === "plan" ? "先に原稿を作成してください" : "まだ画像がありません")),
+        h("div", { class: "row" },
+          e.kind === "plan" ? h("button", { class: "btn small", onclick: () => show("plan") }, "計画を開く")
+            : [e.cre ? h("button", { class: "btn small", onclick: () => { S2.creSel = e.d.id; S2.crePage = 0; renderStock(); $("#cre-editor").scrollIntoView({ behavior: "smooth", block: "start" }); } }, "開いて編集") : null,
+              sample && canWrite ? genButton(e.d, e.cre ? "作り直す" : "画像を生成") : null]));
+      return row;
+    }));
+    renderCreEditor();
+  }
+  function genButton(d, label) {
+    const b = h("button", { class: `btn small${creFor(d) ? "" : " primary"}` }, label);
+    const run = async () => {
+      b.disabled = true; b.textContent = "生成中…";
+      try { await designCreative(d); S2.creSel = d.id; S2.crePage = 0; renderStock(); renderCalendar(); }
+      catch (e) { b.disabled = false; b.textContent = sampleErr(e); }
+    };
+    if (creFor(d)) armed(b, "もう一度押すと作り直し", run); else b.addEventListener("click", run);
+    return b;
+  }
+
+  let creCtl = null;
+  $("#cre-stop").addEventListener("click", () => creCtl?.abort());
+  $("#cre-range").addEventListener("change", (ev) => { S2.range = Number(ev.target.value) || 14; renderStock(); });
+  $("#cre-gen-all").addEventListener("click", async (ev) => {
+    const btn = ev.currentTarget, msg = $("#cre-msg");
+    if (!sample) { msg.textContent = "AI生成はこの表示では使えません。"; return; }
+    const todo = stockItems(S2.range).filter((e) => creState(e) === "missing");
+    if (!todo.length) { msg.textContent = "この期間の画像はすべて生成済みです。"; return; }
+    creCtl = new AbortController(); btn.disabled = true; $("#cre-stop").hidden = false;
+    let done = 0;
+    try {
+      for (const e of todo) {
+        if (creCtl.signal.aborted) break;
+        msg.textContent = `生成中 ${done + 1} / ${todo.length}：${dateLabel(e.date)} ${FMT[e.d.format]}`;
+        await designCreative(e.d, creCtl.signal);
+        done++; renderStock(); renderCalendar();
+      }
+      msg.textContent = `${done} 件の画像を生成してストックしました。内容を確認して承認してください。`;
+    } catch (e) { msg.textContent = `${done} 件生成後に止まりました：${sampleErr(e)}`; }
+    finally { btn.disabled = false; $("#cre-stop").hidden = true; }
+  });
+
+  // ---- editor ----
+  const creTimers = new Map();
+  function saveCreative(cre) {
+    cre.updatedAt = Date.now(); cre.updatedBy = me?.id || null;
+    clearTimeout(creTimers.get(cre.id));
+    creTimers.set(cre.id, setTimeout(() => { creTimers.delete(cre.id); db?.doc("creatives/" + cre.id).set(cre).catch(() => {}); }, 600));
+  }
+  async function renderCreEditor() {
+    const box = $("#cre-editor");
+    const cre = S2.creatives.get(S2.creSel), d = S.drafts.get(S2.creSel);
+    if (!cre || !d) { box.hidden = true; return; }
+    if (box.contains(document.activeElement) && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
+    box.hidden = false;
+    const i = Math.min(S2.crePage, cre.pages.length - 1), pg = cre.pages[i];
+    const preview = h("div", { class: `cprev ${cre.format}` });
+    const redraw = () => { thumb(cre, i, 0.5).then((u) => { preview.replaceChildren(h("img", { src: u, alt: `${i + 1}枚目のプレビュー` })); }); };
+    redraw();
+    const upd = (fn) => { fn(); saveCreative(cre); redraw(); };
+    const field = (label, value, set, rows = 1) => {
+      const el = rows > 1 ? h("textarea", { rows: String(rows), readonly: !canWrite || null }) : h("input", { readonly: !canWrite || null });
+      el.value = str(value); el.addEventListener("input", () => upd(() => set(el.value)));
+      return h("label", { class: "f" }, label, el);
+    };
+    const tplSel = h("select", { disabled: !canWrite || null }, Object.entries(TEMPLATES).map(([k, v]) => h("option", { value: k }, v)));
+    tplSel.value = pg.template; tplSel.addEventListener("change", () => upd(() => { pg.template = tplSel.value; }));
+    const photos = [...S2.photos.values()].filter((p) => brandOf(p) === BR);
+    const phSel = h("select", { disabled: !canWrite || null }, h("option", { value: "" }, "写真なし"), photos.map((p) => h("option", { value: p.id }, p.name)));
+    phSel.value = pg.photo || ""; phSel.addEventListener("change", () => upd(() => { pg.photo = phSel.value; if (phSel.value && pg.template !== "photo") { pg.template = "photo"; tplSel.value = "photo"; } }));
+    const pal = palette(cre);
+    const color = (label, key) => {
+      const el = h("input", { type: "color", value: cre.style?.palette?.[key] || pal[key], disabled: !canWrite || null, "aria-label": label });
+      el.addEventListener("input", () => upd(() => { cre.style = { ...(cre.style || {}), palette: { ...(cre.style?.palette || {}), [key]: el.value } }; }));
+      return h("label", { class: "swatch" }, el, label);
+    };
+    const fontSel = h("select", { disabled: !canWrite || null }, Object.entries(FONTS).map(([k, [, ja]]) => h("option", { value: k }, ja)));
+    fontSel.value = cre.style?.font || visual().font; fontSel.addEventListener("change", () => upd(() => { cre.style = { ...(cre.style || {}), font: fontSel.value }; }));
+
+    const saveOne = h("button", { class: "btn small" }, "この画像を保存");
+    saveOne.addEventListener("click", () => saveImages(cre, [i], saveOne));
+    const saveAll = h("button", { class: "btn small" }, `${cre.pages.length}枚をまとめて保存`);
+    saveAll.addEventListener("click", () => saveImages(cre, cre.pages.map((_, k) => k), saveAll));
+    const approve = h("button", { class: "btn small primary" }, cre.status === "approved" ? "承認を取り消す" : "画像を承認");
+    approve.addEventListener("click", () => { cre.status = cre.status === "approved" ? "generated" : "approved"; saveCreative(cre); renderStock(); renderCalendar(); });
+
+    box.replaceChildren(
+      h("div", { class: "row" }, h("h2", {}, str(d.body?.title) || d.plan?.theme), chip(d.format), h("span", { class: `mk ${CRE_STATE[cre.status === "approved" ? "approved" : "generated"][0]}` }, CRE_STATE[cre.status === "approved" ? "approved" : "generated"][1]),
+        h("span", { class: "note" }, `${dateLabel(cre.date)} ${cre.time}${cre.style?.mood ? " ／ " + cre.style.mood : ""}`), h("div", { class: "spacer" }), whoLine(cre)),
+      h("div", { class: "ceditor" },
+        h("div", { class: "cleft" }, preview,
+          h("div", { class: "cpages" }, cre.pages.map((_, k) => { const b = h("button", { class: `cpage${k === i ? " on" : ""}`, "aria-label": `${k + 1}枚目` }, thumbImg(cre, k, 0.1)); b.addEventListener("click", () => { S2.crePage = k; renderCreEditor(); }); return b; }))),
+        h("div", { class: "cright" },
+          h("div", { class: "row" }, h("b", {}, `${i + 1} / ${cre.pages.length} 枚目`), h("div", { class: "spacer" }), h("label", { class: "f", style: "flex-direction:row;align-items:center;gap:8px" }, "型", tplSel)),
+          field("小見出し", pg.eyebrow, (v) => (pg.eyebrow = v)),
+          field("見出し（改行可）", pg.headline, (v) => (pg.headline = v), 3),
+          field("補足", pg.sub, (v) => (pg.sub = v), 2),
+          pg.template === "list" ? field("箇条書き（1行に1つ）", arr(pg.bullets).join("\n"), (v) => (pg.bullets = v.split("\n").filter(Boolean).slice(0, 5)), 4) : null,
+          pg.template === "cta" ? field("ボタンの文言", pg.cta, (v) => (pg.cta = v)) : null,
+          h("label", { class: "f" }, "背景の写真", phSel),
+          h("div", { class: "row" }, color("背景", "bg"), color("文字", "fg"), color("アクセント", "accent"), h("label", { class: "f", style: "flex-direction:row;align-items:center;gap:8px" }, "書体", fontSel)),
+          h("div", { class: "row" }, canWrite ? approve : null, saveOne, saveAll, h("div", { class: "spacer" }), sample && canWrite ? genButton(d, "AIで作り直す") : null),
+          h("span", { class: "note", id: "cre-save-msg" }))));
+  }
+
+  // PNG for one page; a ZIP (JSZip from cdnjs) for several.
+  async function saveImages(cre, idxs, btn) {
+    const msg = $("#cre-save-msg");
+    if (!downloads) { if (msg) msg.textContent = "この表示では保存できません。"; return; }
+    btn.disabled = true; const old = btn.textContent; btn.textContent = "書き出し中…";
+    try {
+      const blobs = [];
+      for (const k of idxs) { const cv = await drawPage(cre, k, 1); blobs.push(await new Promise((r) => cv.toBlob(r, "image/png"))); }
+      const base = `${cre.brand}_${cre.date}_${cre.format}`;
+      if (blobs.length === 1) await downloads.save({ filename: `${base}_${idxs[0] + 1}.png`, data: blobs[0] });
+      else {
+        if (!window.JSZip) throw new Error("zip");
+        const zip = new JSZip(); blobs.forEach((b, k) => zip.file(`${base}_${idxs[k] + 1}.png`, b));
+        await downloads.save({ filename: `${base}.zip`, data: await zip.generateAsync({ type: "blob" }) });
+      }
+      if (msg) msg.textContent = "保存しました。";
+    } catch (e) { if (msg && e?.code !== "cancelled") msg.textContent = "保存できませんでした。1枚ずつ保存してください。"; }
+    finally { btn.disabled = false; btn.textContent = old; }
+  }
+
+  // ---- photo library ----
+  async function compressPhoto(file) {
+    const img = await loadImg(URL.createObjectURL(file));
+    if (!img) throw new Error("decode");
+    const scale = Math.min(1, 1600 / Math.max(img.width, img.height));
+    const cv = document.createElement("canvas"); cv.width = Math.round(img.width * scale); cv.height = Math.round(img.height * scale);
+    cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+    // Keep each photo comfortably under the 256 KiB document limit.
+    for (const q of [0.82, 0.72, 0.62, 0.52, 0.42]) { const u = cv.toDataURL("image/jpeg", q); if (u.length < 240000) return { dataUrl: u, w: cv.width, h: cv.height }; }
+    const small = document.createElement("canvas"); small.width = Math.round(cv.width * 0.7); small.height = Math.round(cv.height * 0.7);
+    small.getContext("2d").drawImage(cv, 0, 0, small.width, small.height);
+    return { dataUrl: small.toDataURL("image/jpeg", 0.6), w: small.width, h: small.height };
+  }
+  $("#photo-file").addEventListener("change", async (ev) => {
+    const files = [...(ev.target.files || [])]; ev.target.value = "";
+    const msg = $("#photo-msg");
+    if (!db || !files.length) return;
+    let ok = 0;
+    for (const f of files.slice(0, 10)) {
+      try {
+        msg.textContent = `取り込み中：${f.name}`;
+        const p = await compressPhoto(f);
+        const id = `${BR}_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+        await db.doc("photos/" + id).set({ id, brand: BR, name: f.name.replace(/\.[^.]+$/, "").slice(0, 40), ...p, updatedAt: Date.now(), updatedBy: me?.id || null });
+        ok++;
+      } catch { msg.textContent = `${f.name} を取り込めませんでした（JPEG・PNG・WebPを選んでください）。`; }
+    }
+    if (ok) msg.textContent = `${ok} 枚の写真を追加しました。画像の「背景の写真」やAI生成で使われます。`;
+  });
+  function renderPhotos() {
+    const list = [...S2.photos.values()].filter((p) => brandOf(p) === BR);
+    $("#photo-grid").replaceChildren(...(list.length ? list.map((p) => h("figure", { class: "ph" }, h("img", { src: p.dataUrl, alt: p.name }), h("figcaption", {}, p.name),
+      canWrite && db ? armed(h("button", { class: "btn small danger" }, "削除"), "もう一度で削除", () => db.doc("photos/" + p.id).delete().catch(() => {})) : null))
+      : [h("p", { class: "note" }, "まだ写真がありません。活動やイベントの写真を追加すると、写真を使ったデザインが作られます。")]));
+  }
+
   // ---------- brand switching ----------
   let brandUnsubs = [], failFn = () => {};
-  function refreshAll() { renderDrafts(); renderPlan(); renderKpi(); renderCalendar(); }
+  function refreshAll() { renderDrafts(); renderPlan(); renderKpi(); renderCalendar(); renderStock(); }
   function subscribeBrand() {
     brandUnsubs.forEach((u) => u()); brandUnsubs = [];
     if (!db) return;
@@ -2145,7 +2716,8 @@ ${JSON.stringify(rows).slice(0, 30000)}
     BR = x.dataset.b;
     try { localStorage.setItem("baseai-brand", BR); } catch {}
     Object.assign(S, { brand: null, inputs: null, kpi: null, research: null, plan: null, insights: null, sync: null, selected: null });
-    refilter(); applyBrandUI(); fillSettings(); renderSyncState(); renderAcctOverview();
+    S2.creSel = null;
+    refilter(); applyBrandUI(); fillSettings(); renderSyncState(); renderAcctOverview(); renderPhotos();
     $("#research-out").replaceChildren(h("div", { class: "empty" }, "読み込み中…"));
     subscribeBrand(); refreshAll();
   }));
@@ -2254,7 +2826,7 @@ ${JSON.stringify(rows).slice(0, 30000)}
     if (c === false) {
       canWrite = false;
       $("#save-settings").disabled = true; $("#settings-msg").textContent = "閲覧のみの権限です。";
-      $("#sync-label").hidden = true; $("#m-save").disabled = true;
+      $("#sync-label").hidden = true; $("#m-save").disabled = true; $("#photo-label").hidden = true; $("#cre-gen-all").disabled = true;
     }
     renderDetail();
   });
@@ -2266,6 +2838,15 @@ ${JSON.stringify(rows).slice(0, 30000)}
     const fail = () => { $("#st-db").textContent = "共有データ: 切断されました"; $("#dot-db").classList.remove("on"); };
     failFn = fail;
     d.doc("settings/accounts").onSnapshot((x) => { S.accounts = x.exists ? x.data() : null; fillSettings(); renderAcctOverview(); refreshAll(); }, fail);
+    d.collection("creatives").onSnapshot((snap) => {
+      const next = new Map();
+      for (const x of snap.docs) next.set(x.id, creTimers.has(x.id) && S2.creatives.has(x.id) ? S2.creatives.get(x.id) : structuredClone(x.data()));
+      S2.creatives = next; renderStock(); renderCalendar();
+    }, fail);
+    d.collection("photos").onSnapshot((snap) => {
+      S2.photos = new Map(snap.docs.map((x) => [x.id, x.data()]));
+      thumbCache.clear(); renderPhotos(); renderStock();
+    }, fail);
     d.collection("metrics").onSnapshot((snap) => { S.metrics = snap.docs.map((x) => x.data()).filter((x) => x && x.date); renderKpi(); }, fail);
     d.collection("drafts").onSnapshot((snap) => {
       const next = new Map();
