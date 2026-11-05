@@ -24,6 +24,7 @@
   --line: #E1EBE5;
   --white: #FFFFFF;
   --round: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
+  --serif: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
   --nav-h: 56px;
   color-scheme: light;
@@ -301,6 +302,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer .logo { display: block; color: #fff; margin: 0 0 2px; }
 .footer .logo b { color: var(--gold); }
 
+
+/* ---------------- 企業: スケジュール・申込の流れ ---------------- */
+.sched div { display: grid; grid-template-columns: 92px 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
+.sched div:last-child { border-bottom: 0; }
+.sched dt { font-family: var(--round); font-weight: 700; color: #fff; }
+.flow { list-style: none; counter-reset: f; display: grid; gap: 6px; }
+.flow li { counter-increment: f; display: grid; grid-template-columns: 26px 1fr; align-items: center; background: rgba(255,255,255,.08); border-radius: 10px; padding: 7px 10px; }
+.g .acc .panel-in .flow li { padding-left: 10px; }
+.g .acc .panel-in .flow li::before { content: counter(f); position: static; width: auto; height: auto; background: none; font-family: var(--round); font-weight: 900; color: var(--gold); }
+
 @media (min-width: 720px) {
   .wrap { max-width: 560px; }
   .sec { padding: 64px 0 70px; }
@@ -494,54 +505,59 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 <section class="sec g foamy" id="companies">
   <div class="wrap">
-    <h2>企業の方へ</h2>
-    <p class="lead">社員の人柄を、学生に直接伝えられる場です。業界・規模は問いません。</p>
+    <h2>企業の皆様へ</h2>
+    <p class="lead">社員の方の人柄を通じて、学生に貴社を知っていただける場です。業界・企業規模は問いません。</p>
 
     <div class="keys">
-      <div class="key"><span>参加費</span><b>50,000円</b><small>社員2名まで・飲食込み</small></div>
-      <div class="key"><span>申込締切</span><b>11/16(月)</b></div>
+      <div class="key"><span>出展料</span><b>50,000円</b><small>社員2名様まで・飲食込み</small></div>
+      <div class="key"><span>お申込締切</span><b>11/16(月)</b></div>
     </div>
 
     <ul class="points">
-      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.6 3-5.5 6-5.5s5.4 1.9 6 5.5"/><path d="M15.5 14.6c2.6.1 4.6 1.8 5.1 5.1"/></svg></span>学生約50名と、対面で話せる</li>
-      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H9l-5 4z"/></svg></span>説明10分のうち2分は社員個人の話</li>
-      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg></span>12月3日までにアンケート結果を報告</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.6 3-5.5 6-5.5s5.4 1.9 6 5.5"/><path d="M15.5 14.6c2.6.1 4.6 1.8 5.1 5.1"/></svg></span>学生約50名と、対面でお話しいただけます</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H9l-5 4z"/></svg></span>説明10分のうち2分は社員の方のお話</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg></span>アンケート結果を12/3までにご報告</li>
     </ul>
 
     <div class="talk">
-      <p class="talk-h">企業説明10分の配分</p>
+      <p class="talk-h">企業説明(10分)の構成</p>
       <div class="talk-bar" aria-hidden="true">
         <span style="flex:1">1</span><span style="flex:6">6分</span><span class="hl" style="flex:2">2分</span><span style="flex:1">1</span>
       </div>
-      <p class="talk-legend"><span><b>1</b> 自己紹介</span><span><b>6</b> 会社・仕事</span><span><b>2</b> 社員個人の話</span><span><b>1</b> 聞いてほしいこと</span></p>
+      <p class="talk-legend"><span><b>1</b> 自己紹介</span><span><b>6</b> 会社・仕事内容</span><span><b>2</b> 社員の方の経験・価値観</span><span><b>1</b> 学生に聞いてほしいこと</span></p>
+      <p class="note">説明資料は11月23日(月)までにご提出ください。</p>
     </div>
 
     <div class="acc">
-      <button class="acc-btn" aria-expanded="false" aria-controls="c1" data-acc>参加条件とスケジュール<span class="plus" aria-hidden="true"></span></button>
+      <button class="acc-btn" aria-expanded="false" aria-controls="c1" data-acc>ご参加条件・スケジュール<span class="plus" aria-hidden="true"></span></button>
       <div class="panel" id="c1"><div class="panel-in">
-        <p class="mini-h">参加条件</p>
+        <p class="mini-h">ご参加条件</p>
         <ul>
-          <li>お支払いは銀行振込(事前)</li>
-          <li>企画の趣旨に合うか確認のうえ参加を確定します(先着順ではありません)</li>
-          <li>11月19日(木)までのキャンセルは全額返金。以降は原則返金なし(主催者都合の中止は全額返金)</li>
+          <li>出展料は銀行振込にて事前にお支払いください</li>
+          <li>企画の趣旨に合うかを確認のうえ、ご参加を確定いたします(先着順ではありません)</li>
+          <li>11月19日(木)までのキャンセルは全額返金いたします。以降は原則返金いたしかねます(主催者都合の中止は全額返金)</li>
         </ul>
         <p class="mini-h">スケジュール</p>
-        <ul>
-          <li>11/16(月) 申込締切</li>
-          <li>11/19(木) 全額返金のキャンセル期限</li>
-          <li>11/23(月) スライド提出 / 参加学生の情報(匿名)を共有</li>
-          <li>11/26(木) 17:15 企業受付</li>
-          <li>12/3(木)まで アンケート結果のご報告</li>
-        </ul>
-        <p class="mini-h">申込の流れ</p>
-        <ul>
-          <li>フォーム送信 → 内容確認 → 規約のご案内 → お振込 → 参加確定</li>
-        </ul>
+        <dl class="sched">
+          <div><dt>11/16(月)</dt><dd>お申込締切</dd></div>
+          <div><dt>11/19(木)</dt><dd>全額返金でのキャンセル期限</dd></div>
+          <div><dt>11/23(月)</dt><dd>説明資料のご提出 / 参加学生情報(匿名)の共有</dd></div>
+          <div><dt>11/26(木)</dt><dd>開催(企業受付 17:15〜)</dd></div>
+          <div><dt>12/3(木)まで</dt><dd>アンケート結果のご報告</dd></div>
+        </dl>
+        <p class="mini-h">お申込の流れ</p>
+        <ol class="flow">
+          <li>フォームよりお申込</li>
+          <li>内容の確認</li>
+          <li>規約のご案内</li>
+          <li>出展料のお振込</li>
+          <li>ご参加確定</li>
+        </ol>
       </div></div>
     </div>
 
     <div class="cta-wide">
-      <a class="pop pop-company js-form" data-form="company" href="#entry">企業として申し込む<small>締切 11月16日(月)</small></a>
+      <a class="pop pop-company js-form" data-form="company" href="#entry">出展を申し込む<small>締切 11月16日(月)</small></a>
     </div>
   </div>
 </section>
@@ -580,8 +596,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 <script>
 // 申込フォームのURL(ここに入れると全ボタンに反映されます)
 const FORM_URL = {
-  student: "",
-  company: ""
+  student: "https://docs.google.com/forms/d/e/1FAIpQLScoF1RPneCLFAgszQIX57I-qrWT87yK8Jk7mvpjxxG2nRkoLQ/viewform",
+  company: "https://docs.google.com/forms/d/e/1FAIpQLSfrXgkEtKuJLzHadQTa0tvHlBSexUuwObs1GCXzPcObj60hBw/viewform"
 };
 document.querySelectorAll(".js-form").forEach(function (a) {
   const url = FORM_URL[a.dataset.form];
