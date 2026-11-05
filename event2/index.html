@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="乾杯キャリア 2026年11月26日(木)18:00〜20:30 東京・新宿。社員の話を聞いて、立食で話せる交流型の説明会。学生は参加無料。主催：ReDANK">
+<meta name="theme-color" content="#11684C">
+<title>乾杯キャリア | 11/26(木) 新宿 | ReDANK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #11684C;
+  --green-deep: #0A4C37;
+  --green-soft: #E9F4EE;
+  --on-green: #FFFFFF;
+  --on-green-sub: #CFE6DA;
+  --gold: #F4B63E;
+  --gold-deep: #C88A17;
+  --on-gold: #3A2700;
+  --ink: #1B2420;
+  --sub: #5D6B64;
+  --line: #E1EBE5;
+  --white: #FFFFFF;
+  --round: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", sans-serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --nav-h: 56px;
+  color-scheme: light;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 10px; }
+.wrap { width: 100%; max-width: 520px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+/* ---------------- Nav ---------------- */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 50;
+  padding-top: env(safe-area-inset-top, 0px);
+  background: rgba(255,255,255,.96);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+}
+.nav.is-hidden { transform: translateY(-110%); }
+.nav.is-scrolled { box-shadow: 0 6px 20px rgba(10,76,55,.08); }
+.nav-inner { height: var(--nav-h); max-width: 960px; margin: 0 auto; padding: 0 14px; display: flex; align-items: center; gap: 4px; }
+.logo { font-family: var(--round); font-weight: 900; font-size: 18px; color: var(--green); letter-spacing: .01em; margin-right: auto; }
+.logo b { color: var(--gold-deep); font-weight: 900; }
+.nav-links { display: flex; }
+.nav-links a { font-family: var(--round); font-weight: 700; font-size: 12.5px; color: var(--sub); padding: 6px 7px; border-radius: 8px; }
+.nav-links a:active { background: var(--green-soft); color: var(--green); }
+.nav-cta {
+  margin-left: 4px; font-family: var(--round); font-weight: 900; font-size: 12.5px;
+  background: var(--gold); color: var(--on-gold);
+  padding: 7px 14px; border-radius: 999px;
+  box-shadow: 0 3px 0 var(--gold-deep);
+}
+.nav-cta:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--gold-deep); }
+
+/* ---------------- Backgrounds ---------------- */
+.g { background: var(--green); color: var(--on-green); position: relative; overflow: hidden; }
+.w { background: var(--white); position: relative; overflow: hidden; }
+.cut { height: 42px; }
+.cut.gw-l { background: linear-gradient(to bottom left, var(--green) 49.6%, var(--white) 50.4%); }
+.cut.gw-r { background: linear-gradient(to bottom right, var(--green) 49.6%, var(--white) 50.4%); }
+.cut.wg-l { background: linear-gradient(to bottom left, var(--white) 49.6%, var(--green) 50.4%); }
+.cut.wg-r { background: linear-gradient(to bottom right, var(--white) 49.6%, var(--green) 50.4%); }
+/* 白背景の水玉グラフィック */
+.dots::before {
+  content: ""; position: absolute; top: 18px; right: -10px; width: 150px; height: 120px;
+  background-image: radial-gradient(var(--green-soft) 3px, transparent 3.5px);
+  background-size: 16px 16px;
+  -webkit-mask-image: linear-gradient(to bottom left, #000 30%, transparent 85%);
+  mask-image: linear-gradient(to bottom left, #000 30%, transparent 85%);
+}
+/* 緑背景の泡グラフィック */
+.foamy::before, .foamy::after {
+  content: ""; position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.12);
+}
+.foamy::before { width: 220px; height: 220px; right: -90px; top: 30px; }
+.foamy::after { width: 90px; height: 90px; left: -30px; bottom: 40px; border-color: rgba(244,182,62,.28); }
+
+/* ---------------- Hero ---------------- */
+.hero {
+  padding: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 14px) 0 34px;
+  background:
+    radial-gradient(120% 60% at 50% 18%, #1C8461 0%, rgba(28,132,97,0) 60%),
+    var(--green);
+  text-align: center;
+}
+.hero-host { font-family: var(--round); font-weight: 700; font-size: 12px; color: var(--on-green-sub); letter-spacing: .06em; }
+.hero-art { position: relative; width: 200px; margin: 2px auto 6px; }
+.toast { display: block; width: 100%; height: auto; overflow: visible; }
+.toast .glass-body { fill: rgba(255,255,255,.08); stroke: #FFFFFF; stroke-width: 2.4; stroke-linejoin: round; }
+.toast .beer { fill: var(--gold); }
+.toast .foam { fill: #FFFDF6; }
+.toast .bubble { fill: #FFF1C9; }
+.toast .spark { stroke: #FFE7A6; stroke-width: 3; stroke-linecap: round; }
+.g-left, .g-right, .sparks, .bubble { transform-box: fill-box; }
+.g-left { transform-origin: 50% 100%; animation: clinkL 3.2s cubic-bezier(.45,.05,.3,1) infinite; }
+.g-right { transform-origin: 50% 100%; animation: clinkR 3.2s cubic-bezier(.45,.05,.3,1) infinite; }
+.sparks { transform-origin: 50% 100%; animation: spark 3.2s ease-out infinite; }
+.bubble { animation: rise 2.2s ease-in infinite; }
+.bubble.b2 { animation-delay: .7s; animation-duration: 2.6s; }
+.bubble.b3 { animation-delay: 1.4s; animation-duration: 2s; }
+@keyframes clinkL {
+  0%, 100% { transform: translateX(-20px) rotate(-5deg); }
+  32% { transform: translateX(0) rotate(0); }
+  38% { transform: translateX(-4px) rotate(-1deg); }
+  44%, 72% { transform: translateX(0) rotate(0); }
+}
+@keyframes clinkR {
+  0%, 100% { transform: translateX(20px) rotate(5deg); }
+  32% { transform: translateX(0) rotate(0); }
+  38% { transform: translateX(4px) rotate(1deg); }
+  44%, 72% { transform: translateX(0) rotate(0); }
+}
+@keyframes spark {
+  0%, 29% { opacity: 0; transform: scale(.5); }
+  36% { opacity: 1; transform: scale(1.05); }
+  56%, 100% { opacity: 0; transform: scale(1.15); }
+}
+@keyframes rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: .9; }
+  100% { transform: translateY(-62px); opacity: 0; }
+}
+
+.hero h1 {
+  font-family: var(--round); font-weight: 900;
+  font-size: clamp(46px, 13.4vw, 72px);
+  line-height: 1.12; letter-spacing: .03em; white-space: nowrap;
+}
+.hero-tagline { font-family: var(--round); font-weight: 700; font-size: 16px; margin-top: 4px; color: var(--on-green-sub); }
+
+/* 日時カード + 王冠バッジ */
+.when {
+  position: relative;
+  margin: 22px auto 22px; max-width: 360px;
+  background: var(--white); color: var(--green);
+  border-radius: 22px;
+  padding: 16px 18px 16px 20px;
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0 16px;
+  text-align: left;
+  box-shadow: 0 12px 30px rgba(5,40,28,.28);
+}
+.when-date { font-family: var(--round); line-height: 1; padding-right: 16px; border-right: 2px dashed var(--line); }
+.when-date .y { display: block; font-size: 12px; font-weight: 700; color: var(--sub); margin-bottom: 4px; }
+.when-date .md { font-size: 42px; font-weight: 900; letter-spacing: .01em; }
+.when-date .dow {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; margin-left: 4px;
+  border-radius: 50%; background: var(--green); color: #fff; font-size: 13px; font-weight: 900; vertical-align: 8px;
+}
+.when-sub p { display: flex; align-items: center; gap: 7px; font-family: var(--round); font-weight: 700; font-size: 15px; color: var(--ink); line-height: 1.5; }
+.when-sub p + p { margin-top: 6px; }
+.when-sub svg { flex-shrink: 0; color: var(--green); }
+.cap {
+  position: absolute; width: 84px; height: 84px; right: -92px; top: 62px;
+  transform: rotate(12deg);
+  animation: bob 4s ease-in-out infinite;
+  filter: drop-shadow(0 6px 10px rgba(5,40,28,.3));
+}
+@keyframes bob { 0%,100% { transform: rotate(12deg) translateY(0); } 50% { transform: rotate(6deg) translateY(-4px); } }
+.cap .crimp { fill: var(--gold); stroke: var(--gold-deep); stroke-width: 1.2; }
+.cap .inner { fill: #FFFDF6; }
+.cap .ring { fill: none; stroke: var(--gold); stroke-width: 1.6; }
+.cap text { font-family: var(--round); font-weight: 900; fill: var(--green); text-anchor: middle; }
+
+/* ---------------- Buttons ---------------- */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pop {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 64px; padding: 12px 10px;
+  border-radius: 18px;
+  font-family: var(--round); font-weight: 900; font-size: 16px; line-height: 1.3; text-align: center;
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.pop small { font-family: var(--body); font-weight: 700; font-size: 11px; opacity: .78; margin-top: 2px; }
+.pop-student { background: var(--gold); color: var(--on-gold); box-shadow: 0 5px 0 var(--gold-deep), 0 12px 22px rgba(0,0,0,.18); }
+.pop-student:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--gold-deep), 0 4px 10px rgba(0,0,0,.15); }
+.pop-company { background: var(--white); color: var(--green); box-shadow: 0 5px 0 #C7DCD1, 0 12px 22px rgba(0,0,0,.14); }
+.pop-company:active { transform: translateY(4px); box-shadow: 0 1px 0 #C7DCD1, 0 4px 10px rgba(0,0,0,.1); }
+.w .pop-company { background: var(--green); color: #fff; box-shadow: 0 5px 0 var(--green-deep), 0 12px 22px rgba(0,0,0,.14); }
+.sticker {
+  position: absolute; top: -12px; right: -6px;
+  background: var(--white); color: var(--green);
+  font-family: var(--round); font-weight: 900; font-size: 12px;
+  padding: 3px 10px; border-radius: 999px;
+  border: 2px solid var(--green);
+  transform: rotate(8deg);
+}
+.cta-wide { margin-top: 28px; }
+.cta-wide .pop { min-height: 72px; font-size: 18px; }
+
+/* ---------------- Sections ---------------- */
+.sec { padding: 40px 0 46px; }
+.sec h2 { font-family: var(--round); font-weight: 900; font-size: 26px; line-height: 1.35; margin-bottom: 14px; }
+.w h2 { color: var(--green); }
+.lead { font-size: 14.5px; }
+.g .lead { color: var(--on-green-sub); }
+.note { font-size: 12px; color: var(--sub); margin-top: 8px; }
+.g .note { color: var(--on-green-sub); }
+
+/* 開催概要 */
+.facts { border-radius: 18px; background: var(--green-soft); padding: 4px 16px; }
+.facts div { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 12px 0; border-bottom: 1px solid #D5E6DC; }
+.facts div:last-child { border-bottom: 0; }
+.facts dt { font-family: var(--round); font-weight: 700; font-size: 13px; color: var(--green); padding-top: 1px; }
+.facts dd { font-size: 14px; font-weight: 500; }
+.facts dd small { display: block; font-size: 11.5px; color: var(--sub); font-weight: 400; }
+.tag { display: inline-block; font-family: var(--round); font-size: 11px; font-weight: 900; padding: 0 7px; border-radius: 5px; margin-right: 5px; vertical-align: 1px; }
+.tag.s { background: var(--gold); color: var(--on-gold); }
+.tag.c { background: var(--green); color: #fff; }
+
+/* タイムテーブル */
+.tl { list-style: none; margin-top: 18px; }
+.tl > li { border-bottom: 1px solid rgba(255,255,255,.14); }
+.tl-row {
+  width: 100%; display: grid; grid-template-columns: 58px 1fr 28px; align-items: center; gap: 8px;
+  padding: 13px 0; text-align: left;
+}
+.tl-row time { font-family: var(--round); font-weight: 900; font-size: 17px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.tl-row .t { font-family: var(--round); font-weight: 700; font-size: 16px; }
+.tl .minor .t { font-weight: 500; color: var(--on-green-sub); font-size: 14px; }
+.plus {
+  width: 26px; height: 26px; border-radius: 50%; position: relative;
+  border: 1.5px solid rgba(255,255,255,.5);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), background .2s;
+}
+.plus::before, .plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 2px; border-radius: 2px; background: currentColor; transform: translate(-50%,-50%); }
+.plus::after { transform: translate(-50%,-50%) rotate(90deg); }
+[aria-expanded="true"] .plus { transform: rotate(45deg); background: rgba(255,255,255,.14); }
+.panel { height: 0; overflow: hidden; transition: height .38s cubic-bezier(.2,.8,.2,1); }
+.panel-in { padding: 0 0 14px 66px; font-size: 13.5px; color: var(--on-green-sub); }
+.panel-in ul { list-style: none; }
+.panel-in li { position: relative; padding-left: 14px; margin-bottom: 4px; }
+.panel-in li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.panel-in .odai { font-family: var(--round); font-weight: 900; color: #fff; font-size: 15px; margin-bottom: 6px; }
+.tl .kanpai { border-bottom: 0; margin: 6px 0; }
+.tl .kanpai .tl-row { background: var(--gold); color: var(--on-gold); border-radius: 16px; padding: 13px 14px; grid-template-columns: 44px 1fr; }
+.tl .kanpai time { color: var(--on-gold); }
+
+/* 学生・企業 共通 */
+.points { list-style: none; margin-top: 20px; display: grid; gap: 10px; }
+.points li { display: flex; align-items: center; gap: 12px; font-family: var(--round); font-weight: 700; font-size: 15px; line-height: 1.45; }
+.ico { flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--green-soft); color: var(--green); }
+.g .ico { background: rgba(255,255,255,.12); color: var(--gold); }
+
+.acc { margin-top: 22px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--white); }
+.acc-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; font-family: var(--round); font-weight: 700; font-size: 15px; color: var(--green); }
+.acc-btn .plus { border-color: var(--green); color: var(--green); }
+.acc[data-open="true"] .acc-btn .plus, .acc-btn[aria-expanded="true"] .plus { background: var(--green-soft); }
+.acc .panel-in { padding: 0 16px 16px; color: var(--ink); }
+.acc .panel-in li::before { background: var(--green); }
+.g .acc { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.22); }
+.g .acc-btn { color: #fff; }
+.g .acc-btn .plus { border-color: rgba(255,255,255,.6); color: #fff; }
+.g .acc .panel-in { color: var(--on-green-sub); }
+.g .acc .panel-in li::before { background: var(--gold); }
+.mini-h { font-family: var(--round); font-weight: 900; font-size: 13px; color: #fff; margin: 12px 0 6px; }
+.mini-h:first-child { margin-top: 0; }
+
+.keys { display: grid; grid-template-columns: 1.4fr 1fr; gap: 10px; margin-top: 18px; }
+.key { background: var(--white); color: var(--green); border-radius: 16px; padding: 12px 14px; }
+.key span { display: block; font-size: 11.5px; font-weight: 700; color: var(--sub); }
+.key b { font-family: var(--round); font-weight: 900; font-size: 22px; line-height: 1.3; }
+.key small { display: block; font-size: 11px; color: var(--sub); }
+
+.talk { margin-top: 20px; }
+.talk-h { font-family: var(--round); font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+.talk-bar { display: flex; gap: 3px; height: 38px; border-radius: 10px; overflow: hidden; }
+.talk-bar span { display: grid; place-items: center; font-family: var(--round); font-weight: 900; font-size: 11px; background: rgba(255,255,255,.16); }
+.talk-bar .hl { background: var(--gold); color: var(--on-gold); }
+.talk-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: 11.5px; color: var(--on-green-sub); }
+.talk-legend b { color: #fff; font-family: var(--round); }
+
+/* 会場 */
+.map { display: block; width: 100%; height: 230px; border: 0; border-radius: 18px; margin-top: 16px; background: var(--green-soft); }
+
+/* 申込 */
+.entry { padding: 40px 0 48px; text-align: center; }
+.entry h2 { font-family: var(--round); font-weight: 900; font-size: 28px; }
+.entry p { font-size: 13px; color: var(--on-green-sub); margin: 4px 0 24px; }
+.entry .pop { min-height: 84px; }
+
+.footer { background: var(--green-deep); color: var(--on-green-sub); text-align: center; padding: 26px 20px calc(26px + env(safe-area-inset-bottom, 0px)); font-size: 11px; }
+.footer .logo { display: block; color: #fff; margin: 0 0 2px; }
+.footer .logo b { color: var(--gold); }
+
+@media (min-width: 720px) {
+  .wrap { max-width: 560px; }
+  .sec { padding: 64px 0 70px; }
+  .cut { height: 70px; }
+  .hero-art { width: 240px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .g-left, .g-right, .sparks, .bubble, .cap { animation: none; }
+  .panel { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav" aria-label="ページ内メニュー">
+  <div class="nav-inner">
+    <a href="#top" class="logo">Re<b>DANK</b></a>
+    <div class="nav-links">
+      <a href="#outline">概要</a>
+      <a href="#program">流れ</a>
+      <a href="#students">学生</a>
+      <a href="#companies">企業</a>
+    </div>
+    <a href="#entry" class="nav-cta">申込</a>
+  </div>
+</nav>
+
+<header class="hero g" id="top">
+  <div class="wrap">
+    <p class="hero-host">ReDANK 主催</p>
+
+    <div class="hero-art">
+    <svg class="toast" viewBox="0 -46 240 196" role="img" aria-label="乾杯する2つのビールグラス">
+      <g class="g-left">
+        <g transform="translate(86 34) rotate(12)">
+          <path class="beer" d="M-32 22 L32 22 L26.5 106 Q26 112 20 112 L-20 112 Q-26 112 -26.5 106 Z"/>
+          <circle class="bubble" cx="-9" cy="98" r="2.6"/>
+          <circle class="bubble b2" cx="7" cy="100" r="2"/>
+          <circle class="bubble b3" cx="-1" cy="96" r="1.7"/>
+          <path class="foam" d="M-34 26 C-35 10 -24 4 -17 9 C-13 0 -2 -1 2 6 C7 -1 19 1 20 9 C28 5 36 11 34 26 Z"/>
+          <path class="glass-body" d="M-35 0 L35 0 L28 110 Q27.5 117 21 117 L-21 117 Q-27.5 117 -28 110 Z"/>
+        </g>
+      </g>
+      <g class="g-right">
+        <g transform="translate(154 34) rotate(-12)">
+          <path class="beer" d="M-32 22 L32 22 L26.5 106 Q26 112 20 112 L-20 112 Q-26 112 -26.5 106 Z"/>
+          <circle class="bubble b2" cx="9" cy="99" r="2.4"/>
+          <circle class="bubble b3" cx="-8" cy="101" r="2"/>
+          <circle class="bubble" cx="2" cy="97" r="1.6"/>
+          <path class="foam" d="M-34 26 C-36 11 -27 5 -20 9 C-18 1 -6 -1 -2 6 C2 -1 14 0 17 9 C24 4 35 10 34 26 Z"/>
+          <path class="glass-body" d="M-35 0 L35 0 L28 110 Q27.5 117 21 117 L-21 117 Q-27.5 117 -28 110 Z"/>
+        </g>
+      </g>
+      <g class="sparks" aria-hidden="true">
+        <line class="spark" x1="109" y1="-14" x2="99" y2="-32"/>
+        <line class="spark" x1="120" y1="-17" x2="120" y2="-39"/>
+        <line class="spark" x1="131" y1="-14" x2="141" y2="-32"/>
+      </g>
+    </svg>
+    <svg class="cap" viewBox="-50 -50 100 100" role="img" aria-label="学生は参加無料">
+        <polygon class="crimp" points="48.0,0.0 42.1,5.5 46.4,12.4 39.3,16.3 41.6,24.0 33.7,25.9 33.9,33.9 25.9,33.7 24.0,41.6 16.3,39.3 12.4,46.4 5.5,42.1 0.0,48.0 -5.5,42.1 -12.4,46.4 -16.3,39.3 -24.0,41.6 -25.9,33.7 -33.9,33.9 -33.7,25.9 -41.6,24.0 -39.3,16.3 -46.4,12.4 -42.1,5.5 -48.0,0.0 -42.1,-5.5 -46.4,-12.4 -39.3,-16.3 -41.6,-24.0 -33.7,-25.9 -33.9,-33.9 -25.9,-33.7 -24.0,-41.6 -16.3,-39.3 -12.4,-46.4 -5.5,-42.1 -0.0,-48.0 5.5,-42.1 12.4,-46.4 16.3,-39.3 24.0,-41.6 25.9,-33.7 33.9,-33.9 33.7,-25.9 41.6,-24.0 39.3,-16.3 46.4,-12.4 42.1,-5.5"/>
+        <circle class="inner" r="37"/>
+        <circle class="ring" r="32"/>
+        <text y="-6" font-size="13">学生</text>
+        <text y="17" font-size="22">無料</text>
+      </svg>
+    </div>
+
+    <h1>乾杯キャリア</h1>
+    <p class="hero-tagline">企業を知る前に、人を知る。</p>
+
+    <div class="when">
+      <div class="when-date">
+        <span class="y">2026</span>
+        <span class="md">11.26</span><span class="dow">木</span>
+      </div>
+      <div class="when-sub">
+        <p><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>18:00〜20:30</p>
+        <p><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>東京・新宿</p>
+      </div>
+
+    </div>
+
+    <div class="duo">
+      <a class="pop pop-student" href="#students">学生の方<small>参加無料</small></a>
+      <a class="pop pop-company" href="#companies">企業の方<small>出展のご案内</small></a>
+    </div>
+  </div>
+</header>
+
+<div class="cut gw-l" aria-hidden="true"></div>
+
+<main>
+<section class="sec w dots" id="outline">
+  <div class="wrap">
+    <h2>開催概要</h2>
+    <dl class="facts">
+      <div><dt>日時</dt><dd>2026年11月26日(木) 18:00〜20:30<small>受付 学生17:30〜 / 企業17:15〜</small></dd></div>
+      <div><dt>会場</dt><dd>東京都内(新宿)<small>詳しい場所は11月25日(水)にご連絡します</small></dd></div>
+      <div><dt>対象</dt><dd>大学1〜4年生・大学院生</dd></div>
+      <div><dt>規模</dt><dd>学生 約50名 / 企業 5〜10社</dd></div>
+      <div><dt>参加費</dt><dd><span class="tag s">学生</span>無料<br><span class="tag c">企業</span>50,000円(2名まで)</dd></div>
+      <div><dt>締切</dt><dd><span class="tag s">学生</span>11月24日(火)<br><span class="tag c">企業</span>11月16日(月)</dd></div>
+      <div><dt>主催</dt><dd>ReDANK</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="cut wg-r" aria-hidden="true"></div>
+
+<section class="sec g foamy" id="program">
+  <div class="wrap">
+    <h2>当日の流れ</h2>
+    <p class="lead">＋を押すと詳しい内容が見られます。</p>
+    <ol class="tl">
+      <li class="minor"><div class="tl-row"><time>17:15</time><span class="t">企業受付</span></div></li>
+      <li class="minor"><div class="tl-row"><time>17:30</time><span class="t">学生受付</span></div></li>
+      <li><div class="tl-row"><time>18:00</time><span class="t">開会</span></div></li>
+      <li>
+        <button class="tl-row" aria-expanded="false" aria-controls="p1" data-acc><time>18:10</time><span class="t">企業説明</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel" id="p1"><div class="panel-in">
+          <ul>
+            <li>1社10分。仕事内容に加えて、社員自身の経験や考え方も聞けます</li>
+            <li>質問は後半の交流の時間に直接どうぞ</li>
+          </ul>
+        </div></div>
+      </li>
+      <li class="minor"><div class="tl-row"><time>19:00</time><span class="t">休憩</span></div></li>
+      <li>
+        <button class="tl-row" aria-expanded="false" aria-controls="p2" data-acc><time>19:05</time><span class="t">グループゲーム</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel" id="p2"><div class="panel-in">
+          <p class="odai">お題「最高の飲み会の1日を作れ!」</p>
+          <ul>
+            <li>社員1名＋学生4名のチーム</li>
+            <li>予算100万円の企画を7分で考え、30秒で発表</li>
+            <li>拍手で優勝決定。優勝チーム全員に1,000円分のギフトカード</li>
+            <li>お酒を飲まなくても参加できます</li>
+          </ul>
+        </div></div>
+      </li>
+      <li class="kanpai"><div class="tl-row"><time>19:20</time><span class="t">全員で乾杯</span></div></li>
+      <li>
+        <button class="tl-row" aria-expanded="false" aria-controls="p3" data-acc><time>19:25</time><span class="t">自由交流</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="panel" id="p3"><div class="panel-in">
+          <ul>
+            <li>立食形式。企業ブースはなく、話したい人のところへ自由に移動できます</li>
+            <li>軽食とドリンクを用意しています</li>
+          </ul>
+        </div></div>
+      </li>
+      <li><div class="tl-row"><time>20:20</time><span class="t">アンケート・閉会</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<div class="cut gw-r" aria-hidden="true"></div>
+
+<section class="sec w dots" id="students">
+  <div class="wrap">
+    <h2>学生の方へ</h2>
+    <p class="lead">学年や、就活中かどうかは問いません。参加は無料です。</p>
+    <ul class="points">
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H9l-5 4z"/></svg></span>社員の経験談を、直接聞ける</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1.5 17h-7z"/><path d="M7.6 9h8.8"/></svg></span>ブースなし。立食で自由に話せる</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.6 3-5.5 6-5.5s5.4 1.9 6 5.5"/><path d="M15.5 14.6c2.6.1 4.6 1.8 5.1 5.1"/></svg></span>ゲームで同世代とも仲良くなれる</li>
+    </ul>
+
+    <div class="acc">
+      <button class="acc-btn" aria-expanded="false" aria-controls="s1" data-acc>参加前の確認事項<span class="plus" aria-hidden="true"></span></button>
+      <div class="panel" id="s1"><div class="panel-in">
+        <ul>
+          <li>お酒は20歳以上のみ。受付で年齢を確認します</li>
+          <li>ソフトドリンクあり。飲酒の強制はありません</li>
+          <li>友人と参加する場合も、1人ずつ登録してください</li>
+          <li>連絡先の交換は任意です</li>
+          <li>登録時の学年・興味分野は、匿名で集計して企業に共有します</li>
+          <li>定員に達した後はキャンセル待ちになります</li>
+          <li>会場の詳細は11月25日(水)にご連絡します</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="cta-wide">
+      <a class="pop pop-student js-form" data-form="student" href="#entry">学生として申し込む<small>締切 11月24日(火)</small><span class="sticker">無料</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="cut wg-l" aria-hidden="true"></div>
+
+<section class="sec g foamy" id="companies">
+  <div class="wrap">
+    <h2>企業の方へ</h2>
+    <p class="lead">社員の人柄を、学生に直接伝えられる場です。業界・規模は問いません。</p>
+
+    <div class="keys">
+      <div class="key"><span>参加費</span><b>50,000円</b><small>社員2名まで・飲食込み</small></div>
+      <div class="key"><span>申込締切</span><b>11/16(月)</b></div>
+    </div>
+
+    <ul class="points">
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.6-3.6 3-5.5 6-5.5s5.4 1.9 6 5.5"/><path d="M15.5 14.6c2.6.1 4.6 1.8 5.1 5.1"/></svg></span>学生約50名と、対面で話せる</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H9l-5 4z"/></svg></span>説明10分のうち2分は社員個人の話</li>
+      <li><span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg></span>12月3日までにアンケート結果を報告</li>
+    </ul>
+
+    <div class="talk">
+      <p class="talk-h">企業説明10分の配分</p>
+      <div class="talk-bar" aria-hidden="true">
+        <span style="flex:1">1</span><span style="flex:6">6分</span><span class="hl" style="flex:2">2分</span><span style="flex:1">1</span>
+      </div>
+      <p class="talk-legend"><span><b>1</b> 自己紹介</span><span><b>6</b> 会社・仕事</span><span><b>2</b> 社員個人の話</span><span><b>1</b> 聞いてほしいこと</span></p>
+    </div>
+
+    <div class="acc">
+      <button class="acc-btn" aria-expanded="false" aria-controls="c1" data-acc>参加条件とスケジュール<span class="plus" aria-hidden="true"></span></button>
+      <div class="panel" id="c1"><div class="panel-in">
+        <p class="mini-h">参加条件</p>
+        <ul>
+          <li>お支払いは銀行振込(事前)</li>
+          <li>企画の趣旨に合うか確認のうえ参加を確定します(先着順ではありません)</li>
+          <li>11月19日(木)までのキャンセルは全額返金。以降は原則返金なし(主催者都合の中止は全額返金)</li>
+        </ul>
+        <p class="mini-h">スケジュール</p>
+        <ul>
+          <li>11/16(月) 申込締切</li>
+          <li>11/19(木) 全額返金のキャンセル期限</li>
+          <li>11/23(月) スライド提出 / 参加学生の情報(匿名)を共有</li>
+          <li>11/26(木) 17:15 企業受付</li>
+          <li>12/3(木)まで アンケート結果のご報告</li>
+        </ul>
+        <p class="mini-h">申込の流れ</p>
+        <ul>
+          <li>フォーム送信 → 内容確認 → 規約のご案内 → お振込 → 参加確定</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="cta-wide">
+      <a class="pop pop-company js-form" data-form="company" href="#entry">企業として申し込む<small>締切 11月16日(月)</small></a>
+    </div>
+  </div>
+</section>
+
+<div class="cut gw-l" aria-hidden="true"></div>
+
+<section class="sec w dots" id="venue">
+  <div class="wrap">
+    <h2>会場</h2>
+    <p class="lead">東京都内・新宿エリア。詳しい場所は、申込者へ11月25日(水)にご連絡します。</p>
+    <iframe class="map" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
+      src="https://maps.google.com/maps?q=%E6%96%B0%E5%AE%BF%E9%A7%85&output=embed&z=15&hl=ja"
+      title="新宿駅周辺の地図"></iframe>
+  </div>
+</section>
+</main>
+
+<div class="cut wg-r" aria-hidden="true"></div>
+
+<section class="entry g foamy" id="entry">
+  <div class="wrap">
+    <h2>お申し込み</h2>
+    <p>学生と企業で、フォームが分かれています。</p>
+    <div class="duo">
+      <a class="pop pop-student js-form" data-form="student" href="#students">学生として<br>申し込む<small>締切 11/24(火)</small><span class="sticker">無料</span></a>
+      <a class="pop pop-company js-form" data-form="company" href="#companies">企業として<br>申し込む<small>締切 11/16(月)</small></a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <span class="logo">Re<b>DANK</b></span>
+  © 2026 ReDANK
+</footer>
+
+<script>
+// 申込フォームのURL(ここに入れると全ボタンに反映されます)
+const FORM_URL = {
+  student: "",
+  company: ""
+};
+document.querySelectorAll(".js-form").forEach(function (a) {
+  const url = FORM_URL[a.dataset.form];
+  if (url) { a.href = url; a.target = "_blank"; a.rel = "noopener"; }
+});
+
+// 開閉パネル(高さをなめらかに変える)
+document.querySelectorAll("[data-acc]").forEach(function (btn) {
+  const panel = document.getElementById(btn.getAttribute("aria-controls"));
+  btn.addEventListener("click", function () {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", String(!open));
+    if (open) {
+      panel.style.height = panel.scrollHeight + "px";
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { panel.style.height = "0px"; });
+      });
+    } else {
+      panel.style.height = panel.scrollHeight + "px";
+      panel.addEventListener("transitionend", function done(e) {
+        if (e.propertyName !== "height") return;
+        if (btn.getAttribute("aria-expanded") === "true") panel.style.height = "auto";
+        panel.removeEventListener("transitionend", done);
+      });
+    }
+  });
+});
+
+// 下にスクロールでメニューを隠し、上にスクロールで表示
+(function () {
+  const nav = document.getElementById("nav");
+  let lastY = window.scrollY, ticking = false;
+  function update() {
+    const y = window.scrollY;
+    if (y > lastY && y > 120) nav.classList.add("is-hidden");
+    else if (y < lastY - 4 || y < 120) nav.classList.remove("is-hidden");
+    nav.classList.toggle("is-scrolled", y > 8);
+    lastY = y; ticking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!ticking) { requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
